@@ -37,6 +37,12 @@ public sealed class MediaContentViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Absolute path to the local file when the content was scanned from a directory.
+    /// <c>null</c> for mesh-sourced content that has not been downloaded locally yet.
+    /// </summary>
+    public string? LocalFilePath { get; set; }
+
     public MediaContentViewModel(MediaContent source)
     {
         Source = source;

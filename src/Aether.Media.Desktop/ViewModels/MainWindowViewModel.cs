@@ -3,6 +3,7 @@ using Aether.Media.Content;
 using Aether.Media.Core;
 using Aether.Media.Distribution;
 using Aether.Media.Identity;
+using Aether.Media.LocalLibrary.Interfaces;
 using Aether.Media.Social;
 using Aether.Media.Streaming;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -66,11 +67,17 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         IProfileService profileService,
         ICreatorChannel channel,
         ISocialGraph socialGraph,
-        IMeshAppDistributor distributor)
+        IMeshAppDistributor distributor,
+        IMetadataEditor metadataEditor,
+        IMovieMetadataService movieMetadataService,
+        ISubtitleService subtitleService)
     {
         Home     = new HomeViewModel(feed, ranker);
         Nearby   = new NearbyViewModel(discovery, aggregator);
-        Library  = new LibraryViewModel(library, scanner);
+        Library  = new LibraryViewModel(
+            library, scanner,
+            new MetadataEditorViewModel(metadataEditor, movieMetadataService),
+            new SubtitleSearchViewModel(subtitleService));
         Player   = new PlayerViewModel(player, reactions, watchParty);
         Profile  = new ProfileViewModel(profileService, channel, socialGraph);
         MoreApps = new MoreAppsViewModel(distributor);

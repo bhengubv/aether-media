@@ -9,11 +9,12 @@ using CommunityToolkit.Mvvm.Input;
 namespace Aether.Media.Desktop.ViewModels;
 
 /// <summary>
-/// Drives the local library screen: scan, search, play and remove content.
+/// Drives the local library screen: scan, search, play, remove, edit metadata,
+/// and find subtitles.
 /// </summary>
 public sealed partial class LibraryViewModel : ViewModelBase
 {
-    private readonly IMediaLibrary _library;
+    private readonly IMediaLibrary        _library;
     private readonly IMediaLibraryScanner _scanner;
 
     // Full unfiltered snapshot — used as the source for search filtering
@@ -42,11 +43,34 @@ public sealed partial class LibraryViewModel : ViewModelBase
         }
     }
 
+    // ── Panel state ────────────────────────────────────────────────────────
+
+    /// <summary>Whether the metadata editor panel is open.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPanelOpen))]
+    private bool _isEditingMetadata;
+
+    /// <summary>Whether the subtitle search panel is open.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPanelOpen))]
+    private bool _isSearchingSubtitles;
+
+    /// <summary><c>true</c> when any side-panel is open (hides the main list).</summary>
+    public bool IsPanelOpen => IsEditingMetadata || IsSearchingSubtitles;
+
+    // ── Child ViewModels ───────────────────────────────────────────────────
+
+    public MetadataEditorViewModel MetadataEditor { get; }
+    public SubtitleSearchViewModel SubtitleSearch { get; }
+
     // ── Commands ───────────────────────────────────────────────────────────
 
-    public IAsyncRelayCommand ScanDirectoryCommand { get; }
-    public IRelayCommand<MediaContentViewModel> PlayCommand { get; }
-    public IAsyncRelayCommand<MediaContentViewModel> RemoveCommand { get; }
+    public IAsyncRelayCommand                         ScanDirectoryCommand    { get; }
+    public IRelayCommand<MediaContentViewModel>       PlayCommand             { get; }
+    public IAsyncRelayCommand<MediaContentViewModel>  RemoveCommand           { get; }
+    public IAsyncRelayCommand<MediaContentViewModel>  EditMetadataCommand     { get; }
+    public IAsyncRelayCommand<MediaContentViewModel>  FindSubtitlesCommand    { get; }
+    public IRelayCommand                              ClosePanelCommand       { get; }
 
     // ── Events ─────────────────────────────────────────────────────────────
 
@@ -54,10 +78,17 @@ public sealed partial class LibraryViewModel : ViewModelBase
 
     // ── Constructor ────────────────────────────────────────────────────────
 
-    public LibraryViewModel(IMediaLibrary library, IMediaLibraryScanner scanner)
+    public LibraryViewModel(
+        IMediaLibrary          library,
+        IMediaLibraryScanner   scanner,
+        MetadataEditorViewModel metadataEditor,
+        SubtitleSearchViewModel subtitleSearch)
     {
         _library = library  ?? throw new ArgumentNullException(nameof(library));
         _scanner = scanner  ?? throw new ArgumentNullException(nameof(scanner));
+
+        MetadataEditor = metadataEditor ?? throw new ArgumentNullException(nameof(metadataEditor));
+        SubtitleSearch = subtitleSearch ?? throw new ArgumentNullException(nameof(subtitleSearch));
 
         ScanDirectoryCommand = new AsyncRelayCommand(ExecuteScanDirectoryAsync);
         PlayCommand = new RelayCommand<MediaContentViewModel>(
@@ -66,7 +97,14 @@ public sealed partial class LibraryViewModel : ViewModelBase
                 if (vm is not null) PlayRequested?.Invoke(this, vm);
             },
             vm => vm is not null);
-        RemoveCommand = new AsyncRelayCommand<MediaContentViewModel>(ExecuteRemoveAsync);
+        RemoveCommand        = new AsyncRelayCommand<MediaContentViewModel>(ExecuteRemoveAsync);
+        EditMetadataCommand  = new AsyncRelayCommand<MediaContentViewModel>(ExecuteEditMetadataAsync);
+        FindSubtitlesCommand = new AsyncRelayCommand<MediaContentViewModel>(ExecuteFindSubtitlesAsync);
+        ClosePanelCommand    = new RelayCommand(() =>
+        {
+            IsEditingMetadata  = false;
+            IsSearchingSubtitles = false;
+        });
 
         // Subscribe to library events for cross-VM additions
         _library.ContentAdded   += OnContentAdded;
@@ -130,6 +168,27 @@ public sealed partial class LibraryViewModel : ViewModelBase
             return;
 
         await _library.RemoveAsync(vm.Source.ContentHash);
+    }
+
+    private async Task ExecuteEditMetadataAsync(MediaContentViewModel? vm)
+    {
+        if (vm?.LocalFilePath is null) return;
+
+        IsSearchingSubtitles = false;
+        IsEditingMetadata    = true;
+        await MetadataEditor.LoadAsync(vm.LocalFilePath).ConfigureAwait(false);
+    }
+
+    private async Task ExecuteFindSubtitlesAsync(MediaContentViewModel? vm)
+    {
+        if (vm?.LocalFilePath is null) return;
+
+        // Subtitles are only meaningful for video files
+        if (!vm.Source.IsVideo) return;
+
+        IsEditingMetadata    = false;
+        IsSearchingSubtitles = true;
+        await SubtitleSearch.OpenForAsync(vm.LocalFilePath).ConfigureAwait(false);
     }
 
     private void ApplySearch(string query)
