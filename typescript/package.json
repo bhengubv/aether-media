@@ -5,11 +5,11 @@
   "description": "TypeScript web player for Aether Media — decentralised social media over mesh",
   "scripts": {
     "build": "tsc",
-    "test": "tsx --test",
+    "test": "npx tsx --test src/models/MediaContent.test.ts src/models/MediaFeedItem.test.ts src/models/MediaProfile.test.ts src/models/MediaReaction.test.ts src/social/FeedClient.test.ts src/social/ReactionClient.test.ts src/player/AetherMediaPlayer.test.ts src/identity/ProfileClient.test.ts src/streaming/AetherStreamClient.test.ts",
     "dev": "tsx src/index.ts"
   },
   "dependencies": {
-    "@bhengubv/aether-protocol": "^1.0.0",
+    "@bhengubv/aether-protocol": "file:../../aether-protocol/typescript",
     "hls.js": "^1.5.0",
     "shaka-player": "^4.7.0"
   },
