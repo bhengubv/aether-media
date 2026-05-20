@@ -20,6 +20,10 @@ public sealed partial class LibraryViewModel : ViewModelBase
     // Full unfiltered snapshot — used as the source for search filtering
     private List<MediaContentViewModel> _allContents = [];
 
+    // Maps ContentHash → local file path for items discovered by a scan in this session.
+    // In-memory only — populated when ExecuteScanDirectoryAsync runs.
+    private readonly Dictionary<string, string> _localFilePaths = [];
+
     // ── Observable properties ──────────────────────────────────────────────
 
     [ObservableProperty]
@@ -119,7 +123,10 @@ public sealed partial class LibraryViewModel : ViewModelBase
     private async Task LoadAllAsync()
     {
         var all = await _library.GetAllAsync();
-        _allContents = all.Select(c => new MediaContentViewModel(c)).ToList();
+        _allContents = all.Select(c => new MediaContentViewModel(c)
+        {
+            LocalFilePath = _localFilePaths.GetValueOrDefault(c.ContentHash)
+        }).ToList();
         ApplySearch(_searchQuery);
     }
 
@@ -153,8 +160,12 @@ public sealed partial class LibraryViewModel : ViewModelBase
         try
         {
             var discovered = await _scanner.ScanDirectoryAsync(path, recursive: true);
-            foreach (var content in discovered)
-                await _library.AddAsync(content);
+            foreach (var item in discovered)
+            {
+                // Register the path BEFORE AddAsync so OnContentAdded can look it up.
+                _localFilePaths[item.Content.ContentHash] = item.FilePath;
+                await _library.AddAsync(item.Content);
+            }
         }
         finally
         {
@@ -211,7 +222,10 @@ public sealed partial class LibraryViewModel : ViewModelBase
     {
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
-            var vm = new MediaContentViewModel(content);
+            var vm = new MediaContentViewModel(content)
+            {
+                LocalFilePath = _localFilePaths.GetValueOrDefault(content.ContentHash)
+            };
             _allContents.Insert(0, vm);
             ApplySearch(_searchQuery);
         });

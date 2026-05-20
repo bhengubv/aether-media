@@ -51,7 +51,7 @@ public sealed class MediaLibraryScanner : IMediaLibraryScanner
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<MediaContent>> ScanDirectoryAsync(
+    public async Task<IReadOnlyList<ScannedMediaItem>> ScanDirectoryAsync(
         string path,
         bool recursive,
         CancellationToken ct = default)
@@ -65,7 +65,7 @@ public sealed class MediaLibraryScanner : IMediaLibraryScanner
             ? SearchOption.AllDirectories
             : SearchOption.TopDirectoryOnly;
 
-        var results = new List<MediaContent>();
+        var results = new List<ScannedMediaItem>();
 
         IEnumerable<string> files;
         try
@@ -84,7 +84,7 @@ public sealed class MediaLibraryScanner : IMediaLibraryScanner
 
             var content = await ScanFileAsync(filePath, ct).ConfigureAwait(false);
             if (content is not null)
-                results.Add(content);
+                results.Add(new ScannedMediaItem(content, filePath));
         }
 
         _logger.LogInformation("ScanDirectory complete: {Count} items found in '{Path}'", results.Count, path);
