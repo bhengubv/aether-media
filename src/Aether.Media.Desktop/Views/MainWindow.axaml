@@ -160,6 +160,32 @@
                                 IsVisible="{Binding IsProfileVisible}"/>
                     </Grid>
 
+                    <!-- More Apps nav item -->
+                    <Grid>
+                        <Button Command="{Binding NavigateMoreAppsCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="0,14"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                CornerRadius="0">
+                            <StackPanel Spacing="5" HorizontalAlignment="Center">
+                                <TextBlock Text="📲"
+                                           FontSize="20"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="Get Apps"
+                                           FontSize="11"
+                                           HorizontalAlignment="Center"
+                                           Foreground="#888"/>
+                            </StackPanel>
+                        </Button>
+                        <Border Width="3"
+                                Background="#2196F3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Stretch"
+                                IsVisible="{Binding IsMoreAppsSelected}"/>
+                    </Grid>
+
                 </StackPanel>
             </Border>
 

@@ -26,10 +26,13 @@
     <PackageReference Include="LibVLCSharp.Avalonia"      Version="3.9.0" />
     <PackageReference Include="VideoLAN.LibVLC.Windows"   Version="3.0.21" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <!-- QR code generation for the "Install From a Friend" share screen -->
+    <PackageReference Include="QRCoder"                                 Version="1.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Aether.Media.DependencyInjection\Aether.Media.DependencyInjection.csproj" />
+    <ProjectReference Include="..\Aether.Media.Distribution\Aether.Media.Distribution.csproj" />
     <ProjectReference Include="..\Aether.Media.Streaming\Aether.Media.Streaming.csproj" />
     <ProjectReference Include="..\Aether.Media.Social\Aether.Media.Social.csproj" />
     <ProjectReference Include="..\Aether.Media.AI\Aether.Media.AI.csproj" />

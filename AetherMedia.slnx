@@ -5,10 +5,12 @@
   <Project Path="src\Aether.Media.Social\Aether.Media.Social.csproj" />
   <Project Path="src\Aether.Media.Streaming\Aether.Media.Streaming.csproj" />
   <Project Path="src\Aether.Media.AI\Aether.Media.AI.csproj" />
+  <Project Path="src\Aether.Media.Distribution\Aether.Media.Distribution.csproj" />
   <Project Path="src\Aether.Media.Desktop\Aether.Media.Desktop.csproj" />
   <Project Path="src\Aether.Media.DependencyInjection\Aether.Media.DependencyInjection.csproj" />
   <Project Path="tests\Aether.Media.Core.Tests\Aether.Media.Core.Tests.csproj" />
   <Project Path="tests\Aether.Media.Social.Tests\Aether.Media.Social.Tests.csproj" />
+  <Project Path="tests\Aether.Media.Distribution.Tests\Aether.Media.Distribution.Tests.csproj" />
   <Project Path="samples\Aether.Media.Demo.Console\Aether.Media.Demo.Console.csproj" />
   <Project Path="samples\Aether.Media.RelayTest\Aether.Media.RelayTest.csproj" />
 </Solution>

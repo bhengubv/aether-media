@@ -3,6 +3,7 @@
 using Aether.Media.AI;
 using Aether.Media.Content;
 using Aether.Media.Core;
+using Aether.Media.Distribution;
 using Aether.Media.Identity;
 using Aether.Media.Social;
 using Aether.Media.Streaming;
@@ -92,9 +93,22 @@ public sealed class AetherMediaBuilder
     /// </summary>
     public AetherMediaBuilder AddAI()
     {
-        Services.TryAddSingleton<IContentRanker,        ContentRanker>();
+        Services.TryAddSingleton<IContentRanker,         ContentRanker>();
         Services.TryAddSingleton<ICreatorReputationView, CreatorReputationView>();
-        Services.TryAddSingleton<IContentModerator,     ContentModerator>();
+        Services.TryAddSingleton<IContentModerator,      ContentModerator>();
+        return this;
+    }
+
+    /// <summary>
+    /// Registers mesh-first app distribution:
+    /// <see cref="IMeshAppDistributor"/> — ecosystem catalogue, Cloudflare update checks,
+    /// local HTTP bootstrap server, and QR share flow.
+    /// </summary>
+    public AetherMediaBuilder AddDistribution()
+    {
+        // HttpClient for Cloudflare version checks + APK downloads
+        Services.TryAddSingleton<HttpClient>();
+        Services.TryAddSingleton<IMeshAppDistributor, MeshAppDistributor>();
         return this;
     }
 }

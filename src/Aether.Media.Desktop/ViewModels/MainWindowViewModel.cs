@@ -1,6 +1,7 @@
 using Aether.Media.AI;
 using Aether.Media.Content;
 using Aether.Media.Core;
+using Aether.Media.Distribution;
 using Aether.Media.Identity;
 using Aether.Media.Social;
 using Aether.Media.Streaming;
@@ -16,11 +17,12 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 {
     // ── Child view models ──────────────────────────────────────────────────
 
-    public HomeViewModel    Home    { get; }
-    public NearbyViewModel  Nearby  { get; }
-    public LibraryViewModel Library { get; }
-    public PlayerViewModel  Player  { get; }
-    public ProfileViewModel Profile { get; }
+    public HomeViewModel    Home     { get; }
+    public NearbyViewModel  Nearby   { get; }
+    public LibraryViewModel Library  { get; }
+    public PlayerViewModel  Player   { get; }
+    public ProfileViewModel Profile  { get; }
+    public MoreAppsViewModel MoreApps { get; }
 
     // ── Observable properties ──────────────────────────────────────────────
 
@@ -30,21 +32,24 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     [NotifyPropertyChangedFor(nameof(IsLibrarySelected))]
     [NotifyPropertyChangedFor(nameof(IsPlayerVisible))]
     [NotifyPropertyChangedFor(nameof(IsProfileVisible))]
+    [NotifyPropertyChangedFor(nameof(IsMoreAppsSelected))]
     private object _currentViewModel;
 
-    public bool IsHomeSelected    => ReferenceEquals(CurrentViewModel, Home);
-    public bool IsNearbySelected  => ReferenceEquals(CurrentViewModel, Nearby);
-    public bool IsLibrarySelected => ReferenceEquals(CurrentViewModel, Library);
-    public bool IsPlayerVisible   => ReferenceEquals(CurrentViewModel, Player);
-    public bool IsProfileVisible  => ReferenceEquals(CurrentViewModel, Profile);
+    public bool IsHomeSelected     => ReferenceEquals(CurrentViewModel, Home);
+    public bool IsNearbySelected   => ReferenceEquals(CurrentViewModel, Nearby);
+    public bool IsLibrarySelected  => ReferenceEquals(CurrentViewModel, Library);
+    public bool IsPlayerVisible    => ReferenceEquals(CurrentViewModel, Player);
+    public bool IsProfileVisible   => ReferenceEquals(CurrentViewModel, Profile);
+    public bool IsMoreAppsSelected => ReferenceEquals(CurrentViewModel, MoreApps);
 
     // ── Navigation commands ────────────────────────────────────────────────
 
-    public IRelayCommand NavigateHomeCommand    { get; }
-    public IRelayCommand NavigateNearbyCommand  { get; }
-    public IRelayCommand NavigateLibraryCommand { get; }
-    public IRelayCommand NavigatePlayerCommand  { get; }
-    public IRelayCommand NavigateProfileCommand { get; }
+    public IRelayCommand NavigateHomeCommand     { get; }
+    public IRelayCommand NavigateNearbyCommand   { get; }
+    public IRelayCommand NavigateLibraryCommand  { get; }
+    public IRelayCommand NavigatePlayerCommand   { get; }
+    public IRelayCommand NavigateProfileCommand  { get; }
+    public IRelayCommand NavigateMoreAppsCommand { get; }
 
     // ── Constructor ────────────────────────────────────────────────────────
 
@@ -60,25 +65,28 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         IWatchPartyCoordinator watchParty,
         IProfileService profileService,
         ICreatorChannel channel,
-        ISocialGraph socialGraph)
+        ISocialGraph socialGraph,
+        IMeshAppDistributor distributor)
     {
-        Home    = new HomeViewModel(feed, ranker);
-        Nearby  = new NearbyViewModel(discovery, aggregator);
-        Library = new LibraryViewModel(library, scanner);
-        Player  = new PlayerViewModel(player, reactions, watchParty);
-        Profile = new ProfileViewModel(profileService, channel, socialGraph);
+        Home     = new HomeViewModel(feed, ranker);
+        Nearby   = new NearbyViewModel(discovery, aggregator);
+        Library  = new LibraryViewModel(library, scanner);
+        Player   = new PlayerViewModel(player, reactions, watchParty);
+        Profile  = new ProfileViewModel(profileService, channel, socialGraph);
+        MoreApps = new MoreAppsViewModel(distributor);
 
         // Wire cross-VM navigation
-        Home.NavigationRequested    += OnNavigationRequested;
-        Nearby.NavigationRequested  += OnNavigationRequested;
-        Library.PlayRequested       += (_, vm) => NavigateTo(Player);
-        Profile.PlayRequested       += (_, vm) => NavigateTo(Player);
+        Home.NavigationRequested   += OnNavigationRequested;
+        Nearby.NavigationRequested += OnNavigationRequested;
+        Library.PlayRequested      += (_, vm) => NavigateTo(Player);
+        Profile.PlayRequested      += (_, vm) => NavigateTo(Player);
 
-        NavigateHomeCommand    = new RelayCommand(() => NavigateTo(Home));
-        NavigateNearbyCommand  = new RelayCommand(() => NavigateTo(Nearby));
-        NavigateLibraryCommand = new RelayCommand(() => NavigateTo(Library));
-        NavigatePlayerCommand  = new RelayCommand(() => NavigateTo(Player));
-        NavigateProfileCommand = new RelayCommand(() => NavigateTo(Profile));
+        NavigateHomeCommand     = new RelayCommand(() => NavigateTo(Home));
+        NavigateNearbyCommand   = new RelayCommand(() => NavigateTo(Nearby));
+        NavigateLibraryCommand  = new RelayCommand(() => NavigateTo(Library));
+        NavigatePlayerCommand   = new RelayCommand(() => NavigateTo(Player));
+        NavigateProfileCommand  = new RelayCommand(() => NavigateTo(Profile));
+        NavigateMoreAppsCommand = new RelayCommand(() => NavigateTo(MoreApps));
 
         // Start on the Home screen
         _currentViewModel = Home;
@@ -88,16 +96,18 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         // Design-time stubs — not used at runtime
-        Home    = null!;
-        Nearby  = null!;
-        Library = null!;
-        Player  = null!;
-        Profile = null!;
-        NavigateHomeCommand    = new RelayCommand(() => { });
-        NavigateNearbyCommand  = new RelayCommand(() => { });
-        NavigateLibraryCommand = new RelayCommand(() => { });
-        NavigatePlayerCommand  = new RelayCommand(() => { });
-        NavigateProfileCommand = new RelayCommand(() => { });
+        Home     = null!;
+        Nearby   = null!;
+        Library  = null!;
+        Player   = null!;
+        Profile  = null!;
+        MoreApps = null!;
+        NavigateHomeCommand     = new RelayCommand(() => { });
+        NavigateNearbyCommand   = new RelayCommand(() => { });
+        NavigateLibraryCommand  = new RelayCommand(() => { });
+        NavigatePlayerCommand   = new RelayCommand(() => { });
+        NavigateProfileCommand  = new RelayCommand(() => { });
+        NavigateMoreAppsCommand = new RelayCommand(() => { });
         _currentViewModel = new object();
     }
 
