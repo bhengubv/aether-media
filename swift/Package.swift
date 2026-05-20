@@ -14,15 +14,12 @@ let package = Package(
         ),
     ],
     dependencies: [
-        // Aether Protocol mesh transport layer
-        // .package(url: "https://github.com/bhengubv/aether-protocol", from: "1.0.0"),
+        // aether-protocol: integrated at runtime via Aether mesh — not a compile-time dependency
     ],
     targets: [
         .target(
             name: "AetherMedia",
-            dependencies: [
-                // .product(name: "AetherProtocol", package: "aether-protocol"),
-            ],
+            dependencies: [],
             path: "Sources/AetherMedia"
         ),
         .testTarget(
