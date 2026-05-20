@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Description>
+      Round-trip relay test for Aether Media: creates two HttpRelayTransportService
+      nodes, sends a MediaContent descriptor from node A to node B, and prints latency.
+      Start samples/Aether.RelayServer from aether-protocol on port 5200 first.
+    </Description>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/Aether.Core/Aether.Core.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/Aether.Core/Aether.Core.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/Aether.Transport/Aether.Transport.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/Aether.Core/Aether.Core.csproj')">
+    <PackageReference Include="Aether.Core"      Version="1.0.0" />
+    <PackageReference Include="Aether.Transport" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,218 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
+
+permissions:
+  contents: write   # needed for the go-module tag job
+
+jobs:
+  # ── NuGet ─────────────────────────────────────────────────────────────────────
+  publish-nuget:
+    name: Publish NuGet
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Extract version from tag
+        id: version
+        shell: pwsh
+        run: |
+          $tag = '${{ github.ref_name }}'            # e.g. v1.2.3 or v1.2.3-beta.1
+          $version = $tag.TrimStart('v')             # 1.2.3  or 1.2.3-beta.1
+          # Split prefix (1.2.3) from optional suffix (-beta.1)
+          if ($version -match '^([^-]+)(-.*)?$') {
+            $prefix = $Matches[1]                    # 1.2.3
+            $suffix = if ($Matches[2]) { $Matches[2].TrimStart('-') } else { '' }
+          }
+          echo "VERSION=$version"   >> $env:GITHUB_OUTPUT
+          echo "PREFIX=$prefix"     >> $env:GITHUB_OUTPUT
+          echo "SUFFIX=$suffix"     >> $env:GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore AetherMedia.slnx
+
+      - name: Pack (release)
+        run: >
+          dotnet pack AetherMedia.slnx
+          --no-restore
+          --configuration Release
+          -p:VersionPrefix=${{ steps.version.outputs.PREFIX }}
+          ${{ steps.version.outputs.SUFFIX != '' && format('-p:VersionSuffix={0}', steps.version.outputs.SUFFIX) || '' }}
+          --output nupkgs
+
+      - name: Push to NuGet.org
+        run: >
+          dotnet nuget push nupkgs/*.nupkg
+          --api-key ${{ secrets.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+      - name: Push symbols to NuGet.org
+        run: >
+          dotnet nuget push nupkgs/*.snupkg
+          --api-key ${{ secrets.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+  # ── npm ───────────────────────────────────────────────────────────────────────
+  publish-npm:
+    name: Publish npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+          cache-dependency-path: typescript/package-lock.json
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Set package version
+        working-directory: typescript
+        run: npm version --no-git-tag-version "${{ steps.version.outputs.VERSION }}"
+
+      - name: Install
+        working-directory: typescript
+        run: npm ci
+
+      - name: Build
+        working-directory: typescript
+        run: npm run build
+
+      - name: Publish
+        working-directory: typescript
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # ── PyPI ──────────────────────────────────────────────────────────────────────
+  publish-pypi:
+    name: Publish PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/aether-media/
+    permissions:
+      id-token: write   # required for trusted publishing (OIDC)
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Patch version in pyproject.toml
+        working-directory: python
+        run: |
+          sed -i "s/^version = .*/version = \"${{ steps.version.outputs.VERSION }}\"/" pyproject.toml
+
+      - name: Install build tools
+        run: pip install build
+
+      - name: Build sdist and wheel
+        working-directory: python
+        run: python -m build
+
+      - name: Publish via trusted publishing
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist/
+
+  # ── crates.io ─────────────────────────────────────────────────────────────────
+  publish-cargo:
+    name: Publish crates.io
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Patch version in Cargo.toml
+        working-directory: rust
+        run: |
+          sed -i "s/^version = .*/version = \"${{ steps.version.outputs.VERSION }}\"/" Cargo.toml
+
+      - name: Publish
+        working-directory: rust
+        run: cargo publish --no-verify
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+  # ── Kotlin / Maven (GitHub Packages) ─────────────────────────────────────────
+  publish-kotlin:
+    name: Publish Kotlin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: temurin
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('kotlin/**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish to GitHub Packages
+        working-directory: kotlin
+        run: ./gradlew publish -Pversion=${{ steps.version.outputs.VERSION }} --no-daemon
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── Go module tag ─────────────────────────────────────────────────────────────
+  tag-go-module:
+    name: Tag Go module
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Create go/vX.Y.Z tag
+        run: |
+          GO_TAG="go/v${{ steps.version.outputs.VERSION }}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$GO_TAG" "${{ github.sha }}"
+          git push origin "$GO_TAG"

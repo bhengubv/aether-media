@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>Aether.Media.DependencyInjection</PackageId>
+    <Description>DI wiring for all Aether Media services — one call activates the full stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aether.Media.Core\Aether.Media.Core.csproj" />
+    <ProjectReference Include="..\Aether.Media.Identity\Aether.Media.Identity.csproj" />
+    <ProjectReference Include="..\Aether.Media.Content\Aether.Media.Content.csproj" />
+    <ProjectReference Include="..\Aether.Media.Social\Aether.Media.Social.csproj" />
+    <ProjectReference Include="..\Aether.Media.Streaming\Aether.Media.Streaming.csproj" />
+    <ProjectReference Include="..\Aether.Media.AI\Aether.Media.AI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
+  </ItemGroup>
+
+</Project>

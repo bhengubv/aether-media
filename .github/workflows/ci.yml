@@ -1,0 +1,213 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── C# / .NET 10 ─────────────────────────────────────────────────────────────
+  build-csharp:
+    name: C# (.NET 10)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore AetherMedia.slnx
+
+      - name: Build
+        run: dotnet build AetherMedia.slnx --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test AetherMedia.slnx --no-build --configuration Release --logger "console;verbosity=normal"
+
+  # ── TypeScript / Node 20 ─────────────────────────────────────────────────────
+  build-typescript:
+    name: TypeScript (Node 20)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: typescript/package-lock.json
+
+      - name: Install
+        working-directory: typescript
+        run: npm ci
+
+      - name: Build
+        working-directory: typescript
+        run: npm run build
+
+      - name: Test
+        working-directory: typescript
+        run: npm test
+
+  # ── Python 3.12 ──────────────────────────────────────────────────────────────
+  build-python:
+    name: Python 3.12
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install
+        working-directory: python
+        run: pip install -e ".[dev]"
+
+      - name: Test
+        working-directory: python
+        run: pytest
+
+  # ── Rust (stable) ────────────────────────────────────────────────────────────
+  build-rust:
+    name: Rust (stable)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('rust/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Build
+        working-directory: rust
+        run: cargo build
+
+      - name: Test
+        working-directory: rust
+        run: cargo test
+
+  # ── Go 1.22 ──────────────────────────────────────────────────────────────────
+  build-go:
+    name: Go 1.22
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go 1.22
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache-dependency-path: go/go.sum
+
+      - name: Build
+        working-directory: go
+        run: go build ./...
+
+      - name: Test
+        working-directory: go
+        run: go test ./...
+
+  # ── Kotlin / JVM 21 ──────────────────────────────────────────────────────────
+  build-kotlin:
+    name: Kotlin (JVM 21)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: temurin
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('kotlin/**/*.gradle*', 'kotlin/**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Build and test
+        working-directory: kotlin
+        run: ./gradlew build test --no-daemon
+
+  # ── Swift (macOS) ────────────────────────────────────────────────────────────
+  build-swift:
+    name: Swift
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        working-directory: swift
+        run: swift build
+
+      - name: Test
+        working-directory: swift
+        run: swift test
+
+  # ── C (GCC + CMake + libvlc-dev) ─────────────────────────────────────────────
+  build-c:
+    name: C (GCC + CMake)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libvlc-dev cmake
+
+      - name: Configure
+        working-directory: c
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        working-directory: c
+        run: cmake --build build
+
+      - name: Test
+        working-directory: c
+        run: ctest --test-dir build --output-on-failure
+
+  # ── Android (Gradle assembleDebug) ───────────────────────────────────────────
+  build-android:
+    name: Android (assembleDebug)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: temurin
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-android-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-android-
+
+      - name: Assemble debug APK
+        working-directory: android/media
+        run: ./gradlew assembleDebug --no-daemon

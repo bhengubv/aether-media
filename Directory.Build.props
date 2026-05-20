@@ -1,0 +1,30 @@
+<Project>
+
+  <PropertyGroup>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <Authors>The Other Bhengu (Pty) Ltd t/a The Geek Network</Authors>
+    <Company>The Geek Network</Company>
+    <Copyright>Copyright © 2025 The Other Bhengu (Pty) Ltd t/a The Geek Network</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/bhengubv/aether-media</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bhengubv/aether-media</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>latest</LangVersion>
+    <Deterministic>true</Deterministic>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <!-- Samples are not packed -->
+  <PropertyGroup Condition="$(MSBuildProjectName.StartsWith('Aether.Media.Demo')) Or $(MSBuildProjectName.StartsWith('Aether.Media.Relay'))">
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!-- Test projects are not packed -->
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Tests'))">
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+</Project>

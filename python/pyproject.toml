@@ -1,0 +1,23 @@
+[project]
+name = "aether-media"
+version = "1.0.0"
+description = "Plugin engine and scripting layer for Aether Media"
+requires-python = ">=3.11"
+dependencies = [
+    "aether-protocol>=1.0.0",
+    "mutagen>=1.47.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.23",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

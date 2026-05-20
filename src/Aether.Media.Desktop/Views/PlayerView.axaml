@@ -1,0 +1,206 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Aether.Media.Desktop.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Aether.Media.Desktop.Views.PlayerView"
+             x:DataType="vm:PlayerViewModel"
+             Background="Transparent">
+
+    <Grid RowDefinitions="*,Auto,Auto">
+
+        <!-- Video canvas area -->
+        <Border Grid.Row="0"
+                Background="#0a0a14"
+                CornerRadius="10"
+                Margin="16,16,16,8"
+                ClipToBounds="True">
+            <Grid>
+                <!-- Placeholder when nothing loaded -->
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Spacing="8"
+                            IsVisible="{Binding !IsPlaying}">
+                    <TextBlock Text="▶"
+                               Foreground="#333"
+                               FontSize="64"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentTitle}"
+                               Foreground="#555"
+                               FontSize="14"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               IsVisible="{Binding CurrentTitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                </StackPanel>
+
+                <!-- Live reactions overlay -->
+                <ItemsControl ItemsSource="{Binding LiveReactions}"
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Right"
+                              Margin="0,0,12,12"
+                              MaxHeight="200">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:MediaReactionViewModel">
+                            <Border Background="#80000020"
+                                    CornerRadius="14"
+                                    Padding="10,5"
+                                    Margin="0,2">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="{Binding TypeEmoji}" FontSize="14"/>
+                                    <TextBlock Text="{Binding FromUhid}"
+                                               Foreground="#ccc"
+                                               FontSize="12"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Message}"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               VerticalAlignment="Center"
+                                               IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Watch party badge -->
+                <Border IsVisible="{Binding IsInWatchParty}"
+                        Background="#2196F3"
+                        CornerRadius="8"
+                        Padding="10,4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0,10,12,0">
+                    <TextBlock Foreground="White" FontSize="12">
+                        <Run Text="👥 "/>
+                        <Run Text="{Binding WatchPartyParticipants}"/>
+                        <Run Text=" watching"/>
+                    </TextBlock>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Seek / progress bar -->
+        <Grid Grid.Row="1" Margin="16,0,16,4">
+            <Grid ColumnDefinitions="*,Auto">
+                <Slider Grid.Column="0"
+                        Minimum="0"
+                        Maximum="{Binding DurationMs}"
+                        Value="{Binding PositionMs, Mode=OneWay}"
+                        Foreground="#2196F3"
+                        VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           Foreground="#aaa"
+                           FontSize="12">
+                    <Run Text="{Binding PositionFormatted}"/>
+                    <Run Text=" / "/>
+                    <Run Text="{Binding DurationFormatted}"/>
+                </TextBlock>
+            </Grid>
+        </Grid>
+
+        <!-- Controls bar -->
+        <Border Grid.Row="2"
+                Background="#12121f"
+                CornerRadius="10"
+                Margin="16,0,16,12"
+                Padding="16,10">
+            <Grid ColumnDefinitions="*,Auto,*">
+
+                <!-- Left: title + speed -->
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="{Binding CurrentTitle}"
+                               Foreground="White"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               TextTrimming="CharacterEllipsis"
+                               MaxWidth="220"
+                               IsVisible="{Binding CurrentTitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                    <TextBlock Foreground="#888" FontSize="11">
+                        <Run Text="Speed: "/>
+                        <Run Text="{Binding PlaybackSpeed, StringFormat='{}{0:F1}×'}"/>
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- Centre: playback buttons -->
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            Spacing="12"
+                            VerticalAlignment="Center">
+                    <Button Command="{Binding StopCommand}"
+                            Content="⏹"
+                            Background="#252540"
+                            Foreground="White"
+                            Width="40"
+                            Height="40"
+                            CornerRadius="20"
+                            Padding="0"
+                            FontSize="16"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"/>
+                    <Button Command="{Binding PlayPauseCommand}"
+                            Width="52"
+                            Height="52"
+                            CornerRadius="26"
+                            Background="#2196F3"
+                            Foreground="White"
+                            Padding="0"
+                            FontSize="20"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center">
+                        <Button.Content>
+                            <Panel>
+                                <TextBlock Text="▶" IsVisible="{Binding !IsPlaying}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="⏸" IsVisible="{Binding IsPlaying}" HorizontalAlignment="Center"/>
+                            </Panel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <!-- Right: volume + reactions -->
+                <StackPanel Grid.Column="2"
+                            Orientation="Horizontal"
+                            Spacing="8"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right">
+                    <TextBlock Text="🔊" Foreground="#888" VerticalAlignment="Center"/>
+                    <Slider Minimum="0"
+                            Maximum="1"
+                            Value="{Binding Volume}"
+                            Width="80"
+                            Foreground="#2196F3"
+                            VerticalAlignment="Center"/>
+                    <Button Command="{Binding SendReactionCommand}"
+                            CommandParameter="❤️"
+                            Content="❤️"
+                            Background="#252540"
+                            Foreground="White"
+                            Width="36"
+                            Height="36"
+                            CornerRadius="18"
+                            Padding="0"
+                            FontSize="14"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"/>
+                    <Button Command="{Binding SendReactionCommand}"
+                            CommandParameter="⭐"
+                            Content="⭐"
+                            Background="#252540"
+                            Foreground="White"
+                            Width="36"
+                            Height="36"
+                            CornerRadius="18"
+                            Padding="0"
+                            FontSize="14"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</UserControl>

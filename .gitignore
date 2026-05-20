@@ -1,0 +1,68 @@
+# ── Build outputs ─────────────────────────────────────────────────────────────
+bin/
+obj/
+out/
+dist/
+dist-electron/
+release/
+target/
+
+# ── .NET ──────────────────────────────────────────────────────────────────────
+*.user
+*.suo
+*.vs/
+.vs/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ── Node / TypeScript ─────────────────────────────────────────────────────────
+node_modules/
+*.tsbuildinfo
+coverage/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.venv/
+venv/
+dist-python/
+
+# ── Rust ──────────────────────────────────────────────────────────────────────
+# (target/ already covered above)
+
+# ── Go ────────────────────────────────────────────────────────────────────────
+vendor/
+
+# ── Android / Kotlin ──────────────────────────────────────────────────────────
+*.apk
+*.aab
+*.ap_
+local.properties
+.gradle/
+*.keystore
+!debug.keystore
+
+# ── Swift / Xcode ─────────────────────────────────────────────────────────────
+*.xcworkspace/xcuserdata/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ── Logs & temps ──────────────────────────────────────────────────────────────
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# ── Secrets ───────────────────────────────────────────────────────────────────
+.env
+.env.local
+*.pfx
+*.p12
+secrets.json

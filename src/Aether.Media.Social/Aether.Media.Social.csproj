@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>Aether.Media.Social</PackageId>
+    <Description>Decentralised social graph, feed, reactions, and peer discovery for Aether Media.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aether.Media.Core\Aether.Media.Core.csproj" />
+    <ProjectReference Include="..\Aether.Media.Identity\Aether.Media.Identity.csproj" />
+    <ProjectReference Include="..\Aether.Media.Content\Aether.Media.Content.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/Aether.Core/Aether.Core.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/Aether.Core/Aether.Core.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/Aether.Content/Aether.Content.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/Aether.Streaming/Aether.Streaming.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/Aether.Core/Aether.Core.csproj')">
+    <PackageReference Include="Aether.Core"      Version="1.0.0" />
+    <PackageReference Include="Aether.Content"   Version="1.0.0" />
+    <PackageReference Include="Aether.Streaming" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
