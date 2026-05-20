@@ -26,8 +26,10 @@ final class SocialGraphTests: XCTestCase {
         await g.follow("bob")
         let c = await g.count
         XCTAssertEqual(c, 2)
-        XCTAssertTrue(await g.isFollowing("alice"))
-        XCTAssertTrue(await g.isFollowing("bob"))
+        let hasAlice = await g.isFollowing("alice")
+        let hasBob   = await g.isFollowing("bob")
+        XCTAssertTrue(hasAlice)
+        XCTAssertTrue(hasBob)
     }
 
     func testDoubleFollowIsIdempotent() async {
@@ -58,15 +60,18 @@ final class SocialGraphTests: XCTestCase {
         let g = SocialGraph()
         await g.follow("alice")
         await g.unfollow("alice")
-        XCTAssertFalse(await g.isFollowing("alice"))
-        XCTAssertEqual(await g.count, 0)
+        let stillFollowing = await g.isFollowing("alice")
+        XCTAssertFalse(stillFollowing)
+        let c = await g.count
+        XCTAssertEqual(c, 0)
     }
 
     func testUnfollowNonFollowingIsNoop() async {
         let g = SocialGraph()
         // Must not crash
         await g.unfollow("ghost")
-        XCTAssertEqual(await g.count, 0)
+        let c = await g.count
+        XCTAssertEqual(c, 0)
     }
 
     func testUnfollowOnlyTargetedUhid() async {
@@ -74,29 +79,35 @@ final class SocialGraphTests: XCTestCase {
         await g.follow("alice")
         await g.follow("bob")
         await g.unfollow("alice")
-        XCTAssertFalse(await g.isFollowing("alice"))
-        XCTAssertTrue(await g.isFollowing("bob"))
-        XCTAssertEqual(await g.count, 1)
+        let hasAlice = await g.isFollowing("alice")
+        let hasBob   = await g.isFollowing("bob")
+        XCTAssertFalse(hasAlice)
+        XCTAssertTrue(hasBob)
+        let c = await g.count
+        XCTAssertEqual(c, 1)
     }
 
     // MARK: - isFollowing
 
     func testIsFollowingReturnsFalseForUnknown() async {
         let g = SocialGraph()
-        XCTAssertFalse(await g.isFollowing("nobody"))
+        let r = await g.isFollowing("nobody")
+        XCTAssertFalse(r)
     }
 
     func testIsFollowingReturnsTrueAfterFollow() async {
         let g = SocialGraph()
         await g.follow("charlie")
-        XCTAssertTrue(await g.isFollowing("charlie"))
+        let r = await g.isFollowing("charlie")
+        XCTAssertTrue(r)
     }
 
     func testIsFollowingReturnsFalseAfterUnfollow() async {
         let g = SocialGraph()
         await g.follow("dave")
         await g.unfollow("dave")
-        XCTAssertFalse(await g.isFollowing("dave"))
+        let r = await g.isFollowing("dave")
+        XCTAssertFalse(r)
     }
 
     // MARK: - followingList
@@ -145,8 +156,10 @@ final class SocialGraphTests: XCTestCase {
         await g.follow("alice")
         await g.unfollow("alice")
         await g.follow("alice")
-        XCTAssertTrue(await g.isFollowing("alice"))
-        XCTAssertEqual(await g.count, 1)
+        let r = await g.isFollowing("alice")
+        XCTAssertTrue(r)
+        let c = await g.count
+        XCTAssertEqual(c, 1)
     }
 
     // MARK: - thread safety

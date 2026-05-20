@@ -126,10 +126,12 @@ final class FeedAggregatorTests: XCTestCase {
         for i in 0..<500 {
             await agg.addItem(makeFeedItem(hash: "h\(i)"))
         }
-        XCTAssertEqual(await agg.count, 500)
+        let beforeCount = await agg.count
+        XCTAssertEqual(beforeCount, 500)
         // Add one more — the very first item added ("h0") should be evicted
         await agg.addItem(makeFeedItem(hash: "new"))
-        XCTAssertEqual(await agg.count, 500)
+        let afterCount = await agg.count
+        XCTAssertEqual(afterCount, 500)
         // Newest item is at index 0
         let first = await agg.getFeed(limit: 1, offset: 0)
         XCTAssertEqual(first[0].content.contentHash, "new")
@@ -143,7 +145,8 @@ final class FeedAggregatorTests: XCTestCase {
         for i in 0..<505 {
             await agg.addItem(makeFeedItem(hash: "h\(i)"))
         }
-        XCTAssertEqual(await agg.count, 500)
+        let c = await agg.count
+        XCTAssertEqual(c, 500)
     }
 
     // MARK: - markWatched
@@ -206,7 +209,8 @@ final class FeedAggregatorTests: XCTestCase {
         let agg = FeedAggregator()
         // Must not crash
         await agg.markWatched(contentHash: "anything", ms: 1000)
-        XCTAssertEqual(await agg.count, 0)
+        let c = await agg.count
+        XCTAssertEqual(c, 0)
     }
 
     // MARK: - thread safety
