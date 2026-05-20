@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, master, develop]
   pull_request:
-    branches: [main]
+    branches: [main, master]
 
 jobs:
   # ── C# / .NET 10 ─────────────────────────────────────────────────────────────
@@ -113,7 +113,8 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22'
-          cache-dependency-path: go/go.sum
+          # go.sum may not exist when the module has no external dependencies
+          cache: false
 
       - name: Build
         working-directory: go
@@ -144,6 +145,10 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('kotlin/**/*.gradle*', 'kotlin/**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable
+        working-directory: kotlin
+        run: chmod +x gradlew
 
       - name: Build and test
         working-directory: kotlin
