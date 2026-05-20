@@ -2,7 +2,7 @@
 import { describe, it, before, after } from "node:test";
 import { strict as assert } from "node:assert";
 import { ReactionClient } from "./ReactionClient.js";
-import type { MediaReaction } from "../models/MediaReaction.js";
+import { type MediaReaction, MediaReactionType } from "../models/MediaReaction.js";
 
 // ── Mock helpers ───────────────────────────────────────────────────────────────
 
@@ -25,10 +25,10 @@ function makeReaction(overrides?: Partial<MediaReaction>): MediaReaction {
     reactionId:  "rxn-001",
     contentHash: "content-abc",
     fromUhid:    "viewer-001",
-    type:        0,           // Like
+    type:        MediaReactionType.Like,
     positionMs:  1_500,
     message:     null,
-    sentAt:      new Date("2025-01-01T00:00:00Z"),
+    sentAtMs:    new Date("2025-01-01T00:00:00Z").getTime(),
     ...overrides,
   };
 }
@@ -103,19 +103,22 @@ describe("ReactionClient", () => {
       );
     });
 
-    it("serialises sentAt as ISO string in the body", async () => {
+    it("serialises using snake_case wire format with unix-ms timestamp", async () => {
       let capturedBody = "";
       globalThis.fetch = async (_u: RequestInfo | URL, init?: RequestInit) => {
         capturedBody = init?.body as string;
         return new Response("{}", { status: 200 });
       };
 
-      const sentAt  = new Date("2025-06-01T12:00:00.000Z");
-      const client  = new ReactionClient("http://test");
-      await client.sendReaction(makeReaction({ sentAt }));
+      const sentAtMs = new Date("2025-06-01T12:00:00.000Z").getTime();
+      const client   = new ReactionClient("http://test");
+      await client.sendReaction(makeReaction({ sentAtMs }));
 
-      const parsed  = JSON.parse(capturedBody);
-      assert.equal(parsed.sentAt, sentAt.toISOString());
+      const parsed = JSON.parse(capturedBody);
+      assert.equal(parsed.sent_at_ms, sentAtMs);
+      assert.equal(typeof parsed.sent_at_ms, "number");
+      assert.equal(parsed.type, "like");             // wire enum as lowercase string
+      assert.equal(parsed.reaction_id, "rxn-001");   // snake_case field
     });
   });
 
@@ -141,21 +144,21 @@ describe("ReactionClient", () => {
       assert.deepEqual(reactions, []);
     });
 
-    it("deserialises reactions with Date objects", async () => {
-      const sentAt = "2025-03-15T08:30:00.000Z";
+    it("deserialises snake_case wire reactions into MediaReaction objects", async () => {
+      const sentAtMs = new Date("2025-03-15T08:30:00.000Z").getTime();
       mockFetch([
         {
-          reactionId:  "r-001",
-          contentHash: "content-xyz",
-          fromUhid:    "viewer-abc",
-          type:        0,
-          positionMs:  5_000,
-          message:     "Nice!",
-          sentAt,
+          reaction_id:  "r-001",
+          content_hash: "content-xyz",
+          from_uhid:    "viewer-abc",
+          type:         "comment",
+          position_ms:  5_000,
+          message:      "Nice!",
+          sent_at_ms:   sentAtMs,
         },
       ]);
 
-      const client   = new ReactionClient("http://test");
+      const client    = new ReactionClient("http://test");
       const reactions = await client.getReactions("content-xyz");
 
       assert.equal(reactions.length, 1);
@@ -165,8 +168,9 @@ describe("ReactionClient", () => {
       assert.equal(r.fromUhid,    "viewer-abc");
       assert.equal(r.positionMs,  5_000);
       assert.equal(r.message,     "Nice!");
-      assert.ok(r.sentAt instanceof Date);
-      assert.equal(r.sentAt.toISOString(), sentAt);
+      assert.equal(r.sentAtMs,    sentAtMs);
+      assert.equal(typeof r.sentAtMs, "number");
+      assert.equal(r.type, MediaReactionType.Comment);
     });
 
     it("throws on HTTP error", async () => {

@@ -1,4 +1,5 @@
-import type { MediaProfile } from "../models/MediaProfile.js";
+import type { MediaProfile, MediaProfileWire } from "../models/MediaProfile.js";
+import { fromWire } from "../models/MediaProfile.js";
 
 const LOCAL_PROFILE_KEY = "aether_local_profile";
 
@@ -32,8 +33,7 @@ export class ProfileClient {
       throw new Error(`getProfile failed: ${response.status} ${response.statusText}`);
     }
 
-    const raw = await response.json();
-    const profile = this._revive(raw);
+    const profile = fromWire(await response.json() as MediaProfileWire);
     this.cache.set(uhid, profile);
     return profile;
   }
@@ -49,7 +49,7 @@ export class ProfileClient {
       const raw = localStorage.getItem(LOCAL_PROFILE_KEY);
       if (!raw) return null;
 
-      const local: MediaProfile = this._revive(JSON.parse(raw));
+      const local: MediaProfile = JSON.parse(raw) as MediaProfile;
 
       // Refresh from network (non-blocking — return stale if network fails)
       this.getProfile(local.uhid).then((fresh) => {
@@ -87,7 +87,7 @@ export class ProfileClient {
       throw new Error(`updateProfile failed: ${response.status} ${response.statusText}`);
     }
 
-    const updated = this._revive(await response.json());
+    const updated = fromWire(await response.json() as MediaProfileWire);
     this.cache.set(updated.uhid, updated);
 
     try {
@@ -99,10 +99,4 @@ export class ProfileClient {
     return updated;
   }
 
-  private _revive(raw: Record<string, unknown>): MediaProfile {
-    return {
-      ...(raw as unknown as MediaProfile),
-      joinedAt: new Date(raw["joinedAt"] as string),
-    };
-  }
 }

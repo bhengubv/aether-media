@@ -1,4 +1,4 @@
-import { type MediaReaction } from "../models/MediaReaction.js";
+import { type MediaReaction, type MediaReactionWire, toWire, fromWire } from "../models/MediaReaction.js";
 
 /**
  * Sends reactions via the Aether protocol transport and retrieves
@@ -23,20 +23,10 @@ export class ReactionClient {
     if (!reaction.contentHash.trim()) throw new Error("contentHash must not be empty");
     if (!reaction.fromUhid.trim())    throw new Error("fromUhid must not be empty");
 
-    const payload = {
-      reactionId:  reaction.reactionId,
-      contentHash: reaction.contentHash,
-      fromUhid:    reaction.fromUhid,
-      type:        reaction.type,
-      positionMs:  reaction.positionMs,
-      message:     reaction.message,
-      sentAt:      reaction.sentAt.toISOString(),
-    };
-
     const response = await fetch(`${this.baseUrl}/reactions`, {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify(payload),
+      body:    JSON.stringify(toWire(reaction)),
     });
 
     if (!response.ok) {
@@ -59,24 +49,7 @@ export class ReactionClient {
       throw new Error(`getReactions failed: ${response.status} ${response.statusText}`);
     }
 
-    const raw: Array<{
-      reactionId: string;
-      contentHash: string;
-      fromUhid: string;
-      type: number;
-      positionMs: number;
-      message: string | null;
-      sentAt: string;
-    }> = await response.json();
-
-    return raw.map((r) => ({
-      reactionId:  r.reactionId,
-      contentHash: r.contentHash,
-      fromUhid:    r.fromUhid,
-      type:        r.type,
-      positionMs:  r.positionMs,
-      message:     r.message,
-      sentAt:      new Date(r.sentAt),
-    }));
+    const raw: MediaReactionWire[] = await response.json();
+    return raw.map(fromWire);
   }
 }

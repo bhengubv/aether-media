@@ -120,16 +120,16 @@ describe("FeedClient", () => {
 
   describe("getFeed", () => {
     it("returns parsed items from the network", async () => {
-      const now = new Date().toISOString();
+      const nowMs = Date.now();
       mockFetch([
         {
           content: {
-            contentHash: "h1", title: "Vid 1", durationMs: 60_000,
-            codec: "h264", contentType: "video/mp4", creatorUhid: "creator-A",
-            sizeBytes: 1024, createdAt: now, thumbnailHash: null, tags: ["demo"],
+            content_hash: "h1", title: "Vid 1", duration_ms: 60_000,
+            codec: "h264", content_type: "video/mp4", creator_uhid: "creator-A",
+            size_bytes: 1024, created_at_ms: nowMs, thumbnail_hash: null, tags: ["demo"],
           },
-          likeCount: 0, shareCount: 0, commentCount: 0, watchCount: 0,
-          isLive: false, streamId: null, topReactions: [], publishedAt: now,
+          like_count: 0, share_count: 0, comment_count: 0, watch_count: 0,
+          is_live: false, stream_id: null, top_reactions: [], published_at_ms: nowMs,
         },
       ]);
 
@@ -139,7 +139,7 @@ describe("FeedClient", () => {
       assert.equal(items.length, 1);
       assert.equal(items[0].content.contentHash, "h1");
       assert.equal(items[0].content.title, "Vid 1");
-      assert.ok(items[0].content.createdAt instanceof Date);
+      assert.equal(typeof items[0].content.createdAtMs, "number");
     });
 
     it("throws on HTTP error", async () => {

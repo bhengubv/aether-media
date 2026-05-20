@@ -48,11 +48,25 @@ function mockFetch(data: unknown, status = 200): void {
     });
 }
 
-// Raw profile object matching what the server would return.
-// ProfileClient._revive() spreads this directly onto the MediaProfile,
-// so we include both the new-style joinedAtMs field AND a joinedAt string
-// (since _revive() still reads raw["joinedAt"] to construct a Date extra property).
-function makeRawProfile(overrides?: Record<string, unknown>): Record<string, unknown> {
+/** Snake_case wire format — what the server sends; passed through fromWire(). */
+function makeWireProfile(overrides?: Record<string, unknown>): Record<string, unknown> {
+  return {
+    uhid:            "uhid-001",
+    display_name:    "Test Creator",
+    avatar_hash:     null,
+    bio:             "Hello from Aether.",
+    aether_tag:      "@testcreator",
+    follower_count:  42,
+    following_count: 7,
+    content_count:   3,
+    is_verified:     false,
+    joined_at_ms:    new Date("2024-06-01T00:00:00.000Z").getTime(),
+    ...overrides,
+  };
+}
+
+/** CamelCase model format — what gets stored in localStorage after fromWire(). */
+function makeLocalProfile(overrides?: Record<string, unknown>): Record<string, unknown> {
   return {
     uhid:           "uhid-001",
     displayName:    "Test Creator",
@@ -64,7 +78,6 @@ function makeRawProfile(overrides?: Record<string, unknown>): Record<string, unk
     contentCount:   3,
     isVerified:     false,
     joinedAtMs:     new Date("2024-06-01T00:00:00.000Z").getTime(),
-    joinedAt:       "2024-06-01T00:00:00.000Z",  // still read by _revive
     ...overrides,
   };
 }
@@ -98,7 +111,7 @@ describe("ProfileClient", () => {
 
   describe("getProfile — network", () => {
     it("returns a profile with the correct uhid", async () => {
-      mockFetch(makeRawProfile());
+      mockFetch(makeWireProfile());
       const client  = new ProfileClient("http://test");
       const profile = await client.getProfile("uhid-001");
 
@@ -119,7 +132,7 @@ describe("ProfileClient", () => {
       let callCount = 0;
       globalThis.fetch = async (_u: RequestInfo | URL) => {
         callCount++;
-        return new Response(JSON.stringify(makeRawProfile()), { status: 200 });
+        return new Response(JSON.stringify(makeWireProfile()), { status: 200 });
       };
 
       const client = new ProfileClient("http://test");
@@ -132,7 +145,7 @@ describe("ProfileClient", () => {
 
     it("includes joinedAtMs as a number from the raw server response", async () => {
       const ms = new Date("2024-06-01T00:00:00.000Z").getTime();
-      mockFetch(makeRawProfile());
+      mockFetch(makeWireProfile());
       const client  = new ProfileClient("http://test");
       const profile = await client.getProfile("uhid-001");
 
@@ -152,10 +165,10 @@ describe("ProfileClient", () => {
     });
 
     it("returns the stored profile when localStorage has one", async () => {
-      const raw = makeRawProfile();
+      const raw = makeLocalProfile();
       storageMock.setItem("aether_local_profile", JSON.stringify(raw));
       // Mock network refresh (best-effort background call)
-      mockFetch(makeRawProfile());
+      mockFetch(makeWireProfile());
 
       const client  = new ProfileClient("http://test");
       const profile = await client.getLocalProfile();
@@ -176,10 +189,10 @@ describe("ProfileClient", () => {
       let networkResolved = false;
       globalThis.fetch = async (_u: RequestInfo | URL) => {
         networkResolved = true;
-        return new Response(JSON.stringify(makeRawProfile()), { status: 200 });
+        return new Response(JSON.stringify(makeWireProfile()), { status: 200 });
       };
 
-      const raw = makeRawProfile();
+      const raw = makeLocalProfile();
       storageMock.setItem("aether_local_profile", JSON.stringify(raw));
 
       const client  = new ProfileClient("http://test");
@@ -215,8 +228,8 @@ describe("ProfileClient", () => {
 
   describe("updateProfile — network", () => {
     it("sends PATCH and returns updated profile", async () => {
-      const updatedRaw = makeRawProfile({ displayName: "Updated Name" });
-      storageMock.setItem("aether_local_profile", JSON.stringify(makeRawProfile()));
+      const updatedRaw = makeWireProfile({ display_name: "Updated Name" });
+      storageMock.setItem("aether_local_profile", JSON.stringify(makeLocalProfile()));
 
       let capturedUrl  = "";
       let capturedInit: RequestInit | undefined;
@@ -240,13 +253,13 @@ describe("ProfileClient", () => {
     });
 
     it("throws on HTTP error from PATCH", async () => {
-      storageMock.setItem("aether_local_profile", JSON.stringify(makeRawProfile()));
+      storageMock.setItem("aether_local_profile", JSON.stringify(makeLocalProfile()));
 
       globalThis.fetch = async (_u: RequestInfo | URL, init?: RequestInit) => {
         if (init?.method === "PATCH") {
           return new Response("{}", { status: 422 });
         }
-        return new Response(JSON.stringify(makeRawProfile()), { status: 200 });
+        return new Response(JSON.stringify(makeWireProfile()), { status: 200 });
       };
 
       const client = new ProfileClient("http://test");
@@ -257,14 +270,14 @@ describe("ProfileClient", () => {
     });
 
     it("persists updated profile to localStorage", async () => {
-      const updatedRaw = makeRawProfile({ displayName: "Persisted" });
-      storageMock.setItem("aether_local_profile", JSON.stringify(makeRawProfile()));
+      const updatedRaw = makeWireProfile({ display_name: "Persisted" });
+      storageMock.setItem("aether_local_profile", JSON.stringify(makeLocalProfile()));
 
       globalThis.fetch = async (_u: RequestInfo | URL, init?: RequestInit) => {
         if (init?.method === "PATCH") {
           return new Response(JSON.stringify(updatedRaw), { status: 200 });
         }
-        return new Response(JSON.stringify(makeRawProfile()), { status: 200 });
+        return new Response(JSON.stringify(makeWireProfile()), { status: 200 });
       };
 
       const client = new ProfileClient("http://test");

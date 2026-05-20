@@ -1,4 +1,5 @@
-import type { MediaFeedItem } from "../models/MediaFeedItem.js";
+import type { MediaFeedItem, MediaFeedItemWire } from "../models/MediaFeedItem.js";
+import { fromWire } from "../models/MediaFeedItem.js";
 
 const CACHE_KEY_PREFIX = "aether_feed_";
 const WATCHED_KEY      = "aether_watched";
@@ -46,10 +47,9 @@ export class FeedClient {
       if (raw) {
         const entry: CacheEntry = JSON.parse(raw);
         if (Date.now() - entry.fetchedAt < CACHE_TTL_MS) {
-          // Revive Date objects
-          const items = entry.items.map(this._reviveDates);
-          this.memCache.set(key, { fetchedAt: entry.fetchedAt, items });
-          return items;
+          // Items stored in cache are already MediaFeedItem (camelCase, number timestamps)
+          this.memCache.set(key, { fetchedAt: entry.fetchedAt, items: entry.items });
+          return entry.items;
         }
       }
     } catch {
@@ -63,7 +63,7 @@ export class FeedClient {
       throw new Error(`Feed fetch failed: ${response.status} ${response.statusText}`);
     }
 
-    const items: MediaFeedItem[] = (await response.json()).map(this._reviveDates);
+    const items: MediaFeedItem[] = (await response.json() as MediaFeedItemWire[]).map(fromWire);
     const entry: CacheEntry = { fetchedAt: Date.now(), items };
 
     this.memCache.set(key, entry);
@@ -85,7 +85,7 @@ export class FeedClient {
     if (!response.ok) {
       throw new Error(`Nearby streams fetch failed: ${response.status} ${response.statusText}`);
     }
-    const items: MediaFeedItem[] = (await response.json()).map(this._reviveDates);
+    const items: MediaFeedItem[] = (await response.json() as MediaFeedItemWire[]).map(fromWire);
     return items;
   }
 
@@ -130,21 +130,4 @@ export class FeedClient {
     }
   }
 
-  /**
-   * Revive date strings from JSON into Date objects.
-   */
-  private _reviveDates(item: MediaFeedItem): MediaFeedItem {
-    return {
-      ...item,
-      publishedAt: new Date(item.publishedAt as unknown as string),
-      content: {
-        ...item.content,
-        createdAt: new Date(item.content.createdAt as unknown as string),
-      },
-      topReactions: item.topReactions.map((r) => ({
-        ...r,
-        sentAt: new Date(r.sentAt as unknown as string),
-      })),
-    };
-  }
 }
