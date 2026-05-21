@@ -13,11 +13,12 @@ final class FeedAggregatorTests: XCTestCase {
             codec:        "h264",
             contentType:  "video/mp4",
             creatorUhid:  "creator",
-            sizeBytes:    500_000
+            sizeBytes:    500_000,
+            createdAtMs:  0
         )
     }
 
-    private func makeFeedItem(hash: String = "h1", publishedAt: Date = Date()) -> MediaFeedItem {
+    private func makeFeedItem(hash: String = "h1", publishedAtMs: Int64 = 0) -> MediaFeedItem {
         MediaFeedItem(
             content:       makeContent(hash: hash),
             likeCount:     0,
@@ -27,7 +28,7 @@ final class FeedAggregatorTests: XCTestCase {
             isLive:        false,
             streamId:      nil,
             topReactions:  [],
-            publishedAt:  publishedAt
+            publishedAtMs: publishedAtMs
         )
     }
 

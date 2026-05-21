@@ -1,0 +1,159 @@
+@page "/reel"
+@inherits ViewModelComponentBase<ReelFeedViewModel>
+
+<div class="am-page am-reel-page">
+
+    @* ── Header ── *@
+    <div class="am-page-header am-reel-header">
+        <h1>Reel</h1>
+        <div class="am-reel-tabs">
+            <button class="am-reel-tab @(ViewModel.ShowForYou ? "am-reel-tab--active" : string.Empty)"
+                    @onclick="() => ViewModel.SwitchTabCommand.Execute(true)">
+                For You
+            </button>
+            <button class="am-reel-tab @(!ViewModel.ShowForYou ? "am-reel-tab--active" : string.Empty)"
+                    @onclick="() => ViewModel.SwitchTabCommand.Execute(false)">
+                Following
+            </button>
+        </div>
+    </div>
+
+    @* ── Active hashtag filter ── *@
+    @if (!string.IsNullOrEmpty(ViewModel.ActiveHashtag))
+    {
+        <div class="am-reel-hashtag-bar">
+            <span class="am-reel-hashtag-active">#@ViewModel.ActiveHashtag</span>
+            <button class="am-btn am-btn-small" @onclick="() => ViewModel.ClearHashtagFilterCommand.Execute(null)">✕ Clear</button>
+        </div>
+    }
+
+    @* ── Status ── *@
+    @if (!string.IsNullOrEmpty(ViewModel.StatusMessage))
+    {
+        <p class="am-status-message">@ViewModel.StatusMessage</p>
+    }
+
+    <div class="am-reel-layout">
+
+        @* ── Feed ── *@
+        <div class="am-reel-feed">
+            @if (ViewModel.IsLoading)
+            {
+                <div class="am-reel-spinner">Loading reels…</div>
+            }
+            else if (ViewModel.Items.Count == 0)
+            {
+                <div class="am-reel-empty">
+                    <p>No reels yet.</p>
+                    <p class="am-reel-hint">Go nearby to discover content from mesh peers.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var item in ViewModel.Items)
+                {
+                    <div class="am-reel-card @(item == ViewModel.CurrentItem ? "am-reel-card--active" : string.Empty)"
+                         @onclick="() => ViewModel.SetCurrentItemCommand.Execute(item)">
+
+                        <div class="am-reel-thumb">
+                            <span class="am-reel-play-icon">▶</span>
+                            <span class="am-reel-duration">@FormatDuration(item.Source.DurationMs)</span>
+                        </div>
+
+                        <div class="am-reel-info">
+                            <p class="am-reel-title">@item.Source.Title</p>
+                            <p class="am-reel-creator">@item.Source.CreatorUhid</p>
+
+                            @if (!string.IsNullOrEmpty(item.Source.SoundTitle))
+                            {
+                                <p class="am-reel-sound">♪ @item.Source.SoundTitle</p>
+                            }
+
+                            @if (!string.IsNullOrEmpty(item.HashtagDisplay))
+                            {
+                                <p class="am-reel-hashtags">@item.HashtagDisplay</p>
+                            }
+                        </div>
+
+                        <div class="am-reel-actions">
+                            <button class="am-reel-action-btn @(item.IsLiked ? "am-reel-action-btn--active" : string.Empty)"
+                                    @onclick:stopPropagation="true"
+                                    @onclick="() => item.ToggleLikeCommand.ExecuteAsync(null)"
+                                    disabled="@item.IsBusy"
+                                    title="@(item.IsLiked ? "Unlike" : "Like")">
+                                ❤ @item.Source.LikeCount
+                            </button>
+                            <button class="am-reel-action-btn @(item.IsBookmarked ? "am-reel-action-btn--active" : string.Empty)"
+                                    @onclick:stopPropagation="true"
+                                    @onclick="() => item.ToggleBookmarkCommand.ExecuteAsync(null)"
+                                    disabled="@item.IsBusy"
+                                    title="@(item.IsBookmarked ? "Remove bookmark" : "Bookmark")">
+                                🔖
+                            </button>
+                        </div>
+
+                    </div>
+                }
+            }
+        </div>
+
+        @* ── Trending sidebar ── *@
+        <aside class="am-reel-sidebar">
+
+            @if (ViewModel.TrendingHashtags.Count > 0)
+            {
+                <div class="am-reel-trending-section">
+                    <h3 class="am-reel-trending-title">Trending</h3>
+                    <ul class="am-reel-trend-list">
+                        @foreach (var tag in ViewModel.TrendingHashtags)
+                        {
+                            <li>
+                                <button class="am-reel-trend-btn"
+                                        @onclick="() => ViewModel.LoadByHashtagCommand.Execute(tag.Tag)">
+                                    <span class="am-reel-trend-tag">#@tag.Tag</span>
+                                    <span class="am-reel-trend-count">@tag.Count24h</span>
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            @if (ViewModel.TrendingSounds.Count > 0)
+            {
+                <div class="am-reel-trending-section">
+                    <h3 class="am-reel-trending-title">Sounds</h3>
+                    <ul class="am-reel-trend-list">
+                        @foreach (var sound in ViewModel.TrendingSounds)
+                        {
+                            <li class="am-reel-sound-item">
+                                <span class="am-reel-sound-name">♪ @sound.Title</span>
+                                <span class="am-reel-sound-artist">@sound.ArtistName</span>
+                                <span class="am-reel-trend-count">@sound.UseCount24h uses</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+        </aside>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Load feed and trending data in parallel
+        await Task.WhenAll(
+            ViewModel.LoadFeedCommand.ExecuteAsync(null),
+            ViewModel.LoadTrendingCommand.ExecuteAsync(null));
+    }
+
+    private static string FormatDuration(long ms)
+    {
+        var t = TimeSpan.FromMilliseconds(ms);
+        return t.TotalMinutes >= 1
+            ? $"{(int)t.TotalMinutes}:{t.Seconds:D2}"
+            : $"0:{t.Seconds:D2}";
+    }
+}

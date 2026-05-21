@@ -1,0 +1,89 @@
+@page "/player"
+@inherits ViewModelComponentBase<PlayerViewModel>
+
+<div class="am-page am-player">
+    <div class="am-player-title">
+        <h2>@(ViewModel.CurrentTitle ?? "No media loaded")</h2>
+        @if (ViewModel.IsInWatchParty)
+        {
+            <span class="am-watch-party-badge">👥 @ViewModel.WatchPartyParticipants watching</span>
+        }
+    </div>
+
+    <div class="am-player-progress">
+        <span>@ViewModel.PositionFormatted</span>
+        <input type="range" class="am-seek-bar"
+               min="0" max="@ViewModel.DurationMs" value="@ViewModel.PositionMs"
+               @onchange="e => SeekTo(e)" />
+        <span>@ViewModel.DurationFormatted</span>
+    </div>
+
+    <div class="am-player-controls">
+        <button class="am-btn am-btn-icon" @onclick="() => ViewModel.PlayPauseCommand.Execute(null)">
+            @(ViewModel.IsPlaying ? "⏸" : "▶")
+        </button>
+        <button class="am-btn am-btn-icon" @onclick="() => ViewModel.StopCommand.Execute(null)">⏹</button>
+
+        <label class="am-control-label">Vol</label>
+        <input type="range" min="0" max="1" step="0.05" value="@ViewModel.Volume"
+               @onchange="e => SetVolume(e)" />
+
+        <label class="am-control-label">Speed</label>
+        <select class="am-select" value="@ViewModel.PlaybackSpeed" @onchange="e => SetSpeed(e)">
+            <option value="0.5">0.5×</option>
+            <option value="0.75">0.75×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+        </select>
+    </div>
+
+    <div class="am-reaction-bar">
+        @foreach (var emoji in new[] { "❤️", "🔁", "⭐" })
+        {
+            <button class="am-btn am-btn-emoji"
+                    @onclick="() => ViewModel.SendReactionCommand.Execute(emoji)">@emoji</button>
+        }
+    </div>
+
+    @if (ViewModel.LiveReactions.Count > 0)
+    {
+        <div class="am-reaction-feed">
+            @foreach (var reaction in ViewModel.LiveReactions)
+            {
+                <div class="am-reaction-item">
+                    <span>@reaction.TypeEmoji</span>
+                    <span>@reaction.FromUhid</span>
+                    @if (!string.IsNullOrEmpty(reaction.Message))
+                    {
+                        <span>@reaction.Message</span>
+                    }
+                    <span class="am-reaction-pos">@reaction.PositionFormatted</span>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private void SeekTo(ChangeEventArgs e)
+    {
+        if (long.TryParse(e.Value?.ToString(), out var pos))
+            ViewModel.SeekCommand.Execute(pos);
+    }
+
+    private void SetVolume(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(), System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out var vol))
+            ViewModel.SetVolumeCommand.Execute(vol);
+    }
+
+    private void SetSpeed(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(), System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out var speed))
+            ViewModel.SetSpeedCommand.Execute(speed);
+    }
+}

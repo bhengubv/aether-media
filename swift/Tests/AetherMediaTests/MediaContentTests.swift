@@ -13,7 +13,8 @@ final class MediaContentTests: XCTestCase {
             codec:        "h264",
             contentType:  contentType,
             creatorUhid:  "u1",
-            sizeBytes:    1_000_000
+            sizeBytes:    1_000_000,
+            createdAtMs:  0
         )
     }
 
@@ -74,7 +75,7 @@ final class MediaContentTests: XCTestCase {
         XCTAssertThrowsError(
             try MediaReaction(
                 reactionId: "r1", contentHash: "h", fromUhid: "u",
-                type: .comment, positionMs: 0, message: nil, sentAt: Date()
+                type: .comment, positionMs: 0, message: nil, sentAtMs: 0
             )
         ) { error in
             XCTAssertTrue(error is MediaReactionError)
@@ -85,7 +86,7 @@ final class MediaContentTests: XCTestCase {
         XCTAssertThrowsError(
             try MediaReaction(
                 reactionId: "r1", contentHash: "h", fromUhid: "u",
-                type: .comment, positionMs: 0, message: "   ", sentAt: Date()
+                type: .comment, positionMs: 0, message: "   ", sentAtMs: 0
             )
         )
     }
@@ -94,7 +95,7 @@ final class MediaContentTests: XCTestCase {
         XCTAssertThrowsError(
             try MediaReaction(
                 reactionId: "r1", contentHash: "h", fromUhid: "u",
-                type: .like, positionMs: 0, message: "oops", sentAt: Date()
+                type: .like, positionMs: 0, message: "oops", sentAtMs: 0
             )
         )
     }
@@ -102,7 +103,7 @@ final class MediaContentTests: XCTestCase {
     func testCommentReactionValid() throws {
         let r = try MediaReaction(
             reactionId: "r1", contentHash: "h", fromUhid: "u",
-            type: .comment, positionMs: 1500, message: "Great stream!", sentAt: Date()
+            type: .comment, positionMs: 1500, message: "Great stream!", sentAtMs: 0
         )
         XCTAssertEqual(r.message, "Great stream!")
     }
@@ -110,7 +111,7 @@ final class MediaContentTests: XCTestCase {
     func testLikeReactionValid() throws {
         let r = try MediaReaction(
             reactionId: "r2", contentHash: "h", fromUhid: "u",
-            type: .like, positionMs: 0, message: nil, sentAt: Date()
+            type: .like, positionMs: 0, message: nil, sentAtMs: 0
         )
         XCTAssertNil(r.message)
     }

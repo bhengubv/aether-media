@@ -67,7 +67,7 @@ var content = new MediaContent(
     ContentType:  "video/mp4",
     CreatorUhid:  CreatorUhid,
     SizeBytes:    15_728_640,        // ~15 MB
-    CreatedAt:    DateTime.UtcNow,
+    CreatedAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
     ThumbnailHash: null,
     Tags:         ["demo", "sample", "aether"]);
 

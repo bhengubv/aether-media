@@ -22,7 +22,7 @@ public sealed class MediaContentTests
             ContentType:   contentType,
             CreatorUhid:   "uhid-creator",
             SizeBytes:     1024,
-            CreatedAt:     DateTime.UtcNow,
+            CreatedAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
             ThumbnailHash: null,
             Tags:          Array.Empty<string>());
 

@@ -58,7 +58,7 @@ var content = new MediaContentDescriptor
     Codec        = "H.264",
     ContentType  = "video/mp4",
     CreatorUhid  = "KXJB7-MN2P4",
-    CreatedAt    = DateTime.UtcNow,
+    CreatedAtMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
 };
 
 var jsonBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(content));
@@ -152,11 +152,11 @@ return 0;
 /// </summary>
 internal sealed class MediaContentDescriptor
 {
-    public string   ContentHash  { get; init; } = string.Empty;
-    public string   Title        { get; init; } = string.Empty;
-    public long     DurationMs   { get; init; }
-    public string   Codec        { get; init; } = string.Empty;
-    public string   ContentType  { get; init; } = string.Empty;
-    public string   CreatorUhid  { get; init; } = string.Empty;
-    public DateTime CreatedAt    { get; init; }
+    public string ContentHash  { get; init; } = string.Empty;
+    public string Title        { get; init; } = string.Empty;
+    public long   DurationMs   { get; init; }
+    public string Codec        { get; init; } = string.Empty;
+    public string ContentType  { get; init; } = string.Empty;
+    public string CreatorUhid  { get; init; } = string.Empty;
+    public long   CreatedAtMs  { get; init; }
 }

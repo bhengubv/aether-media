@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from datetime import datetime, timezone
+import time
 
 
 # ── MediaContent.formatted_duration ───────────────────────────────────────────
@@ -20,7 +20,7 @@ def _make_content(duration_ms: int) -> MediaContent:
         content_type="video/mp4",
         creator_uhid="uhid-1",
         size_bytes=1_000_000,
-        created_at=datetime.now(tz=timezone.utc),
+        created_at_ms=int(time.time() * 1000),
     )
 
 
@@ -65,7 +65,7 @@ def test_is_video_false_for_audio():
     c = MediaContent(
         content_hash="x", title="t", duration_ms=1000, codec="aac",
         content_type="audio/mp4", creator_uhid="u", size_bytes=1,
-        created_at=datetime.now(tz=timezone.utc),
+        created_at_ms=0,
     )
     assert c.is_video is False
     assert c.is_audio is True
@@ -81,7 +81,7 @@ def _make_reaction(**kwargs):
         type=MediaReactionType.LIKE,
         position_ms=0,
         message=None,
-        sent_at=datetime.now(tz=timezone.utc),
+        sent_at_ms=int(time.time() * 1000),
     )
     defaults.update(kwargs)
     return MediaReaction(**defaults)

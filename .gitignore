@@ -39,6 +39,7 @@ dist-python/
 vendor/
 
 # ── Android / Kotlin ──────────────────────────────────────────────────────────
+build/
 *.apk
 *.aab
 *.ap_

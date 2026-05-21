@@ -2,11 +2,11 @@ import Foundation
 
 // MARK: - MediaReactionType
 
-public enum MediaReactionType: Int, Codable, CustomStringConvertible {
-    case like       = 1
-    case share      = 2
-    case comment    = 3
-    case superReact = 4
+public enum MediaReactionType: String, Codable, CustomStringConvertible {
+    case like       = "like"
+    case share      = "share"
+    case comment    = "comment"
+    case superReact = "super_react"
 
     public var description: String {
         switch self {
@@ -30,6 +30,7 @@ public struct MediaContent: Codable, Identifiable, Hashable {
     public let contentType: String
     public let creatorUhid: String
     public let sizeBytes: Int64
+    public let createdAtMs: Int64
     public let thumbnailHash: String?
     public let tags: [String]
 
@@ -41,6 +42,7 @@ public struct MediaContent: Codable, Identifiable, Hashable {
         contentType: String,
         creatorUhid: String,
         sizeBytes: Int64,
+        createdAtMs: Int64,
         thumbnailHash: String? = nil,
         tags: [String] = []
     ) {
@@ -51,8 +53,22 @@ public struct MediaContent: Codable, Identifiable, Hashable {
         self.contentType   = contentType
         self.creatorUhid   = creatorUhid
         self.sizeBytes     = sizeBytes
+        self.createdAtMs   = createdAtMs
         self.thumbnailHash = thumbnailHash
         self.tags          = tags
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case contentHash   = "content_hash"
+        case title
+        case durationMs    = "duration_ms"
+        case codec
+        case contentType   = "content_type"
+        case creatorUhid   = "creator_uhid"
+        case sizeBytes     = "size_bytes"
+        case createdAtMs   = "created_at_ms"
+        case thumbnailHash = "thumbnail_hash"
+        case tags
     }
 
     /// Human-readable duration:
@@ -106,7 +122,17 @@ public struct MediaReaction: Codable, Identifiable {
     public let type: MediaReactionType
     public let positionMs: Int64
     public let message: String?
-    public let sentAt: Date
+    public let sentAtMs: Int64
+
+    private enum CodingKeys: String, CodingKey {
+        case reactionId  = "reaction_id"
+        case contentHash = "content_hash"
+        case fromUhid    = "from_uhid"
+        case type
+        case positionMs  = "position_ms"
+        case message
+        case sentAtMs    = "sent_at_ms"
+    }
 
     /// Failable init that validates business rules.
     public init(
@@ -116,7 +142,7 @@ public struct MediaReaction: Codable, Identifiable {
         type: MediaReactionType,
         positionMs: Int64,
         message: String?,
-        sentAt: Date
+        sentAtMs: Int64
     ) throws {
         guard !contentHash.trimmingCharacters(in: .whitespaces).isEmpty else {
             throw MediaReactionError.emptyContentHash
@@ -139,7 +165,7 @@ public struct MediaReaction: Codable, Identifiable {
         self.type        = type
         self.positionMs  = positionMs
         self.message     = message
-        self.sentAt      = sentAt
+        self.sentAtMs    = sentAtMs
     }
 }
 
@@ -152,12 +178,25 @@ public struct MediaProfile: Codable, Identifiable {
     public let displayName: String
     public let avatarHash: String?
     public let bio: String?
-    public let aetherTagValue: String
+    public let aetherTag: String
     public let followerCount: Int
     public let followingCount: Int
     public let contentCount: Int
     public let isVerified: Bool
-    public let joinedAt: Date
+    public let joinedAtMs: Int64
+
+    private enum CodingKeys: String, CodingKey {
+        case uhid
+        case displayName   = "display_name"
+        case avatarHash    = "avatar_hash"
+        case bio
+        case aetherTag     = "aether_tag"
+        case followerCount = "follower_count"
+        case followingCount = "following_count"
+        case contentCount  = "content_count"
+        case isVerified    = "is_verified"
+        case joinedAtMs    = "joined_at_ms"
+    }
 
     private static let shortBioMax = 120
 
@@ -188,15 +227,27 @@ public struct LiveStream: Codable, Identifiable {
     public let creatorUhid: String
     public let codec: String
     public let segmentDurationMs: Int
-    public let startedAt: Date
+    public let startedAtMs: Int64
     public let viewerCount: Int
     public let isActive: Bool
     public let tags: [String]
 
+    private enum CodingKeys: String, CodingKey {
+        case streamId          = "stream_id"
+        case title
+        case creatorUhid       = "creator_uhid"
+        case codec
+        case segmentDurationMs = "segment_duration_ms"
+        case startedAtMs       = "started_at_ms"
+        case viewerCount       = "viewer_count"
+        case isActive          = "is_active"
+        case tags
+    }
+
     /// Wall-clock milliseconds since the broadcast started.  Always >= 0.
     public var elapsedMs: Int64 {
-        let elapsed = Int64(Date().timeIntervalSince(startedAt) * 1000)
-        return max(0, elapsed)
+        let nowMs = Int64(Date().timeIntervalSince1970 * 1000)
+        return max(0, nowMs - startedAtMs)
     }
 
     /// Human-readable elapsed time (H:MM:SS or M:SS).
@@ -225,8 +276,21 @@ public struct MediaFeedItem: Codable, Identifiable {
     public let isLive: Bool
     public let streamId: String?
     public let topReactions: [MediaReaction]
-    public let publishedAt: Date
+    public let publishedAtMs: Int64
     public let watchedMs: Int64
+
+    private enum CodingKeys: String, CodingKey {
+        case content
+        case likeCount    = "like_count"
+        case shareCount   = "share_count"
+        case commentCount = "comment_count"
+        case watchCount   = "watch_count"
+        case isLive       = "is_live"
+        case streamId     = "stream_id"
+        case topReactions = "top_reactions"
+        case publishedAtMs = "published_at_ms"
+        case watchedMs    = "watched_ms"
+    }
 
     public init(
         content: MediaContent,
@@ -237,7 +301,7 @@ public struct MediaFeedItem: Codable, Identifiable {
         isLive: Bool,
         streamId: String?,
         topReactions: [MediaReaction],
-        publishedAt: Date,
+        publishedAtMs: Int64,
         watchedMs: Int64 = 0
     ) {
         self.content      = content
@@ -248,12 +312,15 @@ public struct MediaFeedItem: Codable, Identifiable {
         self.isLive       = isLive
         self.streamId     = streamId
         self.topReactions = topReactions
-        self.publishedAt  = publishedAt
+        self.publishedAtMs = publishedAtMs
         self.watchedMs    = watchedMs
     }
 
     /// True when published within the last 24 hours.
-    public var isNew: Bool { Date().timeIntervalSince(publishedAt) < 86_400 }
+    public var isNew: Bool {
+        let nowMs = Int64(Date().timeIntervalSince1970 * 1000)
+        return (nowMs - publishedAtMs) < 86_400_000
+    }
 
     /// Likes + shares + comments.
     public var reactionTotal: Int { likeCount + shareCount + commentCount }

@@ -26,7 +26,7 @@ public sealed class InMemoryMediaLibraryTests
             ContentType:   contentType,
             CreatorUhid:   creatorUhid,
             SizeBytes:     4096,
-            CreatedAt:     DateTime.UtcNow,
+            CreatedAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
             ThumbnailHash: null,
             Tags:          tags ?? Array.Empty<string>());
 

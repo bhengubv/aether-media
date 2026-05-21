@@ -220,23 +220,14 @@ fun PlayerScreen(
                 }
             }
 
-            // Floating reaction overlay
-            AnimatedVisibility(
+            // Floating reaction overlay — extracted to break implicit ColumnScope receiver chain
+            ReactionOverlay(
                 visible = showReaction,
-                enter = fadeIn(),
-                exit = fadeOut(),
+                emoji   = reactionEmoji,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(16.dp)
-            ) {
-                Text(
-                    text = reactionEmoji,
-                    fontSize = 48.sp,
-                    modifier = Modifier
-                        .background(Color.Black.copy(alpha = 0.2f), CircleShape)
-                        .padding(8.dp)
-                )
-            }
+            )
         }
 
         // Controls
@@ -326,6 +317,31 @@ fun PlayerScreen(
                 ReactionButton(emoji = "👏") { playerViewModel.sendReaction("👏") }
                 ReactionButton(emoji = "❤️") { playerViewModel.sendReaction("❤️") }
             }
+        }
+    }
+}
+
+/**
+ * Animated overlay that shows [emoji] when [visible] is true.
+ * Extracted into a top-level composable so that Kotlin's implicit-receiver resolution
+ * never picks up [androidx.compose.foundation.layout.ColumnScope.AnimatedVisibility]
+ * instead of the plain [AnimatedVisibility].
+ */
+@Composable
+private fun ReactionOverlay(visible: Boolean, emoji: String, modifier: Modifier = Modifier) {
+    Box(modifier = modifier) {
+        AnimatedVisibility(
+            visible = visible,
+            enter   = fadeIn(),
+            exit    = fadeOut(),
+        ) {
+            Text(
+                text     = emoji,
+                fontSize = 48.sp,
+                modifier = Modifier
+                    .background(Color.Black.copy(alpha = 0.2f), CircleShape)
+                    .padding(8.dp)
+            )
         }
     }
 }

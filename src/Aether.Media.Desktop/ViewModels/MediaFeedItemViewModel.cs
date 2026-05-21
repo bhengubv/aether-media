@@ -29,7 +29,7 @@ public sealed partial class MediaFeedItemViewModel : ViewModelBase
     {
         get
         {
-            var elapsed = DateTime.UtcNow - Source.PublishedAt.ToUniversalTime();
+            var elapsed = DateTime.UtcNow - Source.PublishedAtMs.ToUniversalTime();
 
             if (elapsed.TotalSeconds < 60)
                 return "just now";
@@ -50,7 +50,7 @@ public sealed partial class MediaFeedItemViewModel : ViewModelBase
                 var d = (int)elapsed.TotalDays;
                 return $"{d} days ago";
             }
-            return Source.PublishedAt.ToString("d MMM yyyy");
+            return Source.PublishedAtMs.ToString("d MMM yyyy");
         }
     }
 

@@ -28,6 +28,9 @@ class SocialGraph {
     /** Returns a sorted, immutable snapshot of followed UHIDs. */
     fun getFollowing(): List<String> = following.toSortedSet().toList()
 
+    /** Alias for [getFollowing] — returns a sorted, immutable snapshot of followed UHIDs. */
+    fun following(): List<String> = getFollowing()
+
     /** Number of followed accounts. */
     val count: Int get() = following.size
 }

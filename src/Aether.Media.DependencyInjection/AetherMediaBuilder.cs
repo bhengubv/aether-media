@@ -7,6 +7,8 @@ using Aether.Media.Distribution;
 using Aether.Media.Identity;
 using Aether.Media.LocalLibrary;
 using Aether.Media.LocalLibrary.Interfaces;
+using Aether.Media.Reel;
+using Aether.Media.Reel.Interfaces;
 using Aether.Media.Social;
 using Aether.Media.Streaming;
 using Microsoft.Extensions.DependencyInjection;
@@ -142,6 +144,49 @@ public sealed class AetherMediaBuilder
                 sp.GetRequiredService<IMovieHasher>(),
                 sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<SubtitleService>>(),
                 apiKey: null));   // replace with real key via appsettings / env var
+        return this;
+    }
+
+    /// <summary>
+    /// Registers the decentralised Reel (short-video) platform:
+    /// <list type="bullet">
+    ///   <item><see cref="IReelEngagementTracker"/> — on-device engagement signals (never leaves device).</item>
+    ///   <item><see cref="IReelDiscovery"/> — mesh-gossipped trending + local Reel index.</item>
+    ///   <item><see cref="IReelService"/> — publish, interact, comment, duet, stitch.</item>
+    ///   <item><see cref="IReelFeed"/> — on-device For You algorithm with tunable weights.</item>
+    ///   <item><see cref="ISoundLibrary"/> — content-addressed sound library.</item>
+    /// </list>
+    ///
+    /// Requires <c>AddContent()</c> to be called first (or an <c>IContentService</c>
+    /// to be registered) — Reels are distributed as Aether content chunks.
+    /// </summary>
+    /// <param name="localUhid">
+    /// UHID of the local node — set as the <c>CreatorUhid</c> on published Reels.
+    /// </param>
+    public AetherMediaBuilder AddReel(string localUhid)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(localUhid);
+
+        Services.TryAddSingleton<IReelEngagementTracker, ReelEngagementTracker>();
+        Services.TryAddSingleton<IReelDiscovery,         ReelDiscovery>();
+
+        Services.TryAddSingleton<IReelService>(sp => new ReelService(
+            sp.GetRequiredService<Aether.Content.IContentService>(),
+            sp.GetRequiredService<IReelDiscovery>(),
+            localUhid,
+            sp.GetService<Microsoft.Extensions.Logging.ILogger<ReelService>>()));
+
+        Services.TryAddSingleton<IReelFeed>(sp => new ReelFeed(
+            sp.GetRequiredService<IReelService>(),
+            sp.GetRequiredService<IReelEngagementTracker>(),
+            sp.GetRequiredService<IReelDiscovery>(),
+            sp.GetService<Microsoft.Extensions.Logging.ILogger<ReelFeed>>()));
+
+        Services.TryAddSingleton<ISoundLibrary>(sp => new SoundLibrary(
+            sp.GetRequiredService<Aether.Content.IContentService>(),
+            localUhid,
+            sp.GetService<Microsoft.Extensions.Logging.ILogger<SoundLibrary>>()));
+
         return this;
     }
 }

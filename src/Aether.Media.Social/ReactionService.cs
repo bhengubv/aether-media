@@ -64,7 +64,7 @@ public sealed class ReactionService : IReactionService
             Type = (int)reaction.Type,
             PositionMs = reaction.PositionMs,
             Message = reaction.Message,
-            SentAtMs = new DateTimeOffset(reaction.SentAt, TimeSpan.Zero).ToUnixTimeMilliseconds(),
+            SentAtMs = reaction.SentAtMs,
         };
 
         var json = JsonSerializer.Serialize(wire, JsonOpts);
@@ -125,9 +125,9 @@ public sealed class ReactionService : IReactionService
                 type: (MediaReactionType)wire.Type,
                 positionMs: Math.Max(0, wire.PositionMs),
                 message: wire.Message,
-                sentAt: wire.SentAtMs > 0
-                    ? DateTimeOffset.FromUnixTimeMilliseconds(wire.SentAtMs).UtcDateTime
-                    : DateTime.UtcNow);
+                sentAtMs: wire.SentAtMs > 0
+                    ? wire.SentAtMs
+                    : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
         }
         catch
         {

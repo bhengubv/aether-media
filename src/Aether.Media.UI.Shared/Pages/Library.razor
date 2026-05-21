@@ -1,0 +1,86 @@
+@page "/library"
+@inherits ViewModelComponentBase<LibraryViewModel>
+@inject NavigationManager Nav
+
+<div class="am-page">
+    <div class="am-page-header">
+        <h1>Library</h1>
+        <button class="am-btn am-btn-primary"
+                @onclick="() => ViewModel.ScanDirectoryCommand.Execute(null)"
+                disabled="@ViewModel.IsScanning">
+            @(ViewModel.IsScanning ? "Scanning…" : "📂 Scan Folder")
+        </button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewModel.ScanPath))
+    {
+        <p class="am-scan-path">📁 @ViewModel.ScanPath</p>
+    }
+
+    <div class="am-search-bar">
+        <input class="am-input" placeholder="Search title, codec, type…"
+               value="@ViewModel.SearchQuery"
+               @oninput="e => ViewModel.SearchQuery = e.Value?.ToString() ?? string.Empty" />
+    </div>
+
+    @if (!ViewModel.IsPanelOpen)
+    {
+        @if (ViewModel.Contents.Count == 0)
+        {
+            <p class="am-empty">No content yet. Scan a folder to index local media.</p>
+        }
+        else
+        {
+            <div class="am-content-list">
+                @foreach (var item in ViewModel.Contents)
+                {
+                    <div class="am-content-row">
+                        <div class="am-content-info">
+                            <p class="am-content-title">@item.Title</p>
+                            <p class="am-content-meta">@item.Codec · @item.FormattedDuration · @item.SizeFormatted</p>
+                        </div>
+                        <div class="am-content-actions">
+                            <button class="am-btn am-btn-sm" @onclick="() => Play(item)">▶</button>
+                            <button class="am-btn am-btn-sm" @onclick="() => ViewModel.EditMetadataCommand.Execute(item)">✏️</button>
+                            @if (item.Source.IsVideo)
+                            {
+                                <button class="am-btn am-btn-sm" @onclick="() => ViewModel.FindSubtitlesCommand.Execute(item)">💬</button>
+                            }
+                            <button class="am-btn am-btn-sm am-btn-danger" @onclick="() => ViewModel.RemoveCommand.Execute(item)">🗑</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+
+    @if (ViewModel.IsEditingMetadata)
+    {
+        <div class="am-panel">
+            <div class="am-panel-header">
+                <h3>Edit Metadata</h3>
+                <button class="am-btn am-btn-sm" @onclick="() => ViewModel.ClosePanelCommand.Execute(null)">✕</button>
+            </div>
+            <MetadataEditorPanel Editor="ViewModel.MetadataEditor" />
+        </div>
+    }
+
+    @if (ViewModel.IsSearchingSubtitles)
+    {
+        <div class="am-panel">
+            <div class="am-panel-header">
+                <h3>Find Subtitles</h3>
+                <button class="am-btn am-btn-sm" @onclick="() => ViewModel.ClosePanelCommand.Execute(null)">✕</button>
+            </div>
+            <SubtitleSearchPanel Search="ViewModel.SubtitleSearch" />
+        </div>
+    }
+</div>
+
+@code {
+    private void Play(MediaContentViewModel item)
+    {
+        ViewModel.PlayCommand.Execute(item);
+        Nav.NavigateTo("/player");
+    }
+}

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Aether.Media.Core.Models;
 
 /// <summary>
@@ -6,21 +8,22 @@ namespace Aether.Media.Core.Models;
 /// a SHA-256 hex digest of the raw encoded bytes.
 /// </summary>
 public sealed record MediaContent(
-    string ContentHash,
-    string Title,
-    long DurationMs,
-    string Codec,
-    string ContentType,
-    string CreatorUhid,
-    long SizeBytes,
-    DateTime CreatedAt,
-    string? ThumbnailHash,
-    IReadOnlyList<string> Tags)
+    [property: JsonPropertyName("content_hash")]  string ContentHash,
+    [property: JsonPropertyName("title")]         string Title,
+    [property: JsonPropertyName("duration_ms")]   long DurationMs,
+    [property: JsonPropertyName("codec")]         string Codec,
+    [property: JsonPropertyName("content_type")]  string ContentType,
+    [property: JsonPropertyName("creator_uhid")]  string CreatorUhid,
+    [property: JsonPropertyName("size_bytes")]    long SizeBytes,
+    [property: JsonPropertyName("created_at_ms")] long CreatedAtMs,
+    [property: JsonPropertyName("thumbnail_hash")] string? ThumbnailHash,
+    [property: JsonPropertyName("tags")]          IReadOnlyList<string> Tags)
 {
     /// <summary>
     /// Human-readable duration formatted as <c>H:MM:SS</c> (hours omitted when
     /// less than 60 minutes) or <c>"Live"</c> when <see cref="DurationMs"/> is 0.
     /// </summary>
+    [JsonIgnore]
     public string FormattedDuration
     {
         get
@@ -43,11 +46,13 @@ public sealed record MediaContent(
     /// <c>true</c> when the MIME type indicates a video stream
     /// (i.e. <see cref="ContentType"/> starts with <c>"video/"</c>).
     /// </summary>
+    [JsonIgnore]
     public bool IsVideo => ContentType.StartsWith("video/", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
     /// <c>true</c> when the MIME type indicates a pure audio stream
     /// (i.e. <see cref="ContentType"/> starts with <c>"audio/"</c>).
     /// </summary>
+    [JsonIgnore]
     public bool IsAudio => ContentType.StartsWith("audio/", StringComparison.OrdinalIgnoreCase);
 }

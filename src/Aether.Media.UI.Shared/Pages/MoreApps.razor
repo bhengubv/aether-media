@@ -1,0 +1,81 @@
+@page "/more"
+@inherits ViewModelComponentBase<MoreAppsViewModel>
+@implements IAsyncDisposable
+
+<div class="am-page">
+    <div class="am-page-header">
+        <h1>More Apps</h1>
+    </div>
+
+    <p class="am-status-message">@ViewModel.StatusMessage</p>
+
+    @if (ViewModel.IsDownloading)
+    {
+        <div class="am-progress-bar">
+            <div class="am-progress-fill" style="width: @((int)(ViewModel.DownloadProgress * 100))%"></div>
+        </div>
+        <p class="am-progress-label">@((int)(ViewModel.DownloadProgress * 100))%</p>
+    }
+
+    <div class="am-app-grid">
+        @foreach (var app in ViewModel.Apps)
+        {
+            <div class="am-app-card">
+                <h3 class="am-app-name">@app.Name</h3>
+                <p class="am-app-version">v@app.Version</p>
+                <p class="am-app-desc">@app.Description</p>
+                <p class="am-app-tags">@app.TagsDisplay</p>
+                @if (app.IsReady)
+                {
+                    <p class="am-app-ready">✓ Ready to install</p>
+                }
+                else
+                {
+                    <button class="am-btn am-btn-primary"
+                            @onclick="() => ViewModel.GetAppCommand.Execute(app)"
+                            disabled="@ViewModel.IsDownloading">
+                        ⬇ Get
+                    </button>
+                }
+            </div>
+        }
+    </div>
+
+    <section class="am-section am-share-section">
+        <h2>Share Aether Media</h2>
+        <p>Let a nearby friend install Aether Media from your device — no internet needed.</p>
+
+        @if (!ViewModel.IsHosting)
+        {
+            <button class="am-btn am-btn-primary"
+                    @onclick="() => ViewModel.ShareThisApp.Execute(null)"
+                    disabled="@ViewModel.IsDownloading">
+                📤 Share This App
+            </button>
+        }
+        else
+        {
+            <button class="am-btn" @onclick="() => ViewModel.StopSharing.Execute(null)">
+                ⏹ Stop Sharing
+            </button>
+            @if (!string.IsNullOrEmpty(ViewModel.BootstrapUrl))
+            {
+                <p class="am-bootstrap-url">@ViewModel.BootstrapUrl</p>
+            }
+            @if (ViewModel.QrCodePng is { } png)
+            {
+                <img class="am-qr-code"
+                     src="data:image/png;base64,@Convert.ToBase64String(png)"
+                     alt="QR code to install Aether Media" />
+            }
+        }
+    </section>
+</div>
+
+@code {
+    public async ValueTask DisposeAsync()
+    {
+        base.Dispose();
+        await ViewModel.DisposeAsync();
+    }
+}

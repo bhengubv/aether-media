@@ -37,6 +37,11 @@ impl SocialGraph {
         list
     }
 
+    /// Alias for [`following_list`] — returns a sorted Vec of all followed UHIDs.
+    pub fn following(&self) -> Vec<&str> {
+        self.following_list()
+    }
+
     pub fn following_count(&self) -> usize {
         self.following.len()
     }

@@ -73,7 +73,7 @@ public sealed class ProfileService : IProfileService
             FollowingCount: 0,
             ContentCount: 0,
             IsVerified: false,
-            JoinedAt: DateTime.UtcNow);
+            JoinedAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
 
         _profiles[_localUhid] = profile;
         _logger.LogInformation("Created local profile {DisplayName} tag={Tag}", displayName, aetherTag);

@@ -124,7 +124,7 @@ public sealed class FeedAggregator : IFeedAggregator
             var bFollowed = followingSet.Contains(b.CreatorUhid);
             if (aFollowed != bFollowed)
                 return aFollowed ? -1 : 1;
-            return b.StartedAt.CompareTo(a.StartedAt);
+            return b.StartedAtMs.CompareTo(a.StartedAtMs);
         });
 
         return streams;
@@ -190,7 +190,7 @@ public sealed class FeedAggregator : IFeedAggregator
             ContentType: session.ContentType,
             CreatorUhid: session.PublisherUhid,
             SizeBytes: 0,
-            CreatedAt: session.StartedAt,
+            CreatedAtMs: new DateTimeOffset(session.StartedAt).ToUnixTimeMilliseconds(),
             ThumbnailHash: null,
             Tags: []);
 
@@ -203,7 +203,7 @@ public sealed class FeedAggregator : IFeedAggregator
             IsLive: true,
             StreamId: session.Id,
             TopReactions: [],
-            PublishedAt: session.StartedAt);
+            PublishedAtMs: new DateTimeOffset(session.StartedAt).ToUnixTimeMilliseconds());
 
         AddToFeed(feedItem);
         ItemArrived?.Invoke(this, feedItem);
@@ -222,7 +222,7 @@ public sealed class FeedAggregator : IFeedAggregator
             ContentType: descriptor.ContentType,
             CreatorUhid: string.Empty, // descriptors have no UHID field; inferred from the announcing peer
             SizeBytes: descriptor.TotalBytes,
-            CreatedAt: descriptor.CreatedAt,
+            CreatedAtMs: new DateTimeOffset(descriptor.CreatedAt).ToUnixTimeMilliseconds(),
             ThumbnailHash: null,
             Tags: []);
 
@@ -235,7 +235,7 @@ public sealed class FeedAggregator : IFeedAggregator
             IsLive: false,
             StreamId: null,
             TopReactions: [],
-            PublishedAt: descriptor.CreatedAt);
+            PublishedAtMs: new DateTimeOffset(descriptor.CreatedAt).ToUnixTimeMilliseconds());
 
         AddToFeed(feedItem);
         ItemArrived?.Invoke(this, feedItem);
@@ -285,7 +285,7 @@ public sealed class FeedAggregator : IFeedAggregator
             CreatorUhid: session.PublisherUhid,
             Codec: session.Codec,
             SegmentDurationMs: session.SegmentDurationMs,
-            StartedAt: session.StartedAt,
+            StartedAtMs: new DateTimeOffset(session.StartedAt).ToUnixTimeMilliseconds(),
             ViewerCount: 0,
             IsActive: session.State == StreamState.Live,
             Tags: []);

@@ -138,7 +138,7 @@ func cmdDemo() int {
 		ContentType: "video/mp4",
 		CreatorUHID: "alice-0001",
 		SizeBytes:   150_000_000,
-		CreatedAt:   time.Now(),
+		CreatedAtMs: time.Now().UnixMilli(),
 		Tags:        []string{"aether", "launch"},
 	}
 	fmt.Printf("Title:    %s\n", content.Title)
@@ -152,9 +152,9 @@ func cmdDemo() int {
 		c.ContentHash = fmt.Sprintf("hash-%03d", i)
 		c.Title = fmt.Sprintf("Video #%d", i)
 		agg.AddItem(models.MediaFeedItem{
-			Content:     c,
-			LikeCount:   i * 10,
-			PublishedAt: time.Now().Add(-time.Duration(i) * time.Hour),
+			Content:       c,
+			LikeCount:     i * 10,
+			PublishedAtMs: time.Now().Add(-time.Duration(i)*time.Hour).UnixMilli(),
 		})
 	}
 	agg.MarkWatched("hash-004", 30_000)

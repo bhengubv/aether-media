@@ -114,7 +114,7 @@ public sealed class MetadataResolver : IMetadataResolver
                 ContentType: contentType,
                 CreatorUhid: creatorUhid,
                 SizeBytes: fileInfo.Length,
-                CreatedAt: fileInfo.CreationTimeUtc,
+                CreatedAtMs: new DateTimeOffset(fileInfo.CreationTimeUtc).ToUnixTimeMilliseconds(),
                 ThumbnailHash: null,       // populated separately by IThumbnailService
                 Tags: tags.AsReadOnly());
 

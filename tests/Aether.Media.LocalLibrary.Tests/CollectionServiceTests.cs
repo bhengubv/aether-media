@@ -210,7 +210,7 @@ public sealed class CollectionServiceTests : IDisposable
             ContentType   : "audio/aac",
             CreatorUhid   : "local",
             SizeBytes     : 1024,
-            CreatedAt     : DateTime.UtcNow,
+            CreatedAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
             ThumbnailHash : null,
             Tags          : tags ?? []);
 

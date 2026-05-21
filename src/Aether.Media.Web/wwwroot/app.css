@@ -1,0 +1,5 @@
+/* Web overrides — runs on top of the shared stylesheet */
+
+/* Scrollable body for the web version */
+html { overflow-y: auto; }
+.am-content { overflow-y: auto; }

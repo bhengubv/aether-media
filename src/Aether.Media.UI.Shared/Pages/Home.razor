@@ -1,0 +1,67 @@
+@page "/"
+@inherits ViewModelComponentBase<HomeViewModel>
+@inject NavigationManager Nav
+
+<div class="am-page">
+    <div class="am-page-header">
+        <h1>Home</h1>
+        <button class="am-btn am-btn-primary" @onclick="() => ViewModel.RefreshCommand.Execute(null)"
+                disabled="@ViewModel.IsLoading">
+            @(ViewModel.IsLoading ? "Loading…" : "⟳ Refresh")
+        </button>
+    </div>
+
+    @if (ViewModel.NearbyStreams.Count > 0)
+    {
+        <section class="am-section">
+            <h2>Live Now</h2>
+            <div class="am-stream-list">
+                @foreach (var stream in ViewModel.NearbyStreams)
+                {
+                    <div class="am-stream-card" @onclick="() => OpenStream(stream)">
+                        <div class="am-live-badge">LIVE</div>
+                        <p class="am-stream-title">@stream.Title</p>
+                        <p class="am-stream-meta">@stream.CreatorUhid · @stream.ViewerCount viewers</p>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+
+    <section class="am-section">
+        <h2>Feed</h2>
+        @if (ViewModel.HasNoContent)
+        {
+            <p class="am-empty">Nothing here yet. Tap Refresh to load your feed.</p>
+        }
+        else
+        {
+            <div class="am-feed-list">
+                @foreach (var item in ViewModel.FeedItems)
+                {
+                    <div class="am-feed-card" @onclick="() => OpenItem(item)">
+                        <div class="am-feed-info">
+                            <p class="am-feed-title">@item.Title</p>
+                            <p class="am-feed-meta">@item.CreatorUhid · @item.FormattedDuration · @item.PublishedAgo</p>
+                            <p class="am-feed-counts">❤️ @item.LikeCount · 🔁 @item.ShareCount · 💬 @item.CommentCount</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    private void OpenItem(MediaFeedItemViewModel item)
+    {
+        ViewModel.OpenItemCommand.Execute(item);
+        Nav.NavigateTo("/player");
+    }
+
+    private void OpenStream(LiveStreamViewModel stream)
+    {
+        ViewModel.JoinStreamCommand.Execute(stream);
+        Nav.NavigateTo("/player");
+    }
+}

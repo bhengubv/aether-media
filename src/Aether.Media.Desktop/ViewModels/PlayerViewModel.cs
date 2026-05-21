@@ -147,7 +147,7 @@ public sealed partial class PlayerViewModel : ViewModelBase
             type:        type,
             positionMs:  _player.PositionMs,
             message:     type == MediaReactionType.Comment ? reactionText : null,
-            sentAt:      DateTime.UtcNow);
+            sentAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
 
         await _reactions.SendReactionAsync(reaction);
     }

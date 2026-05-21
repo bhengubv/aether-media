@@ -148,10 +148,12 @@ public class CollectionService : ICollectionService
                 c.CreatorUhid.Contains(filter.Artist, StringComparison.OrdinalIgnoreCase));
 
         if (filter.YearFrom.HasValue)
-            results = results.Where(c => c.CreatedAt.Year >= filter.YearFrom.Value);
+            results = results.Where(c =>
+                DateTimeOffset.FromUnixTimeMilliseconds(c.CreatedAtMs).Year >= filter.YearFrom.Value);
 
         if (filter.YearTo.HasValue)
-            results = results.Where(c => c.CreatedAt.Year <= filter.YearTo.Value);
+            results = results.Where(c =>
+                DateTimeOffset.FromUnixTimeMilliseconds(c.CreatedAtMs).Year <= filter.YearTo.Value);
 
         if (filter.MaxDurationMs.HasValue)
             results = results.Where(c => c.DurationMs <= filter.MaxDurationMs.Value);

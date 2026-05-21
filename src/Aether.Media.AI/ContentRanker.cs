@@ -111,7 +111,7 @@ public sealed class ContentRanker : IContentRanker
                 .ConfigureAwait(false);
 
             // Recency signal: exp(-hours / 48)
-            double hoursSince   = (DateTime.UtcNow - item.PublishedAt.ToUniversalTime()).TotalHours;
+            double hoursSince   = (DateTimeOffset.UtcNow - DateTimeOffset.FromUnixTimeMilliseconds(item.PublishedAtMs)).TotalHours;
             double recencyScore = Math.Exp(-Math.Max(0.0, hoursSince) / RecencyDecayHours);
 
             // Engagement signal, clamped to [0, 1]

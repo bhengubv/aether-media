@@ -30,7 +30,7 @@ public sealed class MediaReactionTests
                 type:        MediaReactionType.Comment,
                 positionMs:  0,
                 message:     null,          // missing — should throw
-                sentAt:      DateTime.UtcNow));
+                sentAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()));
 
         Assert.Equal("message", ex.ParamName);
     }
@@ -45,7 +45,7 @@ public sealed class MediaReactionTests
             type:        MediaReactionType.Comment,
             positionMs:  12_000,
             message:     "Great content!",
-            sentAt:      DateTime.UtcNow);
+            sentAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
 
         Assert.Equal(MediaReactionType.Comment, reaction.Type);
         Assert.Equal("Great content!", reaction.Message);
@@ -64,7 +64,7 @@ public sealed class MediaReactionTests
                 type:        MediaReactionType.Like,
                 positionMs:  0,
                 message:     "unexpected message",   // must be null — should throw
-                sentAt:      DateTime.UtcNow));
+                sentAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()));
 
         Assert.Equal("message", ex.ParamName);
     }
@@ -79,7 +79,7 @@ public sealed class MediaReactionTests
             type:        MediaReactionType.Like,
             positionMs:  0,
             message:     null,
-            sentAt:      DateTime.UtcNow);
+            sentAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
 
         Assert.Equal(MediaReactionType.Like, reaction.Type);
         Assert.Null(reaction.Message);

@@ -1,19 +1,21 @@
+using System.Text.Json.Serialization;
+
 namespace Aether.Media.Core.Models;
 
 /// <summary>
 /// Public profile of a content creator on the Aether network.
 /// </summary>
 public sealed record MediaProfile(
-    string Uhid,
-    string DisplayName,
-    string? AvatarHash,
-    string? Bio,
-    string AetherTagValue,
-    int FollowerCount,
-    int FollowingCount,
-    int ContentCount,
-    bool IsVerified,
-    DateTime JoinedAt)
+    [property: JsonPropertyName("uhid")]            string Uhid,
+    [property: JsonPropertyName("display_name")]    string DisplayName,
+    [property: JsonPropertyName("avatar_hash")]     string? AvatarHash,
+    [property: JsonPropertyName("bio")]             string? Bio,
+    [property: JsonPropertyName("aether_tag")]      string AetherTagValue,
+    [property: JsonPropertyName("follower_count")]  int FollowerCount,
+    [property: JsonPropertyName("following_count")] int FollowingCount,
+    [property: JsonPropertyName("content_count")]   int ContentCount,
+    [property: JsonPropertyName("is_verified")]     bool IsVerified,
+    [property: JsonPropertyName("joined_at_ms")]    long JoinedAtMs)
 {
     private const int ShortBioMaxLength = 120;
 
@@ -23,6 +25,7 @@ public sealed record MediaProfile(
     /// ellipsis (<c>…</c>) is appended.  Returns an empty string when
     /// <see cref="Bio"/> is null or whitespace.
     /// </summary>
+    [JsonIgnore]
     public string ShortBio
     {
         get

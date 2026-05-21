@@ -4,6 +4,7 @@ use std::fmt;
 // ── Reaction type ─────────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 #[repr(u8)]
 pub enum MediaReactionType {
     Like       = 1,
@@ -70,11 +71,12 @@ impl MediaContent {
 // ── MediaReaction ─────────────────────────────────────────────────────────────
 
 /// A validated reaction.  Construct with [`MediaReaction::new`].
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct MediaReaction {
     pub reaction_id: String,
     pub content_hash: String,
     pub from_uhid: String,
+    #[serde(rename = "type")]
     pub reaction_type: MediaReactionType,
     pub position_ms: u64,
     pub message: Option<String>,

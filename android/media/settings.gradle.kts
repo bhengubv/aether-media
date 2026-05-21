@@ -1,3 +1,11 @@
+// Resolve aether-protocol-kotlin from the local monorepo instead of GitHub Packages.
+// This substitution is active on all machines regardless of GITHUB_TOKEN availability.
+includeBuild("../../../aether-protocol/kotlin") {
+    dependencySubstitution {
+        substitute(module("dev.aether:aether-protocol-kotlin")).using(project(":"))
+    }
+}
+
 pluginManagement {
     repositories {
         google()

@@ -1,29 +1,32 @@
+using System.Text.Json.Serialization;
+
 namespace Aether.Media.Core.Models;
 
 /// <summary>
 /// Represents an active live broadcast being relayed through the Aether mesh.
 /// </summary>
 public sealed record LiveStream(
-    Guid StreamId,
-    string Title,
-    string CreatorUhid,
-    string Codec,
-    int SegmentDurationMs,
-    DateTime StartedAt,
-    int ViewerCount,
-    bool IsActive,
-    IReadOnlyList<string> Tags)
+    [property: JsonPropertyName("stream_id")]           Guid StreamId,
+    [property: JsonPropertyName("title")]               string Title,
+    [property: JsonPropertyName("creator_uhid")]        string CreatorUhid,
+    [property: JsonPropertyName("codec")]               string Codec,
+    [property: JsonPropertyName("segment_duration_ms")] int SegmentDurationMs,
+    [property: JsonPropertyName("started_at_ms")]       long StartedAtMs,
+    [property: JsonPropertyName("viewer_count")]        int ViewerCount,
+    [property: JsonPropertyName("is_active")]           bool IsActive,
+    [property: JsonPropertyName("tags")]                IReadOnlyList<string> Tags)
 {
     /// <summary>
     /// Wall-clock milliseconds elapsed since the broadcast started (UTC).
     /// Always >= 0; clamped to 0 if the clock is somehow behind
-    /// <see cref="StartedAt"/>.
+    /// <see cref="StartedAtMs"/>.
     /// </summary>
+    [JsonIgnore]
     public long ElapsedMs
     {
         get
         {
-            var elapsed = (long)(DateTime.UtcNow - StartedAt.ToUniversalTime()).TotalMilliseconds;
+            var elapsed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - StartedAtMs;
             return elapsed < 0 ? 0L : elapsed;
         }
     }
@@ -32,6 +35,7 @@ public sealed record LiveStream(
     /// Human-readable elapsed time formatted as <c>H:MM:SS</c> (hours omitted
     /// when less than 60 minutes).
     /// </summary>
+    [JsonIgnore]
     public string ElapsedFormatted
     {
         get

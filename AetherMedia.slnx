@@ -7,12 +7,20 @@
   <Project Path="src\Aether.Media.AI\Aether.Media.AI.csproj" />
   <Project Path="src\Aether.Media.Distribution\Aether.Media.Distribution.csproj" />
   <Project Path="src\Aether.Media.LocalLibrary\Aether.Media.LocalLibrary.csproj" />
-  <Project Path="src\Aether.Media.Desktop\Aether.Media.Desktop.csproj" />
+  <Project Path="src\Aether.Media.Reel\Aether.Media.Reel.csproj" />
+  <Project Path="src\Aether.Media.UI.Shared\Aether.Media.UI.Shared.csproj" />
+  <Project Path="src\Aether.Media.Mobile\Aether.Media.Mobile.csproj" />
+  <Project Path="src\Aether.Media.Web\Aether.Media.Web.csproj" />
   <Project Path="src\Aether.Media.DependencyInjection\Aether.Media.DependencyInjection.csproj" />
   <Project Path="tests\Aether.Media.Core.Tests\Aether.Media.Core.Tests.csproj" />
   <Project Path="tests\Aether.Media.Social.Tests\Aether.Media.Social.Tests.csproj" />
+  <Project Path="tests\Aether.Media.Streaming.Tests\Aether.Media.Streaming.Tests.csproj" />
+  <Project Path="tests\Aether.Media.Content.Tests\Aether.Media.Content.Tests.csproj" />
+  <Project Path="tests\Aether.Media.Identity.Tests\Aether.Media.Identity.Tests.csproj" />
+  <Project Path="tests\Aether.Media.AI.Tests\Aether.Media.AI.Tests.csproj" />
   <Project Path="tests\Aether.Media.Distribution.Tests\Aether.Media.Distribution.Tests.csproj" />
   <Project Path="tests\Aether.Media.LocalLibrary.Tests\Aether.Media.LocalLibrary.Tests.csproj" />
+  <Project Path="tests\Aether.Media.Reel.Tests\Aether.Media.Reel.Tests.csproj" />
   <Project Path="samples\Aether.Media.Demo.Console\Aether.Media.Demo.Console.csproj" />
   <Project Path="samples\Aether.Media.RelayTest\Aether.Media.RelayTest.csproj" />
 </Solution>

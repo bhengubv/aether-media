@@ -100,13 +100,13 @@ public sealed class InMemoryMediaLibrary : IMediaLibrary
     }
 
     /// <inheritdoc/>
-    /// <remarks>Results are ordered by <see cref="MediaContent.CreatedAt"/> descending.</remarks>
+    /// <remarks>Results are ordered by <see cref="MediaContent.CreatedAtMs"/> descending.</remarks>
     public Task<IReadOnlyList<MediaContent>> GetAllAsync(CancellationToken ct = default)
     {
         ct.ThrowIfCancellationRequested();
 
         IReadOnlyList<MediaContent> result = _store.Values
-            .OrderByDescending(c => c.CreatedAt)
+            .OrderByDescending(c => c.CreatedAtMs)
             .ToList();
 
         return Task.FromResult(result);
@@ -135,14 +135,14 @@ public sealed class InMemoryMediaLibrary : IMediaLibrary
 
         IReadOnlyList<MediaContent> result = _store.Values
             .Where(c => MatchesQuery(c, normalised))
-            .OrderByDescending(c => c.CreatedAt)
+            .OrderByDescending(c => c.CreatedAtMs)
             .ToList();
 
         return Task.FromResult(result);
     }
 
     /// <inheritdoc/>
-    /// <remarks>Results are ordered by <see cref="MediaContent.CreatedAt"/> descending.</remarks>
+    /// <remarks>Results are ordered by <see cref="MediaContent.CreatedAtMs"/> descending.</remarks>
     public Task<IReadOnlyList<MediaContent>> GetByCreatorAsync(
         string creatorUhid,
         CancellationToken ct = default)
@@ -154,7 +154,7 @@ public sealed class InMemoryMediaLibrary : IMediaLibrary
 
         IReadOnlyList<MediaContent> result = _store.Values
             .Where(c => string.Equals(c.CreatorUhid, creatorUhid, StringComparison.OrdinalIgnoreCase))
-            .OrderByDescending(c => c.CreatedAt)
+            .OrderByDescending(c => c.CreatedAtMs)
             .ToList();
 
         return Task.FromResult(result);

@@ -34,16 +34,16 @@ public actor FeedAggregator {
         guard let idx = items.firstIndex(where: { $0.content.contentHash == contentHash }) else { return }
         let old = items[idx]
         items[idx] = MediaFeedItem(
-            content:      old.content,
-            likeCount:    old.likeCount,
-            shareCount:   old.shareCount,
-            commentCount: old.commentCount,
-            watchCount:   old.watchCount + 1,
-            isLive:       old.isLive,
-            streamId:     old.streamId,
-            topReactions: old.topReactions,
-            publishedAt:  old.publishedAt,
-            watchedMs:    old.watchedMs + ms
+            content:       old.content,
+            likeCount:     old.likeCount,
+            shareCount:    old.shareCount,
+            commentCount:  old.commentCount,
+            watchCount:    old.watchCount + 1,
+            isLive:        old.isLive,
+            streamId:      old.streamId,
+            topReactions:  old.topReactions,
+            publishedAtMs: old.publishedAtMs,
+            watchedMs:     old.watchedMs + ms
         )
     }
 

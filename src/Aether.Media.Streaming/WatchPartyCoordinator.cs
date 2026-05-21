@@ -284,7 +284,7 @@ public sealed class WatchPartyCoordinator : IWatchPartyCoordinator
                 type: MediaReactionType.Like,
                 positionMs: Math.Max(0, payload.PositionMs),
                 message: null,
-                sentAt: DateTime.UtcNow);
+                sentAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
 
             ReactionReceived?.Invoke(this, reaction);
         }

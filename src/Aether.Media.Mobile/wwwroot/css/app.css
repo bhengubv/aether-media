@@ -1,0 +1,11 @@
+/* Mobile overrides — runs on top of the shared stylesheet */
+
+/* Full-height shell on mobile */
+html, body { overflow: hidden; }
+
+/* Narrower nav on small screens */
+@media (max-width: 600px) {
+    :root { --am-nav-w: 60px; }
+    .am-nav-title, .am-nav-item { font-size: 0; }
+    .am-nav-item::before { font-size: 1.2rem; }
+}

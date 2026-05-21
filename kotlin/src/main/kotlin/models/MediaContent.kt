@@ -1,5 +1,6 @@
 package aether.media.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -8,14 +9,20 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class MediaContent(
+    @SerialName("content_hash")
     val contentHash: String,
     val title: String,
+    @SerialName("duration_ms")
     val durationMs: Long,
     val codec: String,
+    @SerialName("content_type")
     val contentType: String,
+    @SerialName("creator_uhid")
     val creatorUhid: String,
+    @SerialName("size_bytes")
     val sizeBytes: Long,
     val tags: List<String> = emptyList(),
+    @SerialName("thumbnail_hash")
     val thumbnailHash: String? = null,
 ) {
     /**
@@ -72,12 +79,17 @@ enum class MediaReactionType(val value: Int) {
  */
 @Serializable
 data class MediaReaction(
+    @SerialName("reaction_id")
     val reactionId: String,
+    @SerialName("content_hash")
     val contentHash: String,
+    @SerialName("from_uhid")
     val fromUhid: String,
     val type: MediaReactionType,
+    @SerialName("position_ms")
     val positionMs: Long,
     val message: String?,
+    @SerialName("sent_at_ms")
     val sentAtMs: Long,
 ) {
     init {
@@ -101,14 +113,22 @@ data class MediaReaction(
 @Serializable
 data class MediaProfile(
     val uhid: String,
+    @SerialName("display_name")
     val displayName: String,
+    @SerialName("avatar_hash")
     val avatarHash: String?,
     val bio: String?,
+    @SerialName("aether_tag")
     val aetherTagValue: String,
+    @SerialName("follower_count")
     val followerCount: Int,
+    @SerialName("following_count")
     val followingCount: Int,
+    @SerialName("content_count")
     val contentCount: Int,
+    @SerialName("is_verified")
     val isVerified: Boolean,
+    @SerialName("joined_at_ms")
     val joinedAtMs: Long,
 ) {
     private companion object { const val SHORT_BIO_MAX = 120 }
@@ -133,13 +153,19 @@ data class MediaProfile(
 
 @Serializable
 data class LiveStream(
+    @SerialName("stream_id")
     val streamId: String,
     val title: String,
+    @SerialName("creator_uhid")
     val creatorUhid: String,
     val codec: String,
+    @SerialName("segment_duration_ms")
     val segmentDurationMs: Int,
+    @SerialName("started_at_ms")
     val startedAtMs: Long,
+    @SerialName("viewer_count")
     val viewerCount: Int,
+    @SerialName("is_active")
     val isActive: Boolean,
     val tags: List<String> = emptyList(),
 ) {
@@ -166,14 +192,23 @@ data class LiveStream(
 @Serializable
 data class MediaFeedItem(
     val content: MediaContent,
+    @SerialName("like_count")
     val likeCount: Int,
+    @SerialName("share_count")
     val shareCount: Int,
+    @SerialName("comment_count")
     val commentCount: Int,
+    @SerialName("watch_count")
     val watchCount: Int,
+    @SerialName("is_live")
     val isLive: Boolean,
+    @SerialName("stream_id")
     val streamId: String?,
+    @SerialName("top_reactions")
     val topReactions: List<MediaReaction> = emptyList(),
+    @SerialName("published_at_ms")
     val publishedAtMs: Long,
+    @SerialName("watched_ms")
     val watchedMs: Long = 0L,
 ) {
     val isNew: Boolean

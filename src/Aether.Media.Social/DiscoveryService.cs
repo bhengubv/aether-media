@@ -99,7 +99,7 @@ public sealed class DiscoveryService : IDiscoveryService
                 CreatorUhid: session.PublisherUhid,
                 Codec: session.Codec,
                 SegmentDurationMs: session.SegmentDurationMs,
-                StartedAt: session.StartedAt,
+                StartedAtMs: new DateTimeOffset(session.StartedAt).ToUnixTimeMilliseconds(),
                 ViewerCount: 0,
                 IsActive: true,
                 Tags: []));
@@ -162,5 +162,5 @@ public sealed class DiscoveryService : IDiscoveryService
             FollowingCount: 0,
             ContentCount: 0,
             IsVerified: false,
-            JoinedAt: DateTime.UtcNow);
+            JoinedAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
 }

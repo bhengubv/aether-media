@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import asdict, dataclass, field
 from enum import IntEnum
 from typing import Optional
 
@@ -13,6 +12,26 @@ class MediaReactionType(IntEnum):
     SHARE       = 2
     COMMENT     = 3
     SUPER_REACT = 4
+
+    def to_wire(self) -> str:
+        return {
+            MediaReactionType.LIKE:        "like",
+            MediaReactionType.SHARE:       "share",
+            MediaReactionType.COMMENT:     "comment",
+            MediaReactionType.SUPER_REACT: "super_react",
+        }[self]
+
+    @classmethod
+    def from_wire(cls, value: str) -> "MediaReactionType":
+        mapping = {
+            "like":        cls.LIKE,
+            "share":       cls.SHARE,
+            "comment":     cls.COMMENT,
+            "super_react": cls.SUPER_REACT,
+        }
+        if value not in mapping:
+            raise ValueError(f"Unknown MediaReactionType wire value: {value!r}")
+        return mapping[value]
 
 
 @dataclass(frozen=True)
@@ -24,7 +43,7 @@ class MediaContent:
     content_type:   str
     creator_uhid:   str
     size_bytes:     int
-    created_at:     datetime
+    created_at_ms:  int
     thumbnail_hash: Optional[str]      = None
     tags:           tuple[str, ...]    = field(default_factory=tuple)
 
@@ -54,6 +73,12 @@ class MediaContent:
     def is_audio(self) -> bool:
         return self.content_type.lower().startswith("audio/")
 
+    def to_dict(self) -> dict:
+        """Returns the canonical wire-format dict (snake_case, no datetime objects)."""
+        d = asdict(self)
+        d["tags"] = list(self.tags)
+        return d
+
 
 @dataclass
 class MediaReaction:
@@ -63,7 +88,7 @@ class MediaReaction:
     type:         MediaReactionType
     position_ms:  int
     message:      Optional[str]
-    sent_at:      datetime
+    sent_at_ms:   int              # unix milliseconds
 
     def __post_init__(self) -> None:
         if not self.content_hash.strip():
@@ -81,19 +106,31 @@ class MediaReaction:
                     f"message must be None for {self.type.name} reactions"
                 )
 
+    def to_dict(self) -> dict:
+        """Returns the canonical wire-format dict (snake_case, lowercase type string)."""
+        return {
+            "reaction_id":  self.reaction_id,
+            "content_hash": self.content_hash,
+            "from_uhid":    self.from_uhid,
+            "type":         self.type.to_wire(),
+            "position_ms":  self.position_ms,
+            "message":      self.message,
+            "sent_at_ms":   self.sent_at_ms,
+        }
+
 
 @dataclass(frozen=True)
 class MediaProfile:
-    uhid:           str
-    display_name:   str
-    avatar_hash:    Optional[str]
-    bio:            Optional[str]
-    aether_tag:     str
-    follower_count: int
+    uhid:            str
+    display_name:    str
+    avatar_hash:     Optional[str]
+    bio:             Optional[str]
+    aether_tag:      str
+    follower_count:  int
     following_count: int
-    content_count:  int
-    is_verified:    bool
-    joined_at:      datetime
+    content_count:   int
+    is_verified:     bool
+    joined_at_ms:    int           # unix milliseconds
 
     @property
     def short_bio(self) -> str:
@@ -111,28 +148,40 @@ class MediaProfile:
         boundary = last_space if last_space > 0 else 120
         return cut[:boundary].rstrip() + "…"
 
+    def to_dict(self) -> dict:
+        """Returns the canonical wire-format dict (snake_case, no datetime objects)."""
+        return {
+            "uhid":            self.uhid,
+            "display_name":    self.display_name,
+            "avatar_hash":     self.avatar_hash,
+            "bio":             self.bio,
+            "aether_tag":      self.aether_tag,
+            "follower_count":  self.follower_count,
+            "following_count": self.following_count,
+            "content_count":   self.content_count,
+            "is_verified":     self.is_verified,
+            "joined_at_ms":    self.joined_at_ms,
+        }
+
 
 @dataclass
 class LiveStream:
-    stream_id:          str
-    title:              str
-    creator_uhid:       str
-    codec:              str
+    stream_id:           str
+    title:               str
+    creator_uhid:        str
+    codec:               str
     segment_duration_ms: int
-    started_at:         datetime
-    viewer_count:       int
-    is_active:          bool
-    tags:               tuple[str, ...] = field(default_factory=tuple)
+    started_at_ms:       int       # unix milliseconds
+    viewer_count:        int
+    is_active:           bool
+    tags:                tuple[str, ...] = field(default_factory=tuple)
 
     @property
     def elapsed_ms(self) -> int:
         """Wall-clock milliseconds since the broadcast started (UTC). Always >= 0."""
-        now = datetime.now(tz=timezone.utc)
-        started = self.started_at
-        if started.tzinfo is None:
-            started = started.replace(tzinfo=timezone.utc)
-        elapsed = int((now - started).total_seconds() * 1000)
-        return max(0, elapsed)
+        import time
+        now_ms = int(time.time() * 1000)
+        return max(0, now_ms - self.started_at_ms)
 
     @property
     def elapsed_formatted(self) -> str:
@@ -143,6 +192,20 @@ class LiveStream:
         if hours > 0:
             return f"{hours}:{minutes:02d}:{seconds:02d}"
         return f"{minutes}:{seconds:02d}"
+
+    def to_dict(self) -> dict:
+        """Returns the canonical wire-format dict."""
+        return {
+            "stream_id":            self.stream_id,
+            "title":                self.title,
+            "creator_uhid":         self.creator_uhid,
+            "codec":                self.codec,
+            "segment_duration_ms":  self.segment_duration_ms,
+            "started_at_ms":        self.started_at_ms,
+            "viewer_count":         self.viewer_count,
+            "is_active":            self.is_active,
+            "tags":                 list(self.tags),
+        }
 
 
 @dataclass(frozen=True)
@@ -155,17 +218,29 @@ class MediaFeedItem:
     is_live:       bool
     stream_id:     Optional[str]
     top_reactions: tuple[MediaReaction, ...] = field(default_factory=tuple)
-    published_at:  datetime = field(default_factory=lambda: datetime.now(tz=timezone.utc))
+    published_at_ms: int = 0       # unix milliseconds
 
     @property
     def is_new(self) -> bool:
         """True when published within the last 24 hours."""
-        now = datetime.now(tz=timezone.utc)
-        pub = self.published_at
-        if pub.tzinfo is None:
-            pub = pub.replace(tzinfo=timezone.utc)
-        return (now - pub).total_seconds() < 86400
+        import time
+        now_ms = int(time.time() * 1000)
+        return (now_ms - self.published_at_ms) < 86_400_000
 
     @property
     def reaction_total(self) -> int:
         return self.like_count + self.share_count + self.comment_count
+
+    def to_dict(self) -> dict:
+        """Returns the canonical wire-format dict."""
+        return {
+            "content":          self.content.to_dict(),
+            "like_count":       self.like_count,
+            "share_count":      self.share_count,
+            "comment_count":    self.comment_count,
+            "watch_count":      self.watch_count,
+            "is_live":          self.is_live,
+            "stream_id":        self.stream_id,
+            "top_reactions":    [r.to_dict() for r in self.top_reactions],
+            "published_at_ms":  self.published_at_ms,
+        }

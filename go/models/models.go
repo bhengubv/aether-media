@@ -21,13 +21,13 @@ const (
 func (t MediaReactionType) String() string {
 	switch t {
 	case ReactionLike:
-		return "Like"
+		return "like"
 	case ReactionShare:
-		return "Share"
+		return "share"
 	case ReactionComment:
-		return "Comment"
+		return "comment"
 	case ReactionSuperReact:
-		return "SuperReact"
+		return "super_react"
 	default:
 		return fmt.Sprintf("Unknown(%d)", int(t))
 	}
@@ -36,16 +36,16 @@ func (t MediaReactionType) String() string {
 // MediaContent is an immutable description of a single piece of media.
 // The primary key is ContentHash — a SHA-256 hex digest of the encoded bytes.
 type MediaContent struct {
-	ContentHash  string
-	Title        string
-	DurationMs   int64
-	Codec        string
-	ContentType  string
-	CreatorUHID  string
-	SizeBytes    int64
-	CreatedAt    time.Time
-	ThumbnailHash *string
-	Tags         []string
+	ContentHash   string   `json:"content_hash"`
+	Title         string   `json:"title"`
+	DurationMs    int64    `json:"duration_ms"`
+	Codec         string   `json:"codec"`
+	ContentType   string   `json:"content_type"`
+	CreatorUHID   string   `json:"creator_uhid"`
+	SizeBytes     int64    `json:"size_bytes"`
+	CreatedAtMs   int64    `json:"created_at_ms"`
+	ThumbnailHash *string  `json:"thumbnail_hash"`
+	Tags          []string `json:"tags"`
 }
 
 // FormattedDuration returns a human-readable duration string.
@@ -78,13 +78,13 @@ func (m MediaContent) IsAudio() bool {
 
 // MediaReaction is a timestamped reaction sent by a viewer.
 type MediaReaction struct {
-	ReactionID  string
-	ContentHash string
-	FromUHID    string
-	Type        MediaReactionType
-	PositionMs  int64
-	Message     *string // required for Comment, nil otherwise
-	SentAt      time.Time
+	ReactionID  string            `json:"reaction_id"`
+	ContentHash string            `json:"content_hash"`
+	FromUHID    string            `json:"from_uhid"`
+	Type        MediaReactionType `json:"type"`
+	PositionMs  int64             `json:"position_ms"`
+	Message     *string           `json:"message"`
+	SentAtMs    int64             `json:"sent_at_ms"`
 }
 
 // Validate checks the reaction business rules and returns an error if violated.
@@ -112,16 +112,16 @@ func (r MediaReaction) Validate() error {
 
 // MediaProfile is the public profile of a content creator on Aether.
 type MediaProfile struct {
-	UHID           string
-	DisplayName    string
-	AvatarHash     *string
-	Bio            *string
-	AetherTagValue string
-	FollowerCount  int
-	FollowingCount int
-	ContentCount   int
-	IsVerified     bool
-	JoinedAt       time.Time
+	UHID           string  `json:"uhid"`
+	DisplayName    string  `json:"display_name"`
+	AvatarHash     *string `json:"avatar_hash"`
+	Bio            *string `json:"bio"`
+	AetherTag      string  `json:"aether_tag"`
+	FollowerCount  int     `json:"follower_count"`
+	FollowingCount int     `json:"following_count"`
+	ContentCount   int     `json:"content_count"`
+	IsVerified     bool    `json:"is_verified"`
+	JoinedAtMs     int64   `json:"joined_at_ms"`
 }
 
 const shortBioMax = 120
@@ -151,21 +151,22 @@ func (p MediaProfile) ShortBio() string {
 
 // LiveStream represents an active live broadcast on the Aether mesh.
 type LiveStream struct {
-	StreamID           string
-	Title              string
-	CreatorUHID        string
-	Codec              string
-	SegmentDurationMs  int
-	StartedAt          time.Time
-	ViewerCount        int
-	IsActive           bool
-	Tags               []string
+	StreamID          string   `json:"stream_id"`
+	Title             string   `json:"title"`
+	CreatorUHID       string   `json:"creator_uhid"`
+	Codec             string   `json:"codec"`
+	SegmentDurationMs int      `json:"segment_duration_ms"`
+	StartedAtMs       int64    `json:"started_at_ms"`
+	ViewerCount       int      `json:"viewer_count"`
+	IsActive          bool     `json:"is_active"`
+	Tags              []string `json:"tags"`
 }
 
 // ElapsedMs returns wall-clock milliseconds since the stream started.
-// Clamped to 0 when StartedAt is in the future.
+// Clamped to 0 when StartedAtMs is in the future.
 func (s LiveStream) ElapsedMs() int64 {
-	elapsed := time.Since(s.StartedAt).Milliseconds()
+	startedAt := time.UnixMilli(s.StartedAtMs)
+	elapsed := time.Since(startedAt).Milliseconds()
 	if elapsed < 0 {
 		return 0
 	}
@@ -186,22 +187,23 @@ func (s LiveStream) ElapsedFormatted() string {
 
 // MediaFeedItem combines a piece of content with engagement counters.
 type MediaFeedItem struct {
-	Content      MediaContent
-	LikeCount    int
-	ShareCount   int
-	CommentCount int
-	WatchCount   int
-	IsLive       bool
-	StreamID     *string
-	TopReactions []MediaReaction
-	PublishedAt  time.Time
+	Content      MediaContent   `json:"content"`
+	LikeCount    int            `json:"like_count"`
+	ShareCount   int            `json:"share_count"`
+	CommentCount int            `json:"comment_count"`
+	WatchCount   int            `json:"watch_count"`
+	IsLive       bool           `json:"is_live"`
+	StreamID     *string        `json:"stream_id"`
+	TopReactions []MediaReaction `json:"top_reactions"`
+	PublishedAtMs int64         `json:"published_at_ms"`
 	// WatchedMs is the number of ms the local user has watched this content.
-	WatchedMs int64
+	WatchedMs int64 `json:"watched_ms"`
 }
 
 // IsNew returns true when the item was published within the last 24 hours.
 func (f MediaFeedItem) IsNew() bool {
-	return time.Since(f.PublishedAt) < 24*time.Hour
+	publishedAt := time.UnixMilli(f.PublishedAtMs)
+	return time.Since(publishedAt) < 24*time.Hour
 }
 
 // ReactionTotal returns the sum of likes + shares + comments.

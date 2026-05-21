@@ -48,7 +48,7 @@ public sealed class LocalMediaFeed : IMediaFeed
                     CreatorUhid: i.Content.CreatorUhid,
                     Codec: i.Content.Codec,
                     SegmentDurationMs: 2000,
-                    StartedAt: i.PublishedAt,
+                    StartedAtMs: i.PublishedAtMs,
                     ViewerCount: i.WatchCount,
                     IsActive: true,
                     Tags: []))

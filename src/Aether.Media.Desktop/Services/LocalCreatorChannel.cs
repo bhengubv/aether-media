@@ -41,7 +41,7 @@ public sealed class LocalCreatorChannel : ICreatorChannel
             FollowingCount: 0,
             ContentCount: 0,
             IsVerified: false,
-            JoinedAt: DateTime.UtcNow);
+            JoinedAtMs: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
     }
 
     public async Task<IReadOnlyList<MediaContent>> GetContentAsync(

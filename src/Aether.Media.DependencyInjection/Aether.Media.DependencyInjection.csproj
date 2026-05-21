@@ -15,6 +15,7 @@
     <ProjectReference Include="..\Aether.Media.AI\Aether.Media.AI.csproj" />
     <ProjectReference Include="..\Aether.Media.Distribution\Aether.Media.Distribution.csproj" />
     <ProjectReference Include="..\Aether.Media.LocalLibrary\Aether.Media.LocalLibrary.csproj" />
+    <ProjectReference Include="..\Aether.Media.Reel\Aether.Media.Reel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
