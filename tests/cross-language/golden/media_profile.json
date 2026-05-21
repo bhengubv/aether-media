@@ -1,0 +1,12 @@
+{
+  "uhid":            "uhid-test-001",
+  "display_name":    "Test Creator",
+  "avatar_hash":     null,
+  "bio":             "Hello from Aether.",
+  "aether_tag":      "@testcreator",
+  "follower_count":  100,
+  "following_count": 10,
+  "content_count":   5,
+  "is_verified":     false,
+  "joined_at_ms":    1700000000000
+}

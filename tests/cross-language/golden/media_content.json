@@ -1,0 +1,12 @@
+{
+  "content_hash":   "abc123def456",
+  "title":          "Test Video",
+  "duration_ms":    90000,
+  "codec":          "h264",
+  "content_type":   "video/mp4",
+  "creator_uhid":   "uhid-test-001",
+  "size_bytes":     5000000,
+  "created_at_ms":  1700000000000,
+  "thumbnail_hash": null,
+  "tags":           ["test", "demo"]
+}

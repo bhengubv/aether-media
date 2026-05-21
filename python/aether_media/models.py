@@ -73,6 +73,22 @@ class MediaContent:
     def is_audio(self) -> bool:
         return self.content_type.lower().startswith("audio/")
 
+    @classmethod
+    def from_dict(cls, d: dict) -> "MediaContent":
+        """Constructs a MediaContent from a wire-format dict (snake_case)."""
+        return cls(
+            content_hash=d["content_hash"],
+            title=d["title"],
+            duration_ms=d["duration_ms"],
+            codec=d["codec"],
+            content_type=d["content_type"],
+            creator_uhid=d["creator_uhid"],
+            size_bytes=d["size_bytes"],
+            created_at_ms=d["created_at_ms"],
+            thumbnail_hash=d.get("thumbnail_hash"),
+            tags=tuple(d.get("tags") or []),
+        )
+
     def to_dict(self) -> dict:
         """Returns the canonical wire-format dict (snake_case, no datetime objects)."""
         d = asdict(self)
@@ -105,6 +121,19 @@ class MediaReaction:
                 raise ValueError(
                     f"message must be None for {self.type.name} reactions"
                 )
+
+    @classmethod
+    def from_dict(cls, d: dict) -> "MediaReaction":
+        """Constructs a MediaReaction from a wire-format dict (snake_case)."""
+        return cls(
+            reaction_id=d["reaction_id"],
+            content_hash=d["content_hash"],
+            from_uhid=d["from_uhid"],
+            type=MediaReactionType.from_wire(d["type"]),
+            position_ms=d["position_ms"],
+            message=d.get("message"),
+            sent_at_ms=d["sent_at_ms"],
+        )
 
     def to_dict(self) -> dict:
         """Returns the canonical wire-format dict (snake_case, lowercase type string)."""
@@ -147,6 +176,22 @@ class MediaProfile:
         last_space = cut.rfind(" ")
         boundary = last_space if last_space > 0 else 120
         return cut[:boundary].rstrip() + "…"
+
+    @classmethod
+    def from_dict(cls, d: dict) -> "MediaProfile":
+        """Constructs a MediaProfile from a wire-format dict (snake_case)."""
+        return cls(
+            uhid=d["uhid"],
+            display_name=d["display_name"],
+            avatar_hash=d.get("avatar_hash"),
+            bio=d.get("bio"),
+            aether_tag=d["aether_tag"],
+            follower_count=d["follower_count"],
+            following_count=d["following_count"],
+            content_count=d["content_count"],
+            is_verified=d["is_verified"],
+            joined_at_ms=d["joined_at_ms"],
+        )
 
     def to_dict(self) -> dict:
         """Returns the canonical wire-format dict (snake_case, no datetime objects)."""

@@ -1,0 +1,9 @@
+{
+  "reaction_id":  "rxn-001",
+  "content_hash": "abc123def456",
+  "from_uhid":    "viewer-001",
+  "type":         "like",
+  "position_ms":  45000,
+  "message":      null,
+  "sent_at_ms":   1700000060000
+}

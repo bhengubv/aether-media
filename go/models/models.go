@@ -3,6 +3,7 @@
 package models
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -31,6 +32,36 @@ func (t MediaReactionType) String() string {
 	default:
 		return fmt.Sprintf("Unknown(%d)", int(t))
 	}
+}
+
+// MarshalJSON serialises MediaReactionType as a lowercase string (wire format).
+func (t MediaReactionType) MarshalJSON() ([]byte, error) {
+	s := t.String()
+	if strings.HasPrefix(s, "Unknown(") {
+		return nil, fmt.Errorf("models: cannot marshal unknown MediaReactionType %d", int(t))
+	}
+	return json.Marshal(s)
+}
+
+// UnmarshalJSON deserialises a lowercase string into a MediaReactionType.
+func (t *MediaReactionType) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return fmt.Errorf("models: MediaReactionType must be a string: %w", err)
+	}
+	switch s {
+	case "like":
+		*t = ReactionLike
+	case "share":
+		*t = ReactionShare
+	case "comment":
+		*t = ReactionComment
+	case "super_react":
+		*t = ReactionSuperReact
+	default:
+		return fmt.Errorf("models: unknown MediaReactionType wire value %q", s)
+	}
+	return nil
 }
 
 // MediaContent is an immutable description of a single piece of media.
