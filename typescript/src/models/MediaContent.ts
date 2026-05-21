@@ -6,10 +6,58 @@ export interface MediaContent {
   contentType: string;
   creatorUhid: string;
   sizeBytes: number;
-  createdAt: Date;
+  createdAtMs: number;
   thumbnailHash: string | null;
   tags: string[];
 }
+
+// ── Wire format ───────────────────────────────────────────────────────────────
+
+/** Snake_case JSON representation of MediaContent as sent/received on the wire. */
+export interface MediaContentWire {
+  content_hash: string;
+  title: string;
+  duration_ms: number;
+  codec: string;
+  content_type: string;
+  creator_uhid: string;
+  size_bytes: number;
+  created_at_ms: number;
+  thumbnail_hash: string | null;
+  tags: string[];
+}
+
+export function toWire(content: MediaContent): MediaContentWire {
+  return {
+    content_hash:   content.contentHash,
+    title:          content.title,
+    duration_ms:    content.durationMs,
+    codec:          content.codec,
+    content_type:   content.contentType,
+    creator_uhid:   content.creatorUhid,
+    size_bytes:     content.sizeBytes,
+    created_at_ms:  content.createdAtMs,
+    thumbnail_hash: content.thumbnailHash,
+    tags:           content.tags,
+  };
+}
+
+export function fromWire(obj: MediaContentWire): MediaContent {
+  return {
+    contentHash:   obj.content_hash,
+    title:         obj.title,
+    durationMs:    obj.duration_ms,
+    codec:         obj.codec,
+    contentType:   obj.content_type,
+    creatorUhid:   obj.creator_uhid,
+    sizeBytes:     obj.size_bytes,
+    createdAtMs:   obj.created_at_ms,
+    thumbnailHash: obj.thumbnail_hash,
+    tags:          obj.tags,
+  };
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 /**
  * Returns a human-readable duration string.
