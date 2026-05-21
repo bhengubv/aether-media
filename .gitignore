@@ -6,6 +6,8 @@ dist/
 dist-electron/
 release/
 target/
+build/
+build_*/
 
 # ── .NET ──────────────────────────────────────────────────────────────────────
 *.user
