@@ -177,6 +177,31 @@ public sealed class AetherMediaBuilder
     /// registered in the container (e.g. in lightweight or test setups).
     /// </para>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <b>Prerequisite:</b> <see cref="Aether.Extensibility.IAetherAiProvider"/>
+    /// must be present in the container before this method's factory lambdas are
+    /// resolved (i.e. before the first service is requested from the built
+    /// <see cref="IServiceProvider"/>).
+    /// </para>
+    /// <para>
+    /// This requirement is automatically satisfied by
+    /// <c>services.AddAetherProtocol()</c>, which registers
+    /// <c>NullAetherAiProvider</c> as the fallback when no CircleAI SDK is
+    /// installed. When CircleAI is present it registers its own implementation
+    /// first; the protocol builder's <c>TryAddSingleton</c> call then becomes a
+    /// no-op, so there is always exactly one <see cref="Aether.Extensibility.IAetherAiProvider"/>
+    /// singleton in the container — shared by both the protocol layer and every
+    /// Aether Media service registered here.
+    /// </para>
+    /// <para>
+    /// If you call <c>AddAetherMedia().AddAI()</c> on a bare
+    /// <see cref="IServiceCollection"/> that has no
+    /// <see cref="Aether.Extensibility.IAetherAiProvider"/> registration, an
+    /// <see cref="InvalidOperationException"/> will be thrown at the point the
+    /// first AI-dependent service (e.g. <see cref="IContentRanker"/>) is resolved.
+    /// </para>
+    /// </remarks>
     public AetherMediaBuilder AddAI()
     {
         Services.TryAddSingleton<IWatchHistoryStore,     InMemoryWatchHistoryStore>();
