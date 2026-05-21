@@ -7,6 +7,54 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.1.0] — 2026-05-22
+
+Phase 2 CircleAI integration — watch-history personalisation, velocity burst
+detection, and per-segment AI transport-bias in the ABR controller.
+
+### Added
+
+**AI layer (`Aether.Media.AI`)**
+- `IWatchHistoryStore` — interface for recording and retrieving per-viewer
+  content completion rates.
+- `InMemoryWatchHistoryStore` — thread-safe, insertion-ordered EWMA
+  implementation (α = 0.4); evicts oldest entry at 1 000 items per viewer.
+- `ContentRanker` now accepts `IWatchHistoryStore` as a required fourth
+  dependency; watch-history signal (15 %) blended into five-signal composite
+  score alongside reputation (30 %), AI bias (20 %), recency (20 %), and
+  engagement (15 %). Neutral 0.5 when no viewer history exists.
+- `IContentModerator.AssessSocialPacketAsync` — new interface method combining
+  an AI assessment with a sliding-window velocity burst detector; returns the
+  higher of the two signals and never throws.
+- `ContentModerator` velocity burst detection: `WatchReaction` threshold
+  20 events / 30 s; all other social packet types threshold 5 events / 60 s.
+  Operates independently of AI availability.
+
+**Streaming layer (`Aether.Media.Streaming`)**
+- `AbrController` now accepts an optional `IAetherAiProvider` dependency.
+  Transport biases are fetched at most once every 5 s, averaged, clamped to
+  [0.5, 1.5], and applied to the raw bandwidth sample before the EMA update.
+  Falls back to neutral (1.0) when AI is unavailable or throws.
+
+**DI (`Aether.Media.DependencyInjection`)**
+- `AddAI()` registers `IWatchHistoryStore` → `InMemoryWatchHistoryStore` and
+  wires the updated `ContentRanker` constructor.
+- `AddStreaming()` passes `IAetherAiProvider` (optional) into `AbrController`.
+
+### Tests
+- `WatchHistoryStoreTests` (17 tests) — record/retrieve, EWMA blend, live-
+  stream handling, blank-input no-ops, cap eviction, viewer isolation.
+- `ContentRankerWatchHistoryTests` (4 tests) — high completion boosts rank,
+  skip history suppresses rank, no history is neutral, viewer isolation.
+- `ContentModeratorSocialTests` (10 tests) — null packet, AI unavailable,
+  AI threat propagation, reaction burst, social burst, combined signals,
+  source isolation.
+- `AbrControllerAiTests` (10 tests) — high/low bias rung changes, bias
+  clamping, empty dictionary neutral, multi-transport averaging, throwing
+  provider fallback.
+
+---
+
 ## [1.0.0] — 2026-05-21
 
 First stable release. All eight language implementations (C#, Kotlin, Swift,

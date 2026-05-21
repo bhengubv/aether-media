@@ -140,23 +140,43 @@ public sealed class AetherMediaBuilder
     /// Registers live-streaming services:
     /// <see cref="ILiveStreamPublisher"/>, <see cref="IWatchPartyCoordinator"/>,
     /// and <see cref="IAbrController"/>.
+    ///
+    /// <para>
+    /// When <see cref="Aether.Extensibility.IAetherAiProvider"/> is registered in the
+    /// container, <see cref="AbrController"/> receives it as an optional dependency and
+    /// applies AI transport-bias signals to its EMA bandwidth estimation. If no provider
+    /// is registered the controller operates as a pure-EMA ABR controller.
+    /// </para>
     /// </summary>
     public AetherMediaBuilder AddStreaming()
     {
-        Services.TryAddSingleton<ILiveStreamPublisher,    LiveStreamPublisher>();
-        Services.TryAddSingleton<IWatchPartyCoordinator,  WatchPartyCoordinator>();
-        Services.TryAddSingleton<IAbrController,          AbrController>();
+        Services.TryAddSingleton<ILiveStreamPublisher,   LiveStreamPublisher>();
+        Services.TryAddSingleton<IWatchPartyCoordinator, WatchPartyCoordinator>();
+        Services.TryAddSingleton<IAbrController>(sp => new AbrController(
+            sp.GetRequiredService<Aether.Streaming.IStreamingService>(),
+            ai: sp.GetService<Aether.Extensibility.IAetherAiProvider>()));
         return this;
     }
 
     /// <summary>
     /// Registers AI-powered curation services:
     /// <see cref="IContentRanker"/>, <see cref="ICreatorReputationView"/>,
-    /// and <see cref="IContentModerator"/>.
+    /// <see cref="IContentModerator"/>, and <see cref="IWatchHistoryStore"/>.
+    ///
+    /// <para>
+    /// <see cref="InMemoryWatchHistoryStore"/> is registered as the default
+    /// <see cref="IWatchHistoryStore"/>. Replace it before calling this method to
+    /// use a persistent store (e.g. SQLite-backed implementation).
+    /// </para>
     /// </summary>
     public AetherMediaBuilder AddAI()
     {
-        Services.TryAddSingleton<IContentRanker,         ContentRanker>();
+        Services.TryAddSingleton<IWatchHistoryStore,     InMemoryWatchHistoryStore>();
+        Services.TryAddSingleton<IContentRanker>(sp => new ContentRanker(
+            sp.GetRequiredService<Aether.Reputation.INodeReputationService>(),
+            sp.GetRequiredService<Aether.Extensibility.IAetherAiProvider>(),
+            sp.GetRequiredService<IContentModerator>(),
+            sp.GetRequiredService<IWatchHistoryStore>()));
         Services.TryAddSingleton<ICreatorReputationView, CreatorReputationView>();
         Services.TryAddSingleton<IContentModerator,      ContentModerator>();
         return this;

@@ -2,6 +2,7 @@
 
 using Aether.Extensibility;
 using Aether.Media.Core.Models;
+using Aether.Protocol;
 
 namespace Aether.Media.AI;
 
@@ -25,4 +26,41 @@ public interface IContentModerator
     /// so that content is not incorrectly suppressed.
     /// </summary>
     Task<AiThreatLevel> AssessSourceAsync(string creatorUhid, CancellationToken ct = default);
+
+    /// <summary>
+    /// Assesses the threat level of an incoming social <see cref="MeshPacket"/>
+    /// (e.g. Follow, ContentAnnounce, WatchReaction, ProfileSync).
+    ///
+    /// <para>
+    /// The assessment combines two independent signals and returns the higher
+    /// of the two:
+    /// <list type="bullet">
+    ///   <item>
+    ///     <description>
+    ///       <b>AI signal</b> — <see cref="IAetherAiProvider.AssessThreatAsync"/>
+    ///       called directly on the live social packet; returns
+    ///       <see cref="AiThreatLevel.None"/> when AI is unavailable.
+    ///     </description>
+    ///   </item>
+    ///   <item>
+    ///     <description>
+    ///       <b>Velocity signal</b> — a sliding-window burst detector that
+    ///       returns <see cref="AiThreatLevel.Medium"/> when the source UHID
+    ///       emits social packets above a type-specific rate threshold, even
+    ///       when the AI provider is unavailable.
+    ///     </description>
+    ///   </item>
+    /// </list>
+    /// </para>
+    ///
+    /// <para>
+    /// This method never throws; it returns <see cref="AiThreatLevel.None"/>
+    /// on any internal error to stay permissive.
+    /// </para>
+    /// </summary>
+    /// <param name="packet">The incoming social mesh packet to assess.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<AiThreatLevel> AssessSocialPacketAsync(
+        MeshPacket packet,
+        CancellationToken ct = default);
 }

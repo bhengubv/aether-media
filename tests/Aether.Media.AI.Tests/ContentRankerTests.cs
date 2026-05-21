@@ -14,13 +14,15 @@ public sealed class ContentRankerTests
     private static (ContentRanker Ranker,
                     FakeReputationService Reputation,
                     FakeAiProvider Ai,
-                    FakeContentModerator Moderator)
+                    FakeContentModerator Moderator,
+                    InMemoryWatchHistoryStore History)
         Make()
     {
-        var rep  = new FakeReputationService();
-        var ai   = new FakeAiProvider();
-        var mod  = new FakeContentModerator();
-        return (new ContentRanker(rep, ai, mod), rep, ai, mod);
+        var rep     = new FakeReputationService();
+        var ai      = new FakeAiProvider();
+        var mod     = new FakeContentModerator();
+        var history = new InMemoryWatchHistoryStore();
+        return (new ContentRanker(rep, ai, mod, history), rep, ai, mod, history);
     }
 
     private static MediaFeedItem MakeFeedItem(
@@ -59,24 +61,29 @@ public sealed class ContentRankerTests
     [Fact]
     public void Constructor_NullReputation_Throws() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new ContentRanker(null!, new FakeAiProvider(), new FakeContentModerator()));
+            new ContentRanker(null!, new FakeAiProvider(), new FakeContentModerator(), new InMemoryWatchHistoryStore()));
 
     [Fact]
     public void Constructor_NullAi_Throws() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new ContentRanker(new FakeReputationService(), null!, new FakeContentModerator()));
+            new ContentRanker(new FakeReputationService(), null!, new FakeContentModerator(), new InMemoryWatchHistoryStore()));
 
     [Fact]
     public void Constructor_NullModerator_Throws() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new ContentRanker(new FakeReputationService(), new FakeAiProvider(), null!));
+            new ContentRanker(new FakeReputationService(), new FakeAiProvider(), null!, new InMemoryWatchHistoryStore()));
+
+    [Fact]
+    public void Constructor_NullHistory_Throws() =>
+        Assert.Throws<ArgumentNullException>(() =>
+            new ContentRanker(new FakeReputationService(), new FakeAiProvider(), new FakeContentModerator(), null!));
 
     // ── RankFeedAsync — edge cases ─────────────────────────────────────────
 
     [Fact]
     public async Task RankFeed_EmptyList_ReturnsEmpty()
     {
-        var (ranker, _, _, _) = Make();
+        var (ranker, _, _, _, _) = Make();
         var result = await ranker.RankFeedAsync([], "viewer");
         Assert.Empty(result);
     }
@@ -84,7 +91,7 @@ public sealed class ContentRankerTests
     [Fact]
     public async Task RankFeed_NullList_Throws()
     {
-        var (ranker, _, _, _) = Make();
+        var (ranker, _, _, _, _) = Make();
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
             ranker.RankFeedAsync(null!, "viewer"));
     }
@@ -94,7 +101,7 @@ public sealed class ContentRankerTests
     [Fact]
     public async Task RankFeed_HighThreatCreator_IsSortedLast()
     {
-        var (ranker, rep, _, mod) = Make();
+        var (ranker, rep, _, mod, _) = Make();
 
         var safeItem  = MakeFeedItem("safe-creator");
         var threatItem = MakeFeedItem("bad-creator");
@@ -116,7 +123,7 @@ public sealed class ContentRankerTests
     {
         // Medium threshold for zero: any level >= High gets score 0.
         // Verify that Critical (if added later) also scores 0 by using High as proxy.
-        var (ranker, rep, _, mod) = Make();
+        var (ranker, rep, _, mod, _) = Make();
         var item = MakeFeedItem("threat-creator");
 
         mod.ThreatLevels["threat-creator"] = AiThreatLevel.High;
@@ -133,7 +140,7 @@ public sealed class ContentRankerTests
     [Fact]
     public async Task RankFeed_HigherReputation_RanksHigher()
     {
-        var (ranker, rep, _, _) = Make();
+        var (ranker, rep, _, _, _) = Make();
         var twoHoursAgo = DateTimeOffset.UtcNow.AddHours(-2).ToUnixTimeMilliseconds();
 
         var highRep = MakeFeedItem("high-rep", publishedAtMs: twoHoursAgo);
@@ -152,7 +159,7 @@ public sealed class ContentRankerTests
     [Fact]
     public async Task RankFeed_MoreRecentItem_RanksHigher()
     {
-        var (ranker, _, _, _) = Make();
+        var (ranker, _, _, _, _) = Make();
 
         var recent = MakeFeedItem("creator-a", publishedAtMs: DateTimeOffset.UtcNow.AddMinutes(-30).ToUnixTimeMilliseconds());
         var stale  = MakeFeedItem("creator-b", publishedAtMs: DateTimeOffset.UtcNow.AddHours(-47).ToUnixTimeMilliseconds());
@@ -167,7 +174,7 @@ public sealed class ContentRankerTests
     [Fact]
     public async Task RankFeed_MoreEngagement_RanksHigher()
     {
-        var (ranker, _, _, _) = Make();
+        var (ranker, _, _, _, _) = Make();
         var sameTime = DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeMilliseconds();
 
         var viral   = MakeFeedItem("viral",   publishedAtMs: sameTime, likeCount: 500, shareCount: 200, watchCount: 1000);
@@ -183,7 +190,7 @@ public sealed class ContentRankerTests
     [Fact]
     public async Task RankFeed_AiUnavailable_DoesNotThrow()
     {
-        var (ranker, _, ai, _) = Make();
+        var (ranker, _, ai, _, _) = Make();
         ai.Available = false;
 
         var item = MakeFeedItem();
@@ -199,7 +206,7 @@ public sealed class ContentRankerTests
         // Two identical items; one ranked with high AI bias, one with neutral.
         // We can't test this in a single RankFeedAsync call directly, but we can
         // verify that the ranker completes successfully with high bias values.
-        var (ranker, _, ai, _) = Make();
+        var (ranker, _, ai, _, _) = Make();
         ai.TransportBiases["BLE"]     = 2.0;  // above neutral → signal = 1.0
         ai.TransportBiases["WiFi"]    = 1.5;
 
