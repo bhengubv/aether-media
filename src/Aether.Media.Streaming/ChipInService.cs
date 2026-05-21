@@ -1,65 +1,57 @@
 // SPDX-License-Identifier: MIT
+// ChipIn pools, contributions, and state are defined in Aether.Streaming.Models
+// (part of the Aether Protocol).  This service manages the lifecycle on the
+// local node and delegates transport to IWatchTogetherService.
+using Aether.Streaming;
+using Aether.Streaming.Models;
 using System.Collections.Concurrent;
 
 namespace Aether.Media.Streaming;
 
 /// <summary>
-/// Models a ChipIn session where viewers contribute to a creator's pool.
-/// Maps to IWatchTogetherService.StartChipInAsync / ContributeAsync.
+/// Manages active ChipIn sessions for the local Aether Media node.
+///
+/// The protocol types (<see cref="ChipInPool"/>, <see cref="ChipInContribution"/>,
+/// <see cref="ChipInState"/>) come from <c>Aether.Streaming.Models</c>.
+/// Transport is via <see cref="IWatchTogetherService.StartChipInAsync"/> and
+/// <see cref="IWatchTogetherService.ContributeAsync"/>; this class tracks the
+/// in-memory state for the UI layer.
 /// </summary>
-public sealed class ChipInSession
-{
-    public string  SessionId    { get; init; } = Guid.NewGuid().ToString();
-    public string  ContentHash  { get; init; } = "";
-    public string  CreatorUhid  { get; init; } = "";
-    public decimal TargetAmount { get; init; }
-    public string  Currency     { get; init; } = "ZAR";
-    public decimal TotalRaised  { get; private set; }
-    public bool    IsComplete   => TotalRaised >= TargetAmount;
-    public DateTimeOffset StartedAt { get; init; } = DateTimeOffset.UtcNow;
-
-    private readonly List<ChipInContribution> _contributions = [];
-    public IReadOnlyList<ChipInContribution> Contributions => _contributions;
-
-    public void Contribute(string fromUhid, decimal amount)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(fromUhid);
-        if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be positive.");
-        _contributions.Add(new ChipInContribution(fromUhid, amount, DateTimeOffset.UtcNow));
-        TotalRaised += amount;
-    }
-}
-
-public sealed record ChipInContribution(string FromUhid, decimal Amount, DateTimeOffset ContributedAt);
-
-/// <summary>Manages active ChipIn sessions for the local node.</summary>
 public sealed class ChipInManager
 {
-    private readonly ConcurrentDictionary<string, ChipInSession> _sessions = new();
+    private readonly ConcurrentDictionary<Guid, ChipInPool> _pools = new();
 
-    public ChipInSession StartSession(string contentHash, string creatorUhid, decimal target, string currency = "ZAR")
+    /// <summary>
+    /// Register a pool that was returned by
+    /// <see cref="IWatchTogetherService.StartChipInAsync"/>.
+    /// </summary>
+    public void Track(ChipInPool pool)
     {
-        var session = new ChipInSession
-        {
-            ContentHash  = contentHash,
-            CreatorUhid  = creatorUhid,
-            TargetAmount = target,
-            Currency     = currency,
-        };
-        _sessions[session.SessionId] = session;
-        return session;
+        ArgumentNullException.ThrowIfNull(pool);
+        _pools[pool.Id] = pool;
     }
 
-    public bool Contribute(string sessionId, string fromUhid, decimal amount)
+    /// <summary>
+    /// Apply a contribution update that was received via
+    /// <see cref="IWatchTogetherService.ChipInUpdated"/>.
+    /// </summary>
+    public void ApplyUpdate(ChipInPool updated)
     {
-        if (!_sessions.TryGetValue(sessionId, out var session)) return false;
-        session.Contribute(fromUhid, amount);
-        return true;
+        ArgumentNullException.ThrowIfNull(updated);
+        _pools[updated.Id] = updated;
     }
 
-    public ChipInSession? GetSession(string sessionId)
-        => _sessions.TryGetValue(sessionId, out var s) ? s : null;
+    /// <summary>Returns the tracked pool with the given ID, or <see langword="null"/>.</summary>
+    public ChipInPool? GetPool(Guid poolId)
+        => _pools.TryGetValue(poolId, out var p) ? p : null;
 
-    public IReadOnlyCollection<ChipInSession> ActiveSessions
-        => _sessions.Values.Where(s => !s.IsComplete).ToList();
+    /// <summary>All pools that are still accepting contributions.</summary>
+    public IReadOnlyCollection<ChipInPool> ActivePools
+        => _pools.Values.Where(p => p.State == ChipInState.Collecting).ToList();
+
+    /// <summary>All tracked pools.</summary>
+    public IReadOnlyCollection<ChipInPool> AllPools => _pools.Values.ToList();
+
+    /// <summary>Remove a pool from local tracking (e.g. after it is refunded or acquired).</summary>
+    public bool Untrack(Guid poolId) => _pools.TryRemove(poolId, out _);
 }
