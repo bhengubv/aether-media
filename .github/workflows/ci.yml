@@ -319,3 +319,51 @@ jobs:
       - name: Assemble debug APK
         working-directory: android/media
         run: ./gradlew assembleDebug --no-daemon
+
+      - name: Unit tests
+        working-directory: android/media
+        run: ./gradlew test --no-daemon
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-results
+          path: android/media/app/build/reports/tests/
+          if-no-files-found: ignore
+
+  # ── Cross-language wire format interop ───────────────────────────────────────
+  cross-language:
+    name: Cross-language wire format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup Go 1.22
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache-dependency-path: go/go.mod
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: typescript/package-lock.json
+
+      - name: Install Python models package
+        working-directory: python
+        run: pip install -e ".[dev]"
+
+      - name: Build TypeScript (required for round-trip import)
+        working-directory: typescript
+        run: npm ci && npm run build
+
+      - name: Run cross-language interop tests
+        run: bash tests/cross-language/run_all.sh

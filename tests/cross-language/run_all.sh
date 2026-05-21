@@ -25,9 +25,9 @@ check() {
 
 # ── TypeScript ────────────────────────────────────────────────────────────────
 TS_OUT=$(cd "$ROOT/typescript" && node --input-type=module <<'EOF'
-import { toWire as contentToWire, fromWire as contentFromWire } from './src/models/MediaContent.js';
-import { toWire as reactionToWire, fromWire as reactionFromWire } from './src/models/MediaReaction.js';
-import { toWire as profileToWire, fromWire as profileFromWire } from './src/models/MediaProfile.js';
+import { toWire as contentToWire, fromWire as contentFromWire } from './dist/models/MediaContent.js';
+import { toWire as reactionToWire, fromWire as reactionFromWire } from './dist/models/MediaReaction.js';
+import { toWire as profileToWire, fromWire as profileFromWire } from './dist/models/MediaProfile.js';
 import { readFileSync } from 'fs';
 const g = (f) => JSON.parse(readFileSync(new URL(f, import.meta.url)));
 const c = g('../tests/cross-language/golden/media_content.json');
