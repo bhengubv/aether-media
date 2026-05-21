@@ -122,9 +122,11 @@ public sealed class MeshAppDistributor : IMeshAppDistributor
         catch (HttpListenerException)
         {
             // On Windows without admin rights, wildcard binding fails.
-            // Fall back to localhost-only — QR still works on the same machine.
+            // Fall back to 127.0.0.1 — use the IPv4 loopback explicitly so that
+            // HttpListener prefix matching works for requests made to 127.0.0.1.
+            // (Binding to "localhost" can route to IPv6 ::1, causing 400s for IPv4.)
             _listener = new HttpListener();
-            _listener.Prefixes.Add($"http://localhost:{port}/");
+            _listener.Prefixes.Add($"http://127.0.0.1:{port}/");
             _listener.Start();
             localIp = "127.0.0.1";
             _logger.LogWarning(
