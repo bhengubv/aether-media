@@ -52,14 +52,64 @@ public sealed class AetherMediaBuilder
     /// <see cref="IMediaLibrary"/>, <see cref="IContentCache"/>,
     /// <see cref="IMetadataResolver"/>, <see cref="IThumbnailService"/>,
     /// and <see cref="IMediaLibraryScanner"/>.
+    ///
+    /// If <see cref="AddFootprintPolicy"/> has been called (or a <see cref="FootprintOptions"/>
+    /// is already registered), the cache capacity is taken from
+    /// <see cref="FootprintOptions.StorageCapBytes"/>; otherwise the 500 MiB default applies.
     /// </summary>
     public AetherMediaBuilder AddContent()
     {
-        Services.TryAddSingleton<IMediaLibrary,        InMemoryMediaLibrary>();
-        Services.TryAddSingleton<IContentCache,        LruContentCache>();
+        Services.TryAddSingleton<IMediaLibrary, InMemoryMediaLibrary>();
+
+        // Respect FootprintOptions.StorageCapBytes when it has been registered;
+        // fall back to LruContentCache.DefaultCapacityBytes (500 MiB) otherwise.
+        Services.TryAddSingleton<IContentCache>(sp =>
+        {
+            var opts = sp.GetService<FootprintOptions>();
+            return new LruContentCache(opts?.StorageCapBytes ?? 0);
+        });
+
         Services.TryAddSingleton<IMetadataResolver,    MetadataResolver>();
         Services.TryAddSingleton<IThumbnailService,    ThumbnailService>();
         Services.TryAddSingleton<IMediaLibraryScanner, MediaLibraryScanner>();
+        return this;
+    }
+
+    /// <summary>
+    /// Registers the three-axis device footprint policy.
+    ///
+    /// <list type="bullet">
+    ///   <item><b>Storage</b> — <see cref="FootprintOptions.StorageCapBytes"/> caps the LRU content
+    ///         cache (default 500 MiB; picked up automatically by <see cref="AddContent"/>).</item>
+    ///   <item><b>Network</b> — <see cref="INetworkPolicy"/> gates seeding and mesh scanning on
+    ///         metered connections (mobile data, tethered hotspot).</item>
+    ///   <item><b>Power</b>   — <see cref="IPowerPolicy"/> drops the node to passive mode below
+    ///         the configured battery threshold or when the screen is off.</item>
+    /// </list>
+    ///
+    /// The null implementations (<see cref="NullNetworkPolicy"/>, <see cref="NullPowerPolicy"/>)
+    /// are registered as defaults and are safe for desktop and test use.  Override them by
+    /// registering platform-specific implementations <em>before</em> calling this method.
+    ///
+    /// <see cref="FootprintGuard"/> is registered as a singleton and is the single call-site
+    /// that all subsystems use to check whether seeding or scanning is currently permitted.
+    /// </summary>
+    /// <param name="configure">Optional delegate to override default option values.</param>
+    public AetherMediaBuilder AddFootprintPolicy(Action<FootprintOptions>? configure = null)
+    {
+        var options = new FootprintOptions();
+        configure?.Invoke(options);
+
+        // Options — singleton so IContentCache and FootprintGuard both resolve the same instance.
+        Services.TryAddSingleton(options);
+
+        // Null defaults — overridden by platform implementations if already registered.
+        Services.TryAddSingleton<INetworkPolicy>(NullNetworkPolicy.Instance);
+        Services.TryAddSingleton<IPowerPolicy>(NullPowerPolicy.Instance);
+
+        // Guard — the single boolean oracle injected into seeding / scanning services.
+        Services.TryAddSingleton<FootprintGuard>();
+
         return this;
     }
 
