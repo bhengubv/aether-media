@@ -161,12 +161,20 @@ public sealed class AetherMediaBuilder
     /// <summary>
     /// Registers AI-powered curation services:
     /// <see cref="IContentRanker"/>, <see cref="ICreatorReputationView"/>,
-    /// <see cref="IContentModerator"/>, and <see cref="IWatchHistoryStore"/>.
+    /// <see cref="IContentModerator"/>, <see cref="IWatchHistoryStore"/>,
+    /// and <see cref="IRoutePreseeder"/>.
     ///
     /// <para>
     /// <see cref="InMemoryWatchHistoryStore"/> is registered as the default
     /// <see cref="IWatchHistoryStore"/>. Replace it before calling this method to
     /// use a persistent store (e.g. SQLite-backed implementation).
+    /// </para>
+    ///
+    /// <para>
+    /// <see cref="RoutePreseeder"/> is registered with
+    /// <see cref="Aether.Routing.IRoutingService"/> as an optional dependency.
+    /// Route pre-warming is silently skipped when the routing service is not
+    /// registered in the container (e.g. in lightweight or test setups).
     /// </para>
     /// </summary>
     public AetherMediaBuilder AddAI()
@@ -179,6 +187,9 @@ public sealed class AetherMediaBuilder
             sp.GetRequiredService<IWatchHistoryStore>()));
         Services.TryAddSingleton<ICreatorReputationView, CreatorReputationView>();
         Services.TryAddSingleton<IContentModerator,      ContentModerator>();
+        Services.TryAddSingleton<IRoutePreseeder>(sp => new RoutePreseeder(
+            sp.GetRequiredService<Aether.Extensibility.IAetherAiProvider>(),
+            sp.GetService<Aether.Routing.IRoutingService>()));
         return this;
     }
 

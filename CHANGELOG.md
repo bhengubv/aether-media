@@ -7,6 +7,49 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.2.0] — 2026-05-22
+
+Phase 3 CircleAI integration — predictive route pre-warming via
+`IAetherAiProvider.SuggestRoutesAsync` completes the full three-hook
+CircleAI surface area for Aether Media.
+
+### Added
+
+**AI layer (`Aether.Media.AI`)**
+- `IRoutePreseeder` — interface for pre-warming AODV routing-table entries
+  for feed creators before the user taps on content.
+- `RoutePreseeder` — implementation that uses
+  `IAetherAiProvider.SuggestRoutesAsync` to rank creators by AI confidence
+  and then calls `IRoutingService.FindRouteAsync` for the top-N candidates:
+  - AI available → creators above confidence threshold 0.6 are pre-warmed,
+    sorted by confidence descending, capped at 10.
+  - AI confidence all below threshold → falls back to feed-order pre-warm
+    (magic-potion: AI enhances, never blocks).
+  - AI unavailable → all distinct creators pre-warmed up to cap of 10.
+  - `IRoutingService` is optional; no-op when not registered.
+  - Per-creator and per-route exceptions are swallowed (best-effort).
+  - Probe payload hint: 1 KiB (presence probe, not media payload).
+
+**DI (`Aether.Media.DependencyInjection`)**
+- `AddAI()` registers `IRoutePreseeder` → `RoutePreseeder` with optional
+  `IRoutingService` (silently no-op when routing is absent from the container).
+
+### All Three CircleAI Hooks Now Integrated
+
+| Hook | Where Used |
+|---|---|
+| `AssessThreatAsync` | `ContentModerator` — threat-gate feed items and social packets |
+| `GetTransportBiasesAsync` | `AbrController` (per-segment EMA bias) + `ContentRanker` (AI signal weight) |
+| `SuggestRoutesAsync` | `RoutePreseeder` — pre-warm AODV cache before user taps content |
+
+### Tests
+- `RoutePreseederTests` (10 tests) — empty list, null routing no-op, AI
+  unavailable warms all, high-confidence selection, confidence sort order,
+  all-low-confidence fallback, duplicate dedup, cap enforcement, per-creator
+  AI exception skip, routing exception swallowed.
+
+---
+
 ## [1.1.0] — 2026-05-22
 
 Phase 2 CircleAI integration — watch-history personalisation, velocity burst
