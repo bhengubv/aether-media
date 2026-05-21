@@ -11,6 +11,7 @@ using Aether.Media.Reel;
 using Aether.Media.Reel.Interfaces;
 using Aether.Media.Social;
 using Aether.Media.Streaming;
+using Aether.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -42,7 +43,11 @@ public sealed class AetherMediaBuilder
     public AetherMediaBuilder AddIdentity()
     {
         Services.TryAddSingleton<IProfileService,     ProfileService>();
-        Services.TryAddSingleton<IProfileSyncService, ProfileSyncService>();
+        Services.TryAddSingleton<IProfileSyncService>(sp => new ProfileSyncService(
+            sp.GetRequiredService<IProfileService>(),
+            sp.GetRequiredService<IMeshSender>(),
+            sp.GetService<Microsoft.Extensions.Logging.ILogger<ProfileSyncService>>(),
+            sp.GetService<FootprintGuard>()));
         Services.TryAddSingleton<IAvatarService,      AvatarService>();
         return this;
     }
@@ -123,7 +128,11 @@ public sealed class AetherMediaBuilder
         Services.TryAddSingleton<ISocialGraph,      SocialGraph>();
         Services.TryAddSingleton<IFeedAggregator,   FeedAggregator>();
         Services.TryAddSingleton<IReactionService,  ReactionService>();
-        Services.TryAddSingleton<IDiscoveryService, DiscoveryService>();
+        Services.TryAddSingleton<IDiscoveryService>(sp => new DiscoveryService(
+            sp.GetRequiredService<Aether.Handshake.IHandshakeService>(),
+            sp.GetRequiredService<Aether.Streaming.IStreamingService>(),
+            sp.GetRequiredService<IProfileService>(),
+            sp.GetService<FootprintGuard>()));
         return this;
     }
 
@@ -162,7 +171,11 @@ public sealed class AetherMediaBuilder
     {
         // HttpClient for Cloudflare version checks + APK downloads
         Services.TryAddSingleton<HttpClient>();
-        Services.TryAddSingleton<IMeshAppDistributor, MeshAppDistributor>();
+        Services.TryAddSingleton<IMeshAppDistributor>(sp => new MeshAppDistributor(
+            sp.GetRequiredService<Aether.Content.IContentService>(),
+            sp.GetRequiredService<HttpClient>(),
+            sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<MeshAppDistributor>>(),
+            sp.GetService<FootprintGuard>()));
         return this;
     }
 

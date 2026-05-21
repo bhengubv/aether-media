@@ -2,6 +2,7 @@
 
 using System.Collections.Concurrent;
 using Aether.Handshake;
+using Aether.Media.Core;
 using Aether.Media.Core.Models;
 using Aether.Media.Identity;
 using Aether.Models;
@@ -38,17 +39,20 @@ public sealed class DiscoveryService : IDiscoveryService
     private readonly IHandshakeService _handshake;
     private readonly IStreamingService _streaming;
     private readonly IProfileService _profileService;
+    private readonly FootprintGuard? _guard;
 
     private bool _started;
 
     public DiscoveryService(
         IHandshakeService handshake,
         IStreamingService streaming,
-        IProfileService profileService)
+        IProfileService profileService,
+        FootprintGuard? guard = null)
     {
         _handshake      = handshake      ?? throw new ArgumentNullException(nameof(handshake));
         _streaming      = streaming      ?? throw new ArgumentNullException(nameof(streaming));
         _profileService = profileService ?? throw new ArgumentNullException(nameof(profileService));
+        _guard          = guard;
     }
 
     // ── IDiscoveryService ──────────────────────────────────────────────────
@@ -115,6 +119,10 @@ public sealed class DiscoveryService : IDiscoveryService
 
     private void EnqueueCreatorDiscovery(PeerCapabilities caps)
     {
+        // Respect power/network policy — don't process new peer discovery when passive
+        if (_guard is { MeshScanAllowed: false })
+            return;
+
         // Check for Streaming capability using the string tag used in the hello payload
         // or the NodeCapabilities flags if they are encoded in the capability set.
         // The Aether.Core handshake advertises capability tags as strings — "streaming" is

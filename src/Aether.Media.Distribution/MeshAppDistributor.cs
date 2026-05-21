@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using Aether.Content;
 using Aether.Content.Models;
+using Aether.Media.Core;
 using Aether.Media.Distribution.Models;
 using Microsoft.Extensions.Logging;
 
@@ -41,6 +42,7 @@ public sealed class MeshAppDistributor : IMeshAppDistributor
     private readonly IContentService _content;
     private readonly HttpClient _http;
     private readonly ILogger<MeshAppDistributor> _logger;
+    private readonly FootprintGuard? _guard;
     private readonly string _cacheDir;
 
     private HttpListener? _listener;
@@ -65,11 +67,13 @@ public sealed class MeshAppDistributor : IMeshAppDistributor
     public MeshAppDistributor(
         IContentService content,
         HttpClient http,
-        ILogger<MeshAppDistributor> logger)
+        ILogger<MeshAppDistributor> logger,
+        FootprintGuard? guard = null)
     {
         _content  = content  ?? throw new ArgumentNullException(nameof(content));
         _http     = http     ?? throw new ArgumentNullException(nameof(http));
         _logger   = logger   ?? throw new ArgumentNullException(nameof(logger));
+        _guard    = guard;
         _cacheDir = Path.Combine(Path.GetTempPath(), "aether-media", "app-cache");
 
         Directory.CreateDirectory(_cacheDir);
@@ -293,6 +297,14 @@ public sealed class MeshAppDistributor : IMeshAppDistributor
     {
         try
         {
+            if (_guard is { SeedingAllowed: false })
+            {
+                ctx.Response.StatusCode = 503;
+                ctx.Response.Headers["Retry-After"] = "60";
+                ctx.Response.Close();
+                return;
+            }
+
             if (_servedFilePath is null || !File.Exists(_servedFilePath))
             {
                 ctx.Response.StatusCode = 404;
@@ -328,6 +340,9 @@ public sealed class MeshAppDistributor : IMeshAppDistributor
 
     private void OnContentAnnounced(object? sender, ContentDescriptor descriptor)
     {
+        if (_guard is { SeedingAllowed: false })
+            return;
+
         // We only care about app packages
         if (!string.Equals(
                 descriptor.ContentType,

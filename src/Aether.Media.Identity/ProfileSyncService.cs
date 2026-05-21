@@ -2,6 +2,7 @@
 
 using System.Collections.Concurrent;
 using System.Text.Json;
+using Aether.Media.Core;
 using Aether.Media.Core.Models;
 using Aether.Protocol;
 using Aether.Routing;
@@ -27,25 +28,35 @@ public sealed class ProfileSyncService : IProfileSyncService
     private readonly ConcurrentDictionary<string, MediaProfile> _remoteProfiles
         = new(StringComparer.Ordinal);
     private readonly ILogger<ProfileSyncService> _logger;
+    private readonly FootprintGuard? _guard;
 
     public event EventHandler<MediaProfile>? ProfileReceived;
 
     /// <param name="profileService">Local profile access for outbound sync.</param>
     /// <param name="sender">Mesh sender for broadcasting the local profile.</param>
     /// <param name="logger">Optional logger.</param>
+    /// <param name="guard">Optional footprint guard; when present, skips sync in passive mode.</param>
     public ProfileSyncService(
         IProfileService profileService,
         IMeshSender sender,
-        ILogger<ProfileSyncService>? logger = null)
+        ILogger<ProfileSyncService>? logger = null,
+        FootprintGuard? guard = null)
     {
         _profileService = profileService ?? throw new ArgumentNullException(nameof(profileService));
         _sender = sender ?? throw new ArgumentNullException(nameof(sender));
         _logger = logger ?? NullLogger<ProfileSyncService>.Instance;
+        _guard  = guard;
     }
 
     /// <inheritdoc/>
     public async Task SyncLocalProfileAsync(CancellationToken ct = default)
     {
+        if (_guard is { MeshScanAllowed: false })
+        {
+            _logger.LogDebug("ProfileSync skipped — passive mode or metered connection");
+            return;
+        }
+
         MediaProfile local;
         try
         {
