@@ -100,6 +100,46 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+  # ── npm (extension TypeScript SDKs) ─────────────────────────────────────────
+  publish-extensions-npm:
+    name: Publish Extension npm (${{ matrix.extension }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        extension: [aether-space, aether-forge, aether-vault, aether-market]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+          cache-dependency-path: extensions/${{ matrix.extension }}/typescript/package.json
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Set package version
+        working-directory: extensions/${{ matrix.extension }}/typescript
+        run: npm version --no-git-tag-version "${{ steps.version.outputs.VERSION }}"
+
+      - name: Install
+        working-directory: extensions/${{ matrix.extension }}/typescript
+        run: npm install
+
+      - name: Build
+        working-directory: extensions/${{ matrix.extension }}/typescript
+        run: npm run build
+
+      - name: Publish
+        working-directory: extensions/${{ matrix.extension }}/typescript
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   # ── PyPI ──────────────────────────────────────────────────────────────────────
   publish-pypi:
     name: Publish PyPI

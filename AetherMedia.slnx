@@ -23,4 +23,17 @@
   <Project Path="tests\Aether.Media.Reel.Tests\Aether.Media.Reel.Tests.csproj" />
   <Project Path="samples\Aether.Media.Demo.Console\Aether.Media.Demo.Console.csproj" />
   <Project Path="samples\Aether.Media.RelayTest\Aether.Media.RelayTest.csproj" />
+  <!-- Phase 2 Extensions -->
+  <Project Path="extensions\aether-space\src\Aether.Space.Core\Aether.Space.Core.csproj" />
+  <Project Path="extensions\aether-space\src\Aether.Space.Protocol\Aether.Space.Protocol.csproj" />
+  <Project Path="extensions\aether-space\tests\Aether.Space.Tests\Aether.Space.Tests.csproj" />
+  <Project Path="extensions\aether-forge\src\Aether.Forge.Core\Aether.Forge.Core.csproj" />
+  <Project Path="extensions\aether-forge\src\Aether.Forge.Proxy\Aether.Forge.Proxy.csproj" />
+  <Project Path="extensions\aether-forge\tests\Aether.Forge.Tests\Aether.Forge.Tests.csproj" />
+  <Project Path="extensions\aether-vault\src\Aether.Vault.Core\Aether.Vault.Core.csproj" />
+  <Project Path="extensions\aether-vault\src\Aether.Vault.ErasureCoding\Aether.Vault.ErasureCoding.csproj" />
+  <Project Path="extensions\aether-vault\tests\Aether.Vault.Tests\Aether.Vault.Tests.csproj" />
+  <Project Path="extensions\aether-market\src\Aether.Market.Core\Aether.Market.Core.csproj" />
+  <Project Path="extensions\aether-market\src\Aether.Market.Protocol\Aether.Market.Protocol.csproj" />
+  <Project Path="extensions\aether-market\tests\Aether.Market.Tests\Aether.Market.Tests.csproj" />
 </Solution>

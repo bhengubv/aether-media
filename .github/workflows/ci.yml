@@ -332,6 +332,62 @@ jobs:
           path: android/media/app/build/reports/tests/
           if-no-files-found: ignore
 
+  # ── Extensions: aether-forge Go daemon ──────────────────────────────────────
+  build-forge-go:
+    name: aether-forge (Go daemon)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go 1.22
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache-dependency-path: extensions/aether-forge/go/go.mod
+
+      - name: Build
+        working-directory: extensions/aether-forge/go
+        run: go build ./...
+
+      - name: Format check (gofmt)
+        working-directory: extensions/aether-forge/go
+        continue-on-error: true
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "Unformatted files: $unformatted"
+            exit 1
+          fi
+
+      - name: Test
+        working-directory: extensions/aether-forge/go
+        run: go test ./...
+
+  # ── Extensions: TypeScript SDKs (space / forge / vault / market) ─────────────
+  build-extensions-typescript:
+    name: Extension TypeScript SDKs
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        extension: [aether-space, aether-forge, aether-vault, aether-market]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: extensions/${{ matrix.extension }}/typescript/package.json
+
+      - name: Install
+        working-directory: extensions/${{ matrix.extension }}/typescript
+        run: npm install
+
+      - name: Build
+        working-directory: extensions/${{ matrix.extension }}/typescript
+        run: npm run build
+
   # ── Cross-language wire format interop ───────────────────────────────────────
   cross-language:
     name: Cross-language wire format

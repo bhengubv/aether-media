@@ -1,0 +1,17 @@
+{
+  "name": "@bhengubv/aether-vault",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "TypeScript SDK for Aether Vault — distributed encrypted file storage with erasure coding over the Aether mesh network.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/vault/index.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "tsx": "^4.7.0",
+    "@types/node": "^20.0.0"
+  }
+}
