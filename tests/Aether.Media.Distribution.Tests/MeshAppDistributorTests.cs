@@ -194,7 +194,13 @@ public sealed class MeshAppDistributorTests : IAsyncDisposable
         finally
         {
             await distributor.StopHostingAsync();
-            File.Delete(tempFile);
+            // Retry: the HTTP server may still hold the file handle for a brief moment
+            // after StopHostingAsync returns (OS I/O completion ports are async).
+            for (var i = 0; i < 10; i++)
+            {
+                try { File.Delete(tempFile); break; }
+                catch (IOException) when (i < 9) { await Task.Delay(50); }
+            }
         }
     }
 

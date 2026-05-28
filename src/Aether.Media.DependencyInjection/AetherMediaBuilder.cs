@@ -28,7 +28,7 @@ namespace Aether.Media.DependencyInjection;
 /// </summary>
 public sealed class AetherMediaBuilder
 {
-    internal IServiceCollection Services { get; }
+    public IServiceCollection Services { get; }
 
     internal AetherMediaBuilder(IServiceCollection services)
     {

@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Aether.Vault.Core/Aether.Vault.Core.csproj" />
-    <ProjectReference Include="../../../../../src/Aether.Media.DependencyInjection/Aether.Media.DependencyInjection.csproj" />
+    <ProjectReference Include="../../../../src/Aether.Media.DependencyInjection/Aether.Media.DependencyInjection.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="Exists('../../../../../aether-protocol/src/Aether.Core/Aether.Core.csproj')">
