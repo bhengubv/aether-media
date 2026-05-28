@@ -23,6 +23,10 @@
   <Project Path="tests\Aether.Media.Reel.Tests\Aether.Media.Reel.Tests.csproj" />
   <Project Path="samples\Aether.Media.Demo.Console\Aether.Media.Demo.Console.csproj" />
   <Project Path="samples\Aether.Media.RelayTest\Aether.Media.RelayTest.csproj" />
+  <!-- Phase 2 Extensions — Trust Rings -->
+  <Project Path="extensions\aether-trust\src\Aether.Trust.Core\Aether.Trust.Core.csproj" />
+  <Project Path="extensions\aether-trust\src\Aether.Trust.Verification\Aether.Trust.Verification.csproj" />
+  <Project Path="extensions\aether-trust\tests\Aether.Trust.Tests\Aether.Trust.Tests.csproj" />
   <!-- Phase 2 Extensions -->
   <Project Path="extensions\aether-space\src\Aether.Space.Core\Aether.Space.Core.csproj" />
   <Project Path="extensions\aether-space\src\Aether.Space.Protocol\Aether.Space.Protocol.csproj" />
