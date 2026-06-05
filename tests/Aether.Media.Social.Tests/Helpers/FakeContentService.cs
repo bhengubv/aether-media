@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Content;
-using Aether.Content.Models;
-using Aether.Protocol;
+using AetherMesh.Content;
+using AetherMesh.Content.Models;
+using AetherMesh.Protocol;
 
 namespace Aether.Media.Social.Tests.Helpers;
 
@@ -47,4 +47,7 @@ internal sealed class FakeContentService : IContentService
 
     public Task<byte[]?> AssembleAsync(string rootHash, CancellationToken cancellationToken = default)
         => Task.FromResult<byte[]?>(null);
+
+    public Task BroadcastBitmapAsync(string rootHash, CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
 }

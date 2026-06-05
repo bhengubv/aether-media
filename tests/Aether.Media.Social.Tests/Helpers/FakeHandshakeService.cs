@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Handshake;
-using Aether.Protocol;
+using AetherMesh.Extensibility;
+using AetherMesh.Handshake;
+using AetherMesh.Protocol;
 
 namespace Aether.Media.Social.Tests.Helpers;
 
@@ -38,4 +39,9 @@ internal sealed class FakeHandshakeService : IHandshakeService
 
     public Task RenegotiateAsync(string peerUhid, CancellationToken cancellationToken = default)
         => Task.CompletedTask;
+
+    public Task<BiometricVerificationResult> VerifyCoPresenceAsync(
+        byte[] localFaceFrameRgbHwc, int width, int height,
+        FaceEmbedding referenceEmbedding, CancellationToken cancellationToken = default)
+        => Task.FromResult(BiometricVerificationResult.Failed);
 }

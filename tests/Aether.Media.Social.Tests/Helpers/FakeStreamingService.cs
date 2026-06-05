@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Protocol;
-using Aether.Streaming;
-using Aether.Streaming.Models;
+using AetherMesh.Protocol;
+using AetherMesh.Streaming;
+using AetherMesh.Streaming.Models;
 
 namespace Aether.Media.Social.Tests.Helpers;
 

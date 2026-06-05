@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Extensibility;
-using Aether.Streaming;
+using AetherMesh.Extensibility;
+using AetherMesh.Streaming;
 
 namespace Aether.Media.Streaming;
 

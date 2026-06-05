@@ -4,8 +4,8 @@ using System.Collections.Concurrent;
 using System.Text;
 using System.Text.Json;
 using Aether.Media.Core.Models;
-using Aether.Protocol;
-using Aether.Routing;
+using AetherMesh.Protocol;
+using AetherMesh.Routing;
 
 namespace Aether.Media.Social;
 

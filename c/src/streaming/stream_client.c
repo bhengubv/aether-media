@@ -27,6 +27,10 @@ typedef SOCKET socket_t;
 #  define INVALID_SOCK INVALID_SOCKET
 #  define close_sock(s) closesocket(s)
 #  define sock_errno (WSAGetLastError())
+#  ifdef _MSC_VER
+#    include <basetsd.h>
+typedef SSIZE_T ssize_t;   /* MSVC has no POSIX ssize_t */
+#  endif
 #else
 #  include <sys/types.h>
 #  include <sys/socket.h>

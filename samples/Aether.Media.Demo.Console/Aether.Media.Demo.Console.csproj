@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -22,7 +22,15 @@
     <ProjectReference Include="../../../aether-protocol/src/Aether.Core/Aether.Core.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/Aether.Core/Aether.Core.csproj')">
-    <PackageReference Include="Aether.Core" Version="1.0.0" />
+    <PackageReference Include="AetherMesh.Core" Version="1.0.3" />
+  </ItemGroup>
+
+  <!-- Aether.DependencyInjection provides AddAetherProtocol() + the in-memory offline service stack -->
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/Aether.DependencyInjection/Aether.DependencyInjection.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/Aether.DependencyInjection/Aether.DependencyInjection.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/Aether.DependencyInjection/Aether.DependencyInjection.csproj')">
+    <PackageReference Include="AetherMesh.DependencyInjection" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>

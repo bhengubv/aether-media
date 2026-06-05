@@ -12,7 +12,7 @@ namespace Aether.Media.AI;
 /// <para>
 /// When <see cref="CircleAI"/> is available, creator candidates are ranked by
 /// the AI confidence returned from
-/// <see cref="Aether.Extensibility.IAetherAiProvider.SuggestRoutesAsync"/>.
+/// <see cref="AetherMesh.Extensibility.IAetherAiProvider.SuggestRoutesAsync"/>.
 /// When the AI is unavailable the top-<c>N</c> creators (by feed position) are
 /// pre-warmed directly — the AI enhances, never blocks.
 /// </para>

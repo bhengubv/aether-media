@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Extensibility;
+using AetherMesh.Extensibility;
 using Aether.Media.Core.Models;
-using Aether.Routing;
+using AetherMesh.Routing;
 
 namespace Aether.Media.AI;
 

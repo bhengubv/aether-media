@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Protocol;
+using AetherMesh.Protocol;
 using Aether.Media.Identity.Tests.Helpers;
 
 namespace Aether.Media.Identity.Tests;

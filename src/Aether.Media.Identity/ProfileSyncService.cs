@@ -4,8 +4,8 @@ using System.Collections.Concurrent;
 using System.Text.Json;
 using Aether.Media.Core;
 using Aether.Media.Core.Models;
-using Aether.Protocol;
-using Aether.Routing;
+using AetherMesh.Protocol;
+using AetherMesh.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 using System.Collections.Concurrent;
-using Aether.Content;
+using AetherMesh.Content;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -25,7 +25,7 @@ public sealed class AvatarService : IAvatarService
     // The root hash of the local node's published avatar (null until first publish).
     private string? _localAvatarHash;
 
-    /// <param name="content">Chunked content distribution service from Aether.Content.</param>
+    /// <param name="content">Chunked content distribution service from AetherMesh.Content.</param>
     /// <param name="logger">Optional logger.</param>
     public AvatarService(
         IContentService content,

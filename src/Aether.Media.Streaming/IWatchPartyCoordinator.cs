@@ -6,7 +6,7 @@ namespace Aether.Media.Streaming;
 
 /// <summary>
 /// Coordinates a synchronized watch-together session on top of
-/// <c>Aether.Streaming.IWatchTogetherService</c>.
+/// <c>AetherMesh.Streaming.IWatchTogetherService</c>.
 ///
 /// <para>
 /// The host calls <see cref="HostWatchPartyAsync"/> to create a session;

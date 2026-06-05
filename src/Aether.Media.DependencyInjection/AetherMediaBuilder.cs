@@ -11,7 +11,7 @@ using Aether.Media.Reel;
 using Aether.Media.Reel.Interfaces;
 using Aether.Media.Social;
 using Aether.Media.Streaming;
-using Aether.Routing;
+using AetherMesh.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -129,8 +129,8 @@ public sealed class AetherMediaBuilder
         Services.TryAddSingleton<IFeedAggregator,   FeedAggregator>();
         Services.TryAddSingleton<IReactionService,  ReactionService>();
         Services.TryAddSingleton<IDiscoveryService>(sp => new DiscoveryService(
-            sp.GetRequiredService<Aether.Handshake.IHandshakeService>(),
-            sp.GetRequiredService<Aether.Streaming.IStreamingService>(),
+            sp.GetRequiredService<AetherMesh.Handshake.IHandshakeService>(),
+            sp.GetRequiredService<AetherMesh.Streaming.IStreamingService>(),
             sp.GetRequiredService<IProfileService>(),
             sp.GetService<FootprintGuard>()));
         return this;
@@ -142,7 +142,7 @@ public sealed class AetherMediaBuilder
     /// and <see cref="IAbrController"/>.
     ///
     /// <para>
-    /// When <see cref="Aether.Extensibility.IAetherAiProvider"/> is registered in the
+    /// When <see cref="AetherMesh.Extensibility.IAetherAiProvider"/> is registered in the
     /// container, <see cref="AbrController"/> receives it as an optional dependency and
     /// applies AI transport-bias signals to its EMA bandwidth estimation. If no provider
     /// is registered the controller operates as a pure-EMA ABR controller.
@@ -153,8 +153,8 @@ public sealed class AetherMediaBuilder
         Services.TryAddSingleton<ILiveStreamPublisher,   LiveStreamPublisher>();
         Services.TryAddSingleton<IWatchPartyCoordinator, WatchPartyCoordinator>();
         Services.TryAddSingleton<IAbrController>(sp => new AbrController(
-            sp.GetRequiredService<Aether.Streaming.IStreamingService>(),
-            ai: sp.GetService<Aether.Extensibility.IAetherAiProvider>()));
+            sp.GetRequiredService<AetherMesh.Streaming.IStreamingService>(),
+            ai: sp.GetService<AetherMesh.Extensibility.IAetherAiProvider>()));
         return this;
     }
 
@@ -172,14 +172,14 @@ public sealed class AetherMediaBuilder
     ///
     /// <para>
     /// <see cref="RoutePreseeder"/> is registered with
-    /// <see cref="Aether.Routing.IRoutingService"/> as an optional dependency.
+    /// <see cref="AetherMesh.Routing.IRoutingService"/> as an optional dependency.
     /// Route pre-warming is silently skipped when the routing service is not
     /// registered in the container (e.g. in lightweight or test setups).
     /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
-    /// <b>Prerequisite:</b> <see cref="Aether.Extensibility.IAetherAiProvider"/>
+    /// <b>Prerequisite:</b> <see cref="AetherMesh.Extensibility.IAetherAiProvider"/>
     /// must be present in the container before this method's factory lambdas are
     /// resolved (i.e. before the first service is requested from the built
     /// <see cref="IServiceProvider"/>).
@@ -190,14 +190,14 @@ public sealed class AetherMediaBuilder
     /// <c>NullAetherAiProvider</c> as the fallback when no CircleAI SDK is
     /// installed. When CircleAI is present it registers its own implementation
     /// first; the protocol builder's <c>TryAddSingleton</c> call then becomes a
-    /// no-op, so there is always exactly one <see cref="Aether.Extensibility.IAetherAiProvider"/>
+    /// no-op, so there is always exactly one <see cref="AetherMesh.Extensibility.IAetherAiProvider"/>
     /// singleton in the container — shared by both the protocol layer and every
     /// Aether Media service registered here.
     /// </para>
     /// <para>
     /// If you call <c>AddAetherMedia().AddAI()</c> on a bare
     /// <see cref="IServiceCollection"/> that has no
-    /// <see cref="Aether.Extensibility.IAetherAiProvider"/> registration, an
+    /// <see cref="AetherMesh.Extensibility.IAetherAiProvider"/> registration, an
     /// <see cref="InvalidOperationException"/> will be thrown at the point the
     /// first AI-dependent service (e.g. <see cref="IContentRanker"/>) is resolved.
     /// </para>
@@ -206,15 +206,15 @@ public sealed class AetherMediaBuilder
     {
         Services.TryAddSingleton<IWatchHistoryStore,     InMemoryWatchHistoryStore>();
         Services.TryAddSingleton<IContentRanker>(sp => new ContentRanker(
-            sp.GetRequiredService<Aether.Reputation.INodeReputationService>(),
-            sp.GetRequiredService<Aether.Extensibility.IAetherAiProvider>(),
+            sp.GetRequiredService<AetherMesh.Reputation.INodeReputationService>(),
+            sp.GetRequiredService<AetherMesh.Extensibility.IAetherAiProvider>(),
             sp.GetRequiredService<IContentModerator>(),
             sp.GetRequiredService<IWatchHistoryStore>()));
         Services.TryAddSingleton<ICreatorReputationView, CreatorReputationView>();
         Services.TryAddSingleton<IContentModerator,      ContentModerator>();
         Services.TryAddSingleton<IRoutePreseeder>(sp => new RoutePreseeder(
-            sp.GetRequiredService<Aether.Extensibility.IAetherAiProvider>(),
-            sp.GetService<Aether.Routing.IRoutingService>()));
+            sp.GetRequiredService<AetherMesh.Extensibility.IAetherAiProvider>(),
+            sp.GetService<AetherMesh.Routing.IRoutingService>()));
         return this;
     }
 
@@ -228,7 +228,7 @@ public sealed class AetherMediaBuilder
         // HttpClient for Cloudflare version checks + APK downloads
         Services.TryAddSingleton<HttpClient>();
         Services.TryAddSingleton<IMeshAppDistributor>(sp => new MeshAppDistributor(
-            sp.GetRequiredService<Aether.Content.IContentService>(),
+            sp.GetRequiredService<AetherMesh.Content.IContentService>(),
             sp.GetRequiredService<HttpClient>(),
             sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<MeshAppDistributor>>(),
             sp.GetService<FootprintGuard>()));
@@ -290,7 +290,7 @@ public sealed class AetherMediaBuilder
         Services.TryAddSingleton<IReelDiscovery,         ReelDiscovery>();
 
         Services.TryAddSingleton<IReelService>(sp => new ReelService(
-            sp.GetRequiredService<Aether.Content.IContentService>(),
+            sp.GetRequiredService<AetherMesh.Content.IContentService>(),
             sp.GetRequiredService<IReelDiscovery>(),
             localUhid,
             sp.GetService<Microsoft.Extensions.Logging.ILogger<ReelService>>()));
@@ -302,7 +302,7 @@ public sealed class AetherMediaBuilder
             sp.GetService<Microsoft.Extensions.Logging.ILogger<ReelFeed>>()));
 
         Services.TryAddSingleton<ISoundLibrary>(sp => new SoundLibrary(
-            sp.GetRequiredService<Aether.Content.IContentService>(),
+            sp.GetRequiredService<AetherMesh.Content.IContentService>(),
             localUhid,
             sp.GetService<Microsoft.Extensions.Logging.ILogger<SoundLibrary>>()));
 

@@ -3,7 +3,7 @@
 using System.Text.Json;
 using Aether.Media.Core.Models;
 using Aether.Media.Identity.Tests.Helpers;
-using Aether.Protocol;
+using AetherMesh.Protocol;
 
 namespace Aether.Media.Identity.Tests;
 

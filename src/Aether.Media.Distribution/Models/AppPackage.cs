@@ -20,7 +20,7 @@ public sealed record AppPackage
     /// <summary>
     /// SHA-256 hex digest of the APK/installer bytes.
     /// Doubles as the <c>RootHash</c> when the package is published via
-    /// <see cref="Aether.Content.IContentService"/>.
+    /// <see cref="AetherMesh.Content.IContentService"/>.
     /// </summary>
     public required string ContentHash { get; init; }
 

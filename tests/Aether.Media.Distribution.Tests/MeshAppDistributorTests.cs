@@ -2,11 +2,11 @@
 
 using System.Net;
 using System.Security.Cryptography;
-using Aether.Content;
-using Aether.Content.Models;
+using AetherMesh.Content;
+using AetherMesh.Content.Models;
 using Aether.Media.Distribution;
 using Aether.Media.Distribution.Models;
-using Aether.Protocol;
+using AetherMesh.Protocol;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Aether.Media.Distribution.Tests;
@@ -52,6 +52,9 @@ public sealed class MeshAppDistributorTests : IAsyncDisposable
 
         public Task<byte[]?> AssembleAsync(string rootHash, CancellationToken cancellationToken = default)
             => Task.FromResult<byte[]?>(null);
+
+        public Task BroadcastBitmapAsync(string rootHash, CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
 
         public void RaiseContentAnnounced(ContentDescriptor descriptor) =>
             ContentAnnounced?.Invoke(this, descriptor);

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Handshake;
+using AetherMesh.Handshake;
 using Aether.Media.Core.Models;
 using Aether.Media.Social.Tests.Helpers;
-using Aether.Streaming.Models;
+using AetherMesh.Streaming.Models;
 
 namespace Aether.Media.Social.Tests;
 

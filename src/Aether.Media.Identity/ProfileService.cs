@@ -4,10 +4,10 @@ using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using Aether.Identity;
+using AetherMesh.Identity;
 using Aether.Media.Core.Models;
-using Aether.Protocol;
-using Aether.Routing;
+using AetherMesh.Protocol;
+using AetherMesh.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

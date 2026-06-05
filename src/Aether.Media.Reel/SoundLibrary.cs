@@ -2,7 +2,7 @@
 
 using System.Security.Cryptography;
 using System.Text.Json;
-using Aether.Content;
+using AetherMesh.Content;
 using Aether.Media.Reel.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;

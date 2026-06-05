@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 using System.Security.Cryptography;
-using Aether.Content;
+using AetherMesh.Content;
 using Aether.Media.Core.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;

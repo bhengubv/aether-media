@@ -4,8 +4,8 @@ using System.Text;
 using System.Text.Json;
 using Aether.Media.Core.Models;
 using Aether.Media.Social.Tests.Helpers;
-using Aether.Models;
-using Aether.Protocol;
+using AetherMesh.Models;
+using AetherMesh.Protocol;
 
 namespace Aether.Media.Social.Tests;
 

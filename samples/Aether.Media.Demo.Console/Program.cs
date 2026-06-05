@@ -8,27 +8,35 @@
 //   4. AddStreaming()  — live stream publisher + ABR controller
 //   5. AddAI()         — content ranker + moderator
 //
-// The social layer (SocialGraph) depends on the Aether protocol's IDtnService and
-// IMeshSender.  This demo provides no-op stubs for both so the sample runs without
-// a live mesh.  Real deployments wire these from the full aether-protocol DI stack.
+// The media subsystems resolve real Aether-protocol services (IStreamingService,
+// IContentService, IDtnService, IMeshSender, IHandshakeService, …). This demo wires
+// them from the protocol's own DI stack with an in-process transport, so the whole
+// sample runs end-to-end fully offline — no live mesh required.
 
-using Aether.Dtn;
 using Aether.Media.Core;
 using Aether.Media.Core.Models;
 using Aether.Media.DependencyInjection;
 using Aether.Media.Social;
-using Aether.Models;
-using Aether.Protocol;
-using Aether.Routing;
+using AetherMesh.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 // ── 1. Build the service container ────────────────────────────────────────────
 
 var services = new ServiceCollection();
 
-// Register the no-op Aether protocol stubs so SocialGraph can be resolved.
-services.AddSingleton<IDtnService,  NoOpDtnService>();
-services.AddSingleton<IMeshSender,  NoOpMeshSender>();
+// Register the Aether protocol stack with real in-memory, offline implementations.
+// AddInProcessTransport wires IMeshSender via an in-process bridge so routing, DTN,
+// streaming and handshake run end-to-end with no external network. The media
+// subsystems below resolve these protocol services at construction time.
+const string LocalUhid = "DEMO-LOCAL-NODE";
+services.AddAetherProtocol(opts => opts.LocalUhid = LocalUhid)
+        .AddInProcessTransport(LocalUhid)
+        .AddRouting()
+        .AddDtn()
+        .AddReputation()
+        .AddHandshake()
+        .AddContent()
+        .AddStreaming();
 
 // Register all Aether Media subsystems using the fluent builder.
 services.AddAetherMedia(media =>
@@ -134,86 +142,3 @@ Console.WriteLine("────────────────────�
 await feed.StopAsync();
 
 return 0;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// No-op stubs for the Aether protocol dependencies
-//
-// SocialGraph requires IDtnService and IMeshSender from the mesh protocol layer.
-// These stubs satisfy the DI container for demo purposes.  In production, replace
-// them with real implementations from Aether.DependencyInjection.
-// ─────────────────────────────────────────────────────────────────────────────
-
-/// <summary>
-/// No-op <see cref="IDtnService"/> that accepts bundle creation calls and
-/// immediately returns a dummy receipt without network delivery.
-/// </summary>
-internal sealed class NoOpDtnService : IDtnService
-{
-    public event EventHandler<DtnDeliveryReceipt>? BundleDelivered;
-
-    public Task<DtnBundle> CreateBundleAsync(
-        string recipientUhid,
-        byte[] encryptedPayload,
-        BundlePriority priority = BundlePriority.Normal,
-        string? recipientLastGeohash = null,
-        CancellationToken cancellationToken = default)
-    {
-        var bundle = new DtnBundle
-        {
-            Id               = Guid.NewGuid(),
-            RecipientUhid    = recipientUhid,
-            EncryptedPayload = encryptedPayload,
-            Priority         = priority,
-            CreatedAt        = DateTime.UtcNow,
-            ExpiresAt        = DateTime.UtcNow.AddHours(72),
-            Status           = BundleStatus.Delivered,
-        };
-
-        // No-op transport delivers immediately — fire the event so callers
-        // that await delivery confirmation are not left waiting.
-        BundleDelivered?.Invoke(this, new DtnDeliveryReceipt
-        {
-            BundleId      = bundle.Id,
-            RecipientUhid = bundle.RecipientUhid,
-            DeliveredAt   = DateTime.UtcNow,
-        });
-
-        return Task.FromResult(bundle);
-    }
-
-    public Task HandleAsync(MeshPacket packet, CancellationToken cancellationToken = default)
-        => Task.CompletedTask;
-
-    public Task RunDeliveryScanAsync(CancellationToken cancellationToken = default)
-        => Task.CompletedTask;
-
-    public Task<int> ExpireStaleAsync(CancellationToken cancellationToken = default)
-        => Task.FromResult(0);
-
-    public Task<IReadOnlyList<DtnBundle>> GetActiveBundlesAsync(CancellationToken cancellationToken = default)
-        => Task.FromResult<IReadOnlyList<DtnBundle>>(Array.Empty<DtnBundle>());
-}
-
-/// <summary>
-/// No-op <see cref="IMeshSender"/> with a fixed local UHID.  All send and
-/// broadcast calls are accepted and silently discarded.
-/// </summary>
-internal sealed class NoOpMeshSender : IMeshSender
-{
-    public string LocalUhid => "DEMO-LOCAL-NODE";
-
-    public string? LocalGeohash => null;
-
-    public IReadOnlyList<PeerInfo> GetConnectedPeers() => Array.Empty<PeerInfo>();
-
-    public Task<bool> SendAsync(
-        MeshPacket packet,
-        string nextHopUhid,
-        CancellationToken cancellationToken = default)
-        => Task.FromResult(true);
-
-    public Task<int> BroadcastAsync(
-        MeshPacket packet,
-        CancellationToken cancellationToken = default)
-        => Task.FromResult(0);
-}

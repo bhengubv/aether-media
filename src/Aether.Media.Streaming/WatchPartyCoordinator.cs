@@ -4,10 +4,10 @@ using System.Collections.Concurrent;
 using System.Text;
 using System.Text.Json;
 using Aether.Media.Core.Models;
-using Aether.Protocol;
-using Aether.Routing;
-using Aether.Streaming;
-using Aether.Streaming.Models;
+using AetherMesh.Protocol;
+using AetherMesh.Routing;
+using AetherMesh.Streaming;
+using AetherMesh.Streaming.Models;
 
 namespace Aether.Media.Streaming;
 

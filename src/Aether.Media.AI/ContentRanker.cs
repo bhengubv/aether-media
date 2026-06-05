@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Extensibility;
+using AetherMesh.Extensibility;
 using Aether.Media.Core.Models;
-using Aether.Reputation;
+using AetherMesh.Reputation;
 
 namespace Aether.Media.AI;
 

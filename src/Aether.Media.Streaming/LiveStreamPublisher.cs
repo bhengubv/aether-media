@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Streaming;
-using Aether.Streaming.Models;
+using AetherMesh.Streaming;
+using AetherMesh.Streaming.Models;
 
 namespace Aether.Media.Streaming;
 
@@ -64,7 +64,7 @@ public sealed class LiveStreamPublisher : ILiveStreamPublisher
                 title: title,
                 contentType: contentType,
                 codec: codec,
-                segmentDurationMs: Aether.Constants.ProtocolConstants.StreamSegmentDurationMs,
+                segmentDurationMs: AetherMesh.Constants.ProtocolConstants.StreamSegmentDurationMs,
                 profile: StreamProfile.ProfileB,
                 cancellationToken: ct).ConfigureAwait(false);
 

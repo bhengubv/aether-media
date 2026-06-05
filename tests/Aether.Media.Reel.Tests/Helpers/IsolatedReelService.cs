@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Content;
+using AetherMesh.Content;
 using Aether.Media.Reel;
 using Aether.Media.Reel.Interfaces;
 using Microsoft.Extensions.Logging;

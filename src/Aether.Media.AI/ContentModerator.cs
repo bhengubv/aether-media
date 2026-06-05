@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 
 using System.Collections.Concurrent;
-using Aether.Extensibility;
+using AetherMesh.Extensibility;
 using Aether.Media.Core.Models;
-using Aether.Protocol;
+using AetherMesh.Protocol;
 
 namespace Aether.Media.AI;
 

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 
 using System.Collections.Concurrent;
-using Aether.Handshake;
+using AetherMesh.Handshake;
 using Aether.Media.Core;
 using Aether.Media.Core.Models;
 using Aether.Media.Identity;
-using Aether.Models;
-using Aether.Streaming;
-using Aether.Streaming.Models;
+using AetherMesh.Models;
+using AetherMesh.Streaming;
+using AetherMesh.Streaming.Models;
 
 namespace Aether.Media.Social;
 
@@ -125,7 +125,7 @@ public sealed class DiscoveryService : IDiscoveryService
 
         // Check for Streaming capability using the string tag used in the hello payload
         // or the NodeCapabilities flags if they are encoded in the capability set.
-        // The Aether.Core handshake advertises capability tags as strings — "streaming" is
+        // The AetherMesh.Core handshake advertises capability tags as strings — "streaming" is
         // the canonical tag (see HelloPayload.cs).  We also accept the enum flag form.
         var hasStreaming =
             caps.Capabilities.Contains("streaming") ||

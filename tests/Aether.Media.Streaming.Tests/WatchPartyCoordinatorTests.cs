@@ -352,7 +352,7 @@ public sealed class WatchPartyCoordinatorTests : IAsyncDisposable
         var (coord, wt, _) = Make();
         await coord.HostWatchPartyAsync("hash", "T");
 
-        Aether.Streaming.Models.ChipInPool? pool = null;
+        AetherMesh.Streaming.Models.ChipInPool? pool = null;
         wt.ChipInUpdated += (_, p) => pool = p;
 
         await coord.StartChipInAsync(targetAmountZar: 100m, description: "Test ChipIn");

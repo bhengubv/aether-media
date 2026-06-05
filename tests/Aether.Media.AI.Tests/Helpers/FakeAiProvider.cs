@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Extensibility;
-using Aether.Protocol;
+using AetherMesh.Extensibility;
+using AetherMesh.Protocol;
 
 namespace Aether.Media.AI.Tests.Helpers;
 

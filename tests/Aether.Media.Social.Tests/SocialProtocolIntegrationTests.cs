@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Content.Models;
-using Aether.Dtn;
+using AetherMesh.Content.Models;
+using AetherMesh.Dtn;
 using Aether.Media.Core.Models;
 using Aether.Media.Social.Tests.Helpers;
-using Aether.Models;
-using Aether.Protocol;
-using Aether.Routing;
-using Aether.Streaming.Models;
+using AetherMesh.Models;
+using AetherMesh.Protocol;
+using AetherMesh.Routing;
+using AetherMesh.Streaming.Models;
 
 namespace Aether.Media.Social.Tests;
 

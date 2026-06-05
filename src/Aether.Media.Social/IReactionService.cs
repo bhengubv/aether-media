@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 using Aether.Media.Core.Models;
-using Aether.Protocol;
+using AetherMesh.Protocol;
 
 namespace Aether.Media.Social;
 

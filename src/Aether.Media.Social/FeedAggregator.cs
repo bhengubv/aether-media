@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
 using System.Collections.Concurrent;
-using Aether.Content;
-using Aether.Content.Models;
+using AetherMesh.Content;
+using AetherMesh.Content.Models;
 using Aether.Media.Core.Models;
-using Aether.Streaming;
-using Aether.Streaming.Models;
+using AetherMesh.Streaming;
+using AetherMesh.Streaming.Models;
 
 namespace Aether.Media.Social;
 

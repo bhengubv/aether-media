@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Reputation;
+using AetherMesh.Reputation;
 
 namespace Aether.Media.AI.Tests.Helpers;
 

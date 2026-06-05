@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// ChipIn pools, contributions, and state are defined in Aether.Streaming.Models
+// ChipIn pools, contributions, and state are defined in AetherMesh.Streaming.Models
 // (part of the Aether Protocol).  This service manages the lifecycle on the
 // local node and delegates transport to IWatchTogetherService.
-using Aether.Streaming;
-using Aether.Streaming.Models;
+using AetherMesh.Streaming;
+using AetherMesh.Streaming.Models;
 using System.Collections.Concurrent;
 
 namespace Aether.Media.Streaming;
@@ -12,7 +12,7 @@ namespace Aether.Media.Streaming;
 /// Manages active ChipIn sessions for the local Aether Media node.
 ///
 /// The protocol types (<see cref="ChipInPool"/>, <see cref="ChipInContribution"/>,
-/// <see cref="ChipInState"/>) come from <c>Aether.Streaming.Models</c>.
+/// <see cref="ChipInState"/>) come from <c>AetherMesh.Streaming.Models</c>.
 /// Transport is via <see cref="IWatchTogetherService.StartChipInAsync"/> and
 /// <see cref="IWatchTogetherService.ContributeAsync"/>; this class tracks the
 /// in-memory state for the UI layer.

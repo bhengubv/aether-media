@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-using Aether.Content;
+using AetherMesh.Content;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using TagLib;
