@@ -96,8 +96,8 @@ describe("FeedClient", () => {
       await client.markWatched("hash-a", 5_000);
       await client.markWatched("hash-a", 3_000);
 
-      const raw = storageMock.getItem("aethermesh_watched");
-      assert.ok(raw, "aethermesh_watched key should exist");
+      const raw = storageMock.getItem("aethernet_watched");
+      assert.ok(raw, "aethernet_watched key should exist");
       const record: Record<string, { watchedMs: number }> = JSON.parse(raw!);
       assert.equal(record["hash-a"].watchedMs, 8_000);
     });
@@ -109,7 +109,7 @@ describe("FeedClient", () => {
       await client.markWatched("hash-x", 2_000);
       await client.markWatched("hash-y", 7_000);
 
-      const raw = storageMock.getItem("aethermesh_watched");
+      const raw = storageMock.getItem("aethernet_watched");
       const record: Record<string, { watchedMs: number }> = JSON.parse(raw!);
       assert.equal(record["hash-x"].watchedMs, 2_000);
       assert.equal(record["hash-y"].watchedMs, 7_000);

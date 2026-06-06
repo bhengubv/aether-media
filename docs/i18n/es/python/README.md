@@ -40,11 +40,11 @@ pytest
 
 | Módulo | Descripción |
 |--------|-------------|
-| `aethermesh_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
-| `aethermesh_media.metadata` | Lectura/escritura de etiquetas ID3 y MP4 (vía Mutagen); extracción de XML NFO |
-| `aethermesh_media.playlist` | Análisis y serialización de listas de reproducción M3U y XSPF |
-| `aethermesh_media.plugins` | Host de plugins — cargar, activar y llamar scripts de extensión estilo VLC |
-| `aethermesh_media.cli` | Punto de entrada de la línea de comandos (comando `aether-media`) |
+| `aethernet_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
+| `aethernet_media.metadata` | Lectura/escritura de etiquetas ID3 y MP4 (vía Mutagen); extracción de XML NFO |
+| `aethernet_media.playlist` | Análisis y serialización de listas de reproducción M3U y XSPF |
+| `aethernet_media.plugins` | Host de plugins — cargar, activar y llamar scripts de extensión estilo VLC |
+| `aethernet_media.cli` | Punto de entrada de la línea de comandos (comando `aether-media`) |
 
 ---
 
@@ -53,7 +53,7 @@ pytest
 ### Leer metadatos
 
 ```python
-from aethermesh_media.metadata import read_tags
+from aethernet_media.metadata import read_tags
 
 tags = read_tags("/media/music/track.mp3")
 print(tags.title)    # "Song Title"
@@ -64,7 +64,7 @@ print(tags.duration) # 213.4 (seconds)
 ### Escribir metadatos
 
 ```python
-from aethermesh_media.metadata import write_tags, TagUpdate
+from aethernet_media.metadata import write_tags, TagUpdate
 
 write_tags("/media/music/track.mp3", TagUpdate(
     title="Updated Title",
@@ -75,7 +75,7 @@ write_tags("/media/music/track.mp3", TagUpdate(
 ### Analizar una lista de reproducción
 
 ```python
-from aethermesh_media.playlist import parse_m3u, parse_xspf
+from aethernet_media.playlist import parse_m3u, parse_xspf
 
 tracks = parse_m3u("/media/playlists/summer.m3u")
 for track in tracks:
@@ -87,7 +87,7 @@ tracks = parse_xspf("/media/playlists/podcast.xspf")
 ### Extraer un archivo NFO
 
 ```python
-from aethermesh_media.metadata import read_nfo
+from aethernet_media.metadata import read_nfo
 
 movie = read_nfo("/media/movies/Inception/Inception.nfo")
 print(movie.title)   # "Inception"
@@ -98,7 +98,7 @@ print(movie.plot)    # "A thief who steals corporate secrets..."
 ### Cargar un plugin
 
 ```python
-from aethermesh_media.plugins import PluginHost
+from aethernet_media.plugins import PluginHost
 
 host = PluginHost()
 host.load("/path/to/my_plugin.py")
@@ -163,7 +163,7 @@ aether-media plugins activate my_plugin
 ## Modelos
 
 ```python
-from aethermesh_media.models import MediaContent, MediaProfile, MediaFeedItem
+from aethernet_media.models import MediaContent, MediaProfile, MediaFeedItem
 
 content = MediaContent(
     content_hash="sha256abc",
@@ -185,7 +185,7 @@ print(content.is_video)             # True
 
 ```
 python/
-├── aethermesh_media/
+├── aethernet_media/
 │   ├── __init__.py
 │   ├── models.py            # Domain models
 │   ├── metadata/            # Tag reading/writing, NFO scraping

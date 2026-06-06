@@ -1,3 +1,3 @@
 <resources>
-    <style name="Theme.AetherMeshMedia.TV" parent="Theme.Leanback"/>
+    <style name="Theme.AetherNetMedia.TV" parent="Theme.Leanback"/>
 </resources>

@@ -1,5 +1,5 @@
 {
-  "name": "@bhengubv/aethermesh-market",
+  "name": "@bhengubv/aethernet-market",
   "version": "1.0.0",
   "type": "module",
   "description": "TypeScript SDK for Aether Market — decentralised peer-to-peer marketplace with Proof-of-Vicinity trust and escrow over the Aether mesh network.",

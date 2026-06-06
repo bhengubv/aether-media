@@ -10,8 +10,8 @@ Two Android applications built on Jetpack Compose and media3/ExoPlayer, deliveri
 
 | Module | Package | Target |
 |--------|---------|--------|
-| `media/` | `aethermesh.media` | Phone / tablet (Jetpack Compose) |
-| `media-tv/` | `aethermesh.media.tv` | Android TV (lean-back, D-pad navigation) |
+| `media/` | `aethernet.media` | Phone / tablet (Jetpack Compose) |
+| `media-tv/` | `aethernet.media.tv` | Android TV (lean-back, D-pad navigation) |
 
 ---
 
@@ -74,7 +74,7 @@ Data Layer     — Aether mesh transport via aether-protocol Android bindings
 | Nearby | Mesh-discovered live streams (no internet required) |
 | Library | Local and downloaded media |
 | Watch Together | Active watch-party sessions |
-| Profile | AetherMeshTag identity and creator channel |
+| Profile | AetherNetTag identity and creator channel |
 
 ### Key screens (TV app)
 
@@ -120,7 +120,7 @@ Content chunks are distributed via `IContentService`; live streams use `IStreami
 // Host a watch party
 val session = watchTogether.hostAsync(contentHash)
 
-// Guests join by AetherMeshTag
+// Guests join by AetherNetTag
 watchTogether.joinAsync(hostUhid)
 ```
 

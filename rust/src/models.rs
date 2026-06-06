@@ -139,7 +139,7 @@ pub struct MediaProfile {
     pub display_name: String,
     pub avatar_hash: Option<String>,
     pub bio: Option<String>,
-    pub aethermesh_tag: String,
+    pub aethernet_tag: String,
     pub follower_count: u32,
     pub following_count: u32,
     pub content_count: u32,

@@ -1,5 +1,5 @@
 {
-  "name": "@bhengubv/aethermesh-forge",
+  "name": "@bhengubv/aethernet-forge",
   "version": "1.0.0",
   "type": "module",
   "description": "TypeScript SDK for Aether Forge — decentralised package-cache proxy for the Aether mesh network.",

@@ -47,7 +47,7 @@ go run ./cmd/aether-media-daemon \
 | پرچم | پیش‌فرض | توضیح |
 |------|---------|-------------|
 | `--library` | `~/Media` | مسیر کتابخانه رسانه محلی |
-| `--identity` | `~/.aether/identity.json` | فایل هویت AetherMeshTag |
+| `--identity` | `~/.aether/identity.json` | فایل هویت AetherNetTag |
 | `--transport` | `auto` | لیست انتقال جداشده با کاما |
 | `--port` | `7420` | پورت شنود رله HTTP |
 | `--log-level` | `info` | سطح جزئیات لاگ (`debug`، `info`، `warn`، `error`) |
@@ -65,7 +65,7 @@ Commands:
   feed          Browse the content feed from followed creators
   play <hash>   Play content by SHA-256 hash
   search <q>    Search the local library
-  follow <tag>  Follow a creator by AetherMeshTag
+  follow <tag>  Follow a creator by AetherNetTag
   library       List local media files
   quit
 ```
@@ -86,7 +86,7 @@ go run ./cmd/wire-roundtrip
 |---------|-------------|
 | `models` | `MediaContent`، `MediaProfile`، `MediaFeedItem`، `MediaReaction` |
 | `feed` | `FeedAggregator` — محدود به ۵۰۰ آیتم، با حذف تکراری بر اساس هش محتوا |
-| `social` | `SocialGraph` — دنبال‌کردن/لغو دنبال‌کردن با UHID AetherMeshTag |
+| `social` | `SocialGraph` — دنبال‌کردن/لغو دنبال‌کردن با UHID AetherNetTag |
 | `streaming` | کلاینت `IStreamingService` Aether و اشتراک پخش زنده |
 | `player` | اتصالات cgo LibVLC برای پخش صدا/ویدیو |
 

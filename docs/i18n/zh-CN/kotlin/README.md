@@ -63,7 +63,7 @@ data class MediaContent(
 
 ### `MediaProfile`
 
-与 AetherMeshTag 关联的创作者身份。
+与 AetherNetTag 关联的创作者身份。
 
 ```kotlin
 data class MediaProfile(

@@ -1,8 +1,8 @@
 import type { MediaFeedItem, MediaFeedItemWire } from "../models/MediaFeedItem.js";
 import { fromWire } from "../models/MediaFeedItem.js";
 
-const CACHE_KEY_PREFIX = "aethermesh_feed_";
-const WATCHED_KEY      = "aethermesh_watched";
+const CACHE_KEY_PREFIX = "aethernet_feed_";
+const WATCHED_KEY      = "aethernet_watched";
 const CACHE_TTL_MS     = 5 * 60 * 1000; // 5 minutes
 
 interface CacheEntry {
@@ -25,7 +25,7 @@ export class FeedClient {
   private readonly baseUrl: string;
   private readonly memCache = new Map<string, CacheEntry>();
 
-  constructor(baseUrl: string = "https://relay.aethermesh.network/media") {
+  constructor(baseUrl: string = "https://relay.aethernet.network/media") {
     this.baseUrl = baseUrl.replace(/\/$/, "");
   }
 

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherNet.Trust.Verification</PackageId>
+    <Description>Trust Rings verification engine for Aether Media — SHA-256 block validation and Ed25519 ring attestation with quarantine overlay.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AetherNet.Trust.Core/AetherNet.Trust.Core.csproj" />
+    <ProjectReference Include="../../../../src/AetherNet.Media.DependencyInjection/AetherNet.Media.DependencyInjection.csproj" />
+  </ItemGroup>
+
+</Project>

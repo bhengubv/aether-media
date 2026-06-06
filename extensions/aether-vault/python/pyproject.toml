@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "aethermesh-vault"
+name = "aethernet-vault"
 version = "1.0.0"
 description = "Erasure-coded encrypted distributed backup for the Aether protocol"
 requires-python = ">=3.11"
@@ -17,4 +17,4 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["aethermesh_vault"]
+packages = ["aethernet_vault"]

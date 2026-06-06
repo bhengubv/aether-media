@@ -1,0 +1,221 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AetherNet.Media.Desktop.ViewModels"
+             xmlns:views="using:AetherNet.Media.Desktop.Views"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AetherNet.Media.Desktop.Views.LibraryView"
+             x:DataType="vm:LibraryViewModel"
+             Background="Transparent">
+
+    <Grid>
+
+        <!-- ── Main library list (hidden while a panel is open) ── -->
+        <Grid IsVisible="{Binding !IsPanelOpen}"
+              RowDefinitions="Auto,Auto,*">
+
+            <!-- Header -->
+            <DockPanel Grid.Row="0" Margin="20,16,20,8">
+                <TextBlock DockPanel.Dock="Left"
+                           Text="Library"
+                           FontSize="22"
+                           FontWeight="SemiBold"
+                           Foreground="White"
+                           VerticalAlignment="Center"/>
+                <Button DockPanel.Dock="Right"
+                        Command="{Binding ScanDirectoryCommand}"
+                        Content="＋ Scan Folder"
+                        Background="#2196F3"
+                        Foreground="White"
+                        Padding="12,6"
+                        CornerRadius="6"
+                        IsEnabled="{Binding !IsScanning}"/>
+            </DockPanel>
+
+            <!-- Search + scan status -->
+            <StackPanel Grid.Row="1" Margin="16,0,16,8" Spacing="6">
+                <TextBox Text="{Binding SearchQuery}"
+                         PlaceholderText="Search library…"
+                         Background="#1e1e38"
+                         Foreground="White"
+                         BorderBrush="#333"
+                         BorderThickness="1"
+                         CornerRadius="6"
+                         Padding="10,8"/>
+                <StackPanel IsVisible="{Binding IsScanning}"
+                            Orientation="Horizontal"
+                            Spacing="8">
+                    <ProgressBar IsIndeterminate="True"
+                                 Width="120"
+                                 Height="3"
+                                 Foreground="#2196F3"
+                                 Background="Transparent"
+                                 VerticalAlignment="Center"/>
+                    <TextBlock Foreground="#888" FontSize="12">
+                        <Run Text="Scanning "/>
+                        <Run Text="{Binding ScanPath}"/>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Content list -->
+            <Grid Grid.Row="2">
+                <TextBlock IsVisible="{Binding !Contents.Count}"
+                           Text="No media in library. Scan a folder to get started."
+                           Foreground="#555"
+                           FontSize="14"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+
+                <ScrollViewer VerticalScrollBarVisibility="Hidden"
+                              HorizontalScrollBarVisibility="Disabled"
+                              IsVisible="{Binding Contents.Count}">
+                    <ItemsControl ItemsSource="{Binding Contents}" Margin="16,0,16,16">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MediaContentViewModel">
+                                <Border Margin="0,4"
+                                        CornerRadius="10"
+                                        Background="#1e1e38"
+                                        Cursor="Hand">
+                                    <Border.Styles>
+                                        <Style Selector="Border:pointerover">
+                                            <Setter Property="Background" Value="#272744"/>
+                                        </Style>
+                                    </Border.Styles>
+                                    <Grid ColumnDefinitions="80,*,Auto" Margin="0">
+                                        <!-- Thumbnail -->
+                                        <Border Grid.Column="0"
+                                                Width="80"
+                                                Height="60"
+                                                CornerRadius="10,0,0,10"
+                                                Background="#2c2c50"
+                                                ClipToBounds="True">
+                                            <TextBlock Text="🎵"
+                                                       FontSize="22"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <!-- Info -->
+                                        <StackPanel Grid.Column="1"
+                                                    Margin="12,0"
+                                                    VerticalAlignment="Center"
+                                                    Spacing="3">
+                                            <TextBlock Text="{Binding Title}"
+                                                       Foreground="White"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Foreground="#888" FontSize="12">
+                                                <Run Text="{Binding Codec}"/>
+                                                <Run Text=" · "/>
+                                                <Run Text="{Binding FormattedDuration}"/>
+                                                <Run Text=" · "/>
+                                                <Run Text="{Binding SizeFormatted}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <!-- Actions — CommandParameter binds the row item VM -->
+                                        <StackPanel Grid.Column="2"
+                                                    Orientation="Horizontal"
+                                                    Margin="8,0"
+                                                    Spacing="4"
+                                                    VerticalAlignment="Center"
+                                                    x:CompileBindings="False">
+                                            <!-- Play -->
+                                            <Button Content="▶"
+                                                    Command="{Binding $parent[UserControl].DataContext.PlayCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#2196F3"
+                                                    Foreground="White"
+                                                    Width="32" Height="32"
+                                                    CornerRadius="16"
+                                                    Padding="0" FontSize="13"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    ToolTip.Tip="Play"/>
+                                            <!-- Edit metadata -->
+                                            <Button Content="✏"
+                                                    Command="{Binding $parent[UserControl].DataContext.EditMetadataCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#2c2c50"
+                                                    Foreground="#aaa"
+                                                    Width="32" Height="32"
+                                                    CornerRadius="16"
+                                                    Padding="0" FontSize="13"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    ToolTip.Tip="Edit metadata"
+                                                    IsVisible="{Binding LocalFilePath, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                                            <!-- Find subtitles (video only) -->
+                                            <Button Content="🗒"
+                                                    Command="{Binding $parent[UserControl].DataContext.FindSubtitlesCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#2c2c50"
+                                                    Foreground="#aaa"
+                                                    Width="32" Height="32"
+                                                    CornerRadius="16"
+                                                    Padding="0" FontSize="13"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    ToolTip.Tip="Find subtitles"
+                                                    IsVisible="{Binding Source.IsVideo}"/>
+                                            <!-- Remove -->
+                                            <Button Content="✕"
+                                                    Command="{Binding $parent[UserControl].DataContext.RemoveCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#333"
+                                                    Foreground="#aaa"
+                                                    Width="32" Height="32"
+                                                    CornerRadius="16"
+                                                    Padding="0" FontSize="13"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    ToolTip.Tip="Remove from library"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+
+        </Grid>
+
+        <!-- ── Metadata Editor panel ── -->
+        <Grid IsVisible="{Binding IsEditingMetadata}"
+              RowDefinitions="Auto,*">
+            <!-- Back bar -->
+            <DockPanel Grid.Row="0" Margin="16,10,16,0">
+                <Button DockPanel.Dock="Left"
+                        Command="{Binding ClosePanelCommand}"
+                        Content="← Library"
+                        Background="Transparent"
+                        Foreground="#2196F3"
+                        Padding="0"
+                        FontSize="13"/>
+            </DockPanel>
+            <views:MetadataEditorView Grid.Row="1"
+                                      DataContext="{Binding MetadataEditor}"/>
+        </Grid>
+
+        <!-- ── Subtitle Search panel ── -->
+        <Grid IsVisible="{Binding IsSearchingSubtitles}"
+              RowDefinitions="Auto,*">
+            <!-- Back bar -->
+            <DockPanel Grid.Row="0" Margin="16,10,16,0">
+                <Button DockPanel.Dock="Left"
+                        Command="{Binding ClosePanelCommand}"
+                        Content="← Library"
+                        Background="Transparent"
+                        Foreground="#2196F3"
+                        Padding="0"
+                        FontSize="13"/>
+            </DockPanel>
+            <views:SubtitleSearchView Grid.Row="1"
+                                      DataContext="{Binding SubtitleSearch}"/>
+        </Grid>
+
+    </Grid>
+
+</UserControl>

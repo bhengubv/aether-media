@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <!-- RCL used by both MAUI Blazor Hybrid and Blazor Web -->
+    <AddRazorSupportForMvc>false</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm"                          Version="8.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web"            Version="10.0.0" />
+    <PackageReference Include="QRCoder"                                        Version="1.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherNet.Media.AI\AetherNet.Media.AI.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Content\AetherNet.Media.Content.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Core\AetherNet.Media.Core.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Distribution\AetherNet.Media.Distribution.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Identity\AetherNet.Media.Identity.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.LocalLibrary\AetherNet.Media.LocalLibrary.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Reel\AetherNet.Media.Reel.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Social\AetherNet.Media.Social.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Streaming\AetherNet.Media.Streaming.csproj" />
+  </ItemGroup>
+
+</Project>

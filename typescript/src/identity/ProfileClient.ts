@@ -1,7 +1,7 @@
 import type { MediaProfile, MediaProfileWire } from "../models/MediaProfile.js";
 import { fromWire } from "../models/MediaProfile.js";
 
-const LOCAL_PROFILE_KEY = "aethermesh_local_profile";
+const LOCAL_PROFILE_KEY = "aethernet_local_profile";
 
 /**
  * Manages media creator profiles, caching them in memory to avoid
@@ -11,7 +11,7 @@ export class ProfileClient {
   private readonly baseUrl: string;
   private readonly cache = new Map<string, MediaProfile>();
 
-  constructor(baseUrl: string = "https://relay.aethermesh.network/media") {
+  constructor(baseUrl: string = "https://relay.aethernet.network/media") {
     this.baseUrl = baseUrl.replace(/\/$/, "");
   }
 

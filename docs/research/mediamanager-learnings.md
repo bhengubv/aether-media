@@ -56,7 +56,7 @@ need their own API key — one relay fetches and serves many instances.
 That is the **Forge pattern** (`cache-once, serve-to-peers`) applied to media
 metadata. The centralized relay becomes a **mesh metadata cache** — metadata
 enrichment gossiped and cached P2P. This is the single most adoptable *concept*
-from MediaManager, and it slots straight into AetherMesh's existing
+from MediaManager, and it slots straight into AetherNet's existing
 `IContentService` / Forge model.
 
 ---

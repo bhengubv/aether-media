@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherNet.Media.DependencyInjection</PackageId>
+    <Description>DI wiring for all Aether Media services — one call activates the full stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherNet.Media.Core\AetherNet.Media.Core.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Identity\AetherNet.Media.Identity.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Content\AetherNet.Media.Content.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Social\AetherNet.Media.Social.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Streaming\AetherNet.Media.Streaming.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.AI\AetherNet.Media.AI.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Distribution\AetherNet.Media.Distribution.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.LocalLibrary\AetherNet.Media.LocalLibrary.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Reel\AetherNet.Media.Reel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
+  </ItemGroup>
+
+</Project>

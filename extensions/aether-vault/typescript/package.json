@@ -1,5 +1,5 @@
 {
-  "name": "@bhengubv/aethermesh-vault",
+  "name": "@bhengubv/aethernet-vault",
   "version": "1.0.0",
   "type": "module",
   "description": "TypeScript SDK for Aether Vault — distributed encrypted file storage with erasure coding over the Aether mesh network.",

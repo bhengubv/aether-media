@@ -88,7 +88,7 @@ await _sender.BroadcastAsync(packet, ct);
   "uhid":           "uhid-alice-0001",
   "display_name":   "Alice Aether",
   "avatar_hash":    "sha256-of-avatar-bytes",
-  "aethermesh_tag":     "@alice",
+  "aethernet_tag":     "@alice",
   "is_verified":    true,
   "joined_at_ms":   1700000000000
 }

@@ -1,4 +1,4 @@
-package aethermesh.media.models
+package aethernet.media.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -118,8 +118,8 @@ data class MediaProfile(
     @SerialName("avatar_hash")
     val avatarHash: String?,
     val bio: String?,
-    @SerialName("aethermesh_tag")
-    val aethermeshTagValue: String,
+    @SerialName("aethernet_tag")
+    val aethernetTagValue: String,
     @SerialName("follower_count")
     val followerCount: Int,
     @SerialName("following_count")

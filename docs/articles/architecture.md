@@ -80,14 +80,14 @@ The social layer has no server. Every follow, unfollow, reaction, and profile up
 
 | Project | Responsibility |
 |---------|----------------|
-| `AetherMesh.Media.Core` | Domain models (`MediaContent`, `MediaFeedItem`, `MediaReaction`, `MediaProfile`, `LiveStream`) and core interfaces (`IMediaLibrary`, `IFeedAggregator`, `ISocialGraph`) |
-| `AetherMesh.Media.Identity` | Local profile store, avatar management, `ProfileSyncService` for mesh broadcast of profile updates |
-| `AetherMesh.Media.Content` | Library scanner (SHA-256 hashing, metadata resolution, thumbnail extraction), `LruContentCache` (500 MiB default, O(1) eviction) |
-| `AetherMesh.Media.Social` | `SocialGraph` (DTN-backed follow), `FeedAggregator` (mesh event aggregation), `ReactionService` (live reaction routing), `DiscoveryService` (nearby creator detection) |
-| `AetherMesh.Media.Streaming` | `LiveStreamPublisher`, `WatchPartyCoordinator`, `AbrController` |
-| `AetherMesh.Media.AI` | `ContentRanker`, `ContentModerator`, `CreatorReputationView` — on-device AI curation with no data leaving the device |
-| `AetherMesh.Media.Desktop` | Avalonia UI host with LibVLCSharp media engine |
-| `AetherMesh.Media.DependencyInjection` | `AddAetherMeshMedia()` extension and `AetherMeshMediaBuilder` fluent API |
+| `AetherNet.Media.Core` | Domain models (`MediaContent`, `MediaFeedItem`, `MediaReaction`, `MediaProfile`, `LiveStream`) and core interfaces (`IMediaLibrary`, `IFeedAggregator`, `ISocialGraph`) |
+| `AetherNet.Media.Identity` | Local profile store, avatar management, `ProfileSyncService` for mesh broadcast of profile updates |
+| `AetherNet.Media.Content` | Library scanner (SHA-256 hashing, metadata resolution, thumbnail extraction), `LruContentCache` (500 MiB default, O(1) eviction) |
+| `AetherNet.Media.Social` | `SocialGraph` (DTN-backed follow), `FeedAggregator` (mesh event aggregation), `ReactionService` (live reaction routing), `DiscoveryService` (nearby creator detection) |
+| `AetherNet.Media.Streaming` | `LiveStreamPublisher`, `WatchPartyCoordinator`, `AbrController` |
+| `AetherNet.Media.AI` | `ContentRanker`, `ContentModerator`, `CreatorReputationView` — on-device AI curation with no data leaving the device |
+| `AetherNet.Media.Desktop` | Avalonia UI host with LibVLCSharp media engine |
+| `AetherNet.Media.DependencyInjection` | `AddAetherNetMedia()` extension and `AetherNetMediaBuilder` fluent API |
 
 ---
 
@@ -96,7 +96,7 @@ The social layer has no server. Every follow, unfollow, reaction, and profile up
 All subsystems are opt-in. `TryAddSingleton` ensures host applications can substitute their own implementations simply by registering them first:
 
 ```csharp
-services.AddAetherMeshMedia(media =>
+services.AddAetherNetMedia(media =>
     media.AddIdentity()
          .AddContent()
          .AddSocial()
@@ -110,10 +110,10 @@ Optional subsystems include `.AddDistribution()` (mesh-first app distribution wi
 
 ## TypeScript Web Player
 
-The TypeScript package (`@bhengubv/aether-media`) connects through two paths. For peers running an HTTP relay, the `FeedClient` fetches feed items and marks watch progress over standard REST. For direct mesh delivery, `AetherMeshMediaPlayer.feedSegment()` accepts raw encoded bytes and pipes them into the browser's Media Source Extensions (MSE) pipeline:
+The TypeScript package (`@bhengubv/aether-media`) connects through two paths. For peers running an HTTP relay, the `FeedClient` fetches feed items and marks watch progress over standard REST. For direct mesh delivery, `AetherNetMediaPlayer.feedSegment()` accepts raw encoded bytes and pipes them into the browser's Media Source Extensions (MSE) pipeline:
 
 ```typescript
-const player = new AetherMeshMediaPlayer(document.querySelector('video')!);
+const player = new AetherNetMediaPlayer(document.querySelector('video')!);
 await player.load('aether://stream/uhid-alice-0001'); // HLS relay fallback
 
 // Or feed raw mesh segments directly:

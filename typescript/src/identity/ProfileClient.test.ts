@@ -55,7 +55,7 @@ function makeWireProfile(overrides?: Record<string, unknown>): Record<string, un
     display_name:    "Test Creator",
     avatar_hash:     null,
     bio:             "Hello from Aether.",
-    aethermesh_tag:      "@testcreator",
+    aethernet_tag:      "@testcreator",
     follower_count:  42,
     following_count: 7,
     content_count:   3,
@@ -72,7 +72,7 @@ function makeLocalProfile(overrides?: Record<string, unknown>): Record<string, u
     displayName:    "Test Creator",
     avatarHash:     null,
     bio:            "Hello from Aether.",
-    aethermeshTag:      "@testcreator",
+    aethernetTag:      "@testcreator",
     followerCount:  42,
     followingCount: 7,
     contentCount:   3,
@@ -166,7 +166,7 @@ describe("ProfileClient", () => {
 
     it("returns the stored profile when localStorage has one", async () => {
       const raw = makeLocalProfile();
-      storageMock.setItem("aethermesh_local_profile", JSON.stringify(raw));
+      storageMock.setItem("aethernet_local_profile", JSON.stringify(raw));
       // Mock network refresh (best-effort background call)
       mockFetch(makeWireProfile());
 
@@ -178,7 +178,7 @@ describe("ProfileClient", () => {
     });
 
     it("returns null when localStorage value is corrupt JSON", async () => {
-      storageMock.setItem("aethermesh_local_profile", "NOT_JSON");
+      storageMock.setItem("aethernet_local_profile", "NOT_JSON");
       const client  = new ProfileClient("http://test");
       const profile = await client.getLocalProfile();
       assert.equal(profile, null);
@@ -193,7 +193,7 @@ describe("ProfileClient", () => {
       };
 
       const raw = makeLocalProfile();
-      storageMock.setItem("aethermesh_local_profile", JSON.stringify(raw));
+      storageMock.setItem("aethernet_local_profile", JSON.stringify(raw));
 
       const client  = new ProfileClient("http://test");
       const profile = await client.getLocalProfile();
@@ -229,7 +229,7 @@ describe("ProfileClient", () => {
   describe("updateProfile — network", () => {
     it("sends PATCH and returns updated profile", async () => {
       const updatedRaw = makeWireProfile({ display_name: "Updated Name" });
-      storageMock.setItem("aethermesh_local_profile", JSON.stringify(makeLocalProfile()));
+      storageMock.setItem("aethernet_local_profile", JSON.stringify(makeLocalProfile()));
 
       let capturedUrl  = "";
       let capturedInit: RequestInit | undefined;
@@ -253,7 +253,7 @@ describe("ProfileClient", () => {
     });
 
     it("throws on HTTP error from PATCH", async () => {
-      storageMock.setItem("aethermesh_local_profile", JSON.stringify(makeLocalProfile()));
+      storageMock.setItem("aethernet_local_profile", JSON.stringify(makeLocalProfile()));
 
       globalThis.fetch = async (_u: RequestInfo | URL, init?: RequestInit) => {
         if (init?.method === "PATCH") {
@@ -271,7 +271,7 @@ describe("ProfileClient", () => {
 
     it("persists updated profile to localStorage", async () => {
       const updatedRaw = makeWireProfile({ display_name: "Persisted" });
-      storageMock.setItem("aethermesh_local_profile", JSON.stringify(makeLocalProfile()));
+      storageMock.setItem("aethernet_local_profile", JSON.stringify(makeLocalProfile()));
 
       globalThis.fetch = async (_u: RequestInfo | URL, init?: RequestInit) => {
         if (init?.method === "PATCH") {
@@ -283,7 +283,7 @@ describe("ProfileClient", () => {
       const client = new ProfileClient("http://test");
       await client.updateProfile("Persisted", "bio");
 
-      const stored = storageMock.getItem("aethermesh_local_profile");
+      const stored = storageMock.getItem("aethernet_local_profile");
       assert.ok(stored, "localStorage should have updated profile");
       const parsed = JSON.parse(stored!);
       assert.equal(parsed.displayName, "Persisted");

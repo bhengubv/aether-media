@@ -47,7 +47,7 @@ go run ./cmd/aether-media-daemon \
 | الخيار | القيمة الافتراضية | الوصف |
 |------|---------|-------------|
 | `--library` | `~/Media` | المسار إلى مكتبة الوسائط المحلية |
-| `--identity` | `~/.aether/identity.json` | ملف هوية AetherMeshTag |
+| `--identity` | `~/.aether/identity.json` | ملف هوية AetherNetTag |
 | `--transport` | `auto` | قائمة وسائل النقل مفصولة بفواصل |
 | `--port` | `7420` | منفذ الاستماع لترحيل HTTP |
 | `--log-level` | `info` | مستوى تفصيل السجل (`debug`، `info`، `warn`، `error`) |
@@ -65,7 +65,7 @@ Commands:
   feed          Browse the content feed from followed creators
   play <hash>   Play content by SHA-256 hash
   search <q>    Search the local library
-  follow <tag>  Follow a creator by AetherMeshTag
+  follow <tag>  Follow a creator by AetherNetTag
   library       List local media files
   quit
 ```
@@ -86,7 +86,7 @@ go run ./cmd/wire-roundtrip
 |---------|-------------|
 | `models` | `MediaContent`، `MediaProfile`، `MediaFeedItem`، `MediaReaction` |
 | `feed` | `FeedAggregator` — محدود بـ 500 عنصر، يُزيل التكرار حسب تجزئة المحتوى |
-| `social` | `SocialGraph` — متابعة/إلغاء متابعة بـ AetherMeshTag UHID |
+| `social` | `SocialGraph` — متابعة/إلغاء متابعة بـ AetherNetTag UHID |
 | `streaming` | عميل Aether `IStreamingService` واشتراك البث المباشر |
 | `player` | ارتباطات cgo لـ LibVLC لتشغيل الصوت والفيديو |
 

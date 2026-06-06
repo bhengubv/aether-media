@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "aethermesh.media.tv"
+    namespace = "aethernet.media.tv"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "aethermesh.media.tv"
+        applicationId = "aethernet.media.tv"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -51,6 +51,6 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.2.1")
     implementation("androidx.leanback:leanback:1.0.0")
     // Aether Protocol
-    implementation("dev.aethermesh:aethermesh-protocol-kotlin:1.0.0")
+    implementation("dev.aethernet:aethernet-protocol-kotlin:1.0.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }

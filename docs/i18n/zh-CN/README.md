@@ -70,14 +70,14 @@ Aether Media 基于 [aether-protocol](https://github.com/bhengubv/aether-protoco
 
 | Aether 接口 | 包 | Aether Media 的使用方式 |
 |---|---|---|
-| `ITransportService` | `AetherMesh.Transport` | 通过网格（BLE / Wi-Fi Direct / NearLink / LoRa / HTTP 中继）发送编码的视频/音频帧、反应和关注意图 |
-| `IStreamingService` | `AetherMesh.Streaming` | 开始直播时广播 `StreamAnnounce`；`FeedAggregator` 订阅 `StreamAnnounced` 和 `StreamEnded` 事件以维护直播动态 |
-| `IContentService` | `AetherMesh.Content` | 为上传的媒体发布 `ContentDescriptor`；`FeedAggregator` 订阅 `ContentAnnounced` 进行点播发现 |
-| `IDtnService` | `AetherMesh.Dtn` | 将关注意图持久投递至离线创作者；包最多等待 72 小时寻找路由 |
-| `IMeshSender` | `AetherMesh.Messaging` | 通过网格发送尽力而为的取消关注数据包和直播反应，无需 DTN 开销 |
-| `IRoutingService` | `AetherMesh.Routing` | 社交数据包的路由感知投递；带 Ed25519 签名路由回复的 AODV 风格 RREQ/RREP |
-| `SignalProtocolService` | `AetherMesh.Security` | 使用 X3DH + 双棘轮端到端加密私信、个人资料同步负载和私有频道内容 |
-| `IAdaptiveBitrateController` | `AetherMesh.Streaming` | 根据活跃传输的实时带宽估算选择最高可持续质量档次（H.264 / H.265 / VP8） |
+| `ITransportService` | `AetherNet.Transport` | 通过网格（BLE / Wi-Fi Direct / NearLink / LoRa / HTTP 中继）发送编码的视频/音频帧、反应和关注意图 |
+| `IStreamingService` | `AetherNet.Streaming` | 开始直播时广播 `StreamAnnounce`；`FeedAggregator` 订阅 `StreamAnnounced` 和 `StreamEnded` 事件以维护直播动态 |
+| `IContentService` | `AetherNet.Content` | 为上传的媒体发布 `ContentDescriptor`；`FeedAggregator` 订阅 `ContentAnnounced` 进行点播发现 |
+| `IDtnService` | `AetherNet.Dtn` | 将关注意图持久投递至离线创作者；包最多等待 72 小时寻找路由 |
+| `IMeshSender` | `AetherNet.Messaging` | 通过网格发送尽力而为的取消关注数据包和直播反应，无需 DTN 开销 |
+| `IRoutingService` | `AetherNet.Routing` | 社交数据包的路由感知投递；带 Ed25519 签名路由回复的 AODV 风格 RREQ/RREP |
+| `SignalProtocolService` | `AetherNet.Security` | 使用 X3DH + 双棘轮端到端加密私信、个人资料同步负载和私有频道内容 |
+| `IAdaptiveBitrateController` | `AetherNet.Streaming` | 根据活跃传输的实时带宽估算选择最高可持续质量档次（H.264 / H.265 / VP8） |
 
 ---
 
@@ -107,13 +107,13 @@ Aether Media 提供 8 种语言的实现，可在生态系统中的每个平台�
 ```bash
 git clone https://github.com/bhengubv/aether-media.git
 cd aether-media
-dotnet run --project samples/AetherMesh.Media.Demo.Console
+dotnet run --project samples/AetherNet.Media.Demo.Console
 ```
 
 注册所有子系统：
 
 ```csharp
-services.AddAetherMeshMedia(media =>
+services.AddAetherNetMedia(media =>
     media.AddIdentity()
          .AddContent()
          .AddSocial()
@@ -148,10 +148,10 @@ await feed.StartAsync();
 ### TypeScript（浏览器）
 
 ```typescript
-import { AetherMeshMediaPlayer } from '@bhengubv/aether-media';
+import { AetherNetMediaPlayer } from '@bhengubv/aether-media';
 
 const video  = document.querySelector('video') as HTMLVideoElement;
-const player = new AetherMeshMediaPlayer(video);
+const player = new AetherNetMediaPlayer(video);
 
 // Load an HLS stream published by a peer on the mesh
 await player.load('aether://stream/KXJB7-MN2P4');
@@ -166,7 +166,7 @@ player.feedSegment(encodedBytes, 'video/mp4; codecs="avc1.42E01E"');
 ```typescript
 import { FeedClient } from '@bhengubv/aether-media';
 
-const client = new FeedClient('https://relay.aethermesh.network/media');
+const client = new FeedClient('https://relay.aethernet.network/media');
 const items  = await client.getFeed(20, 0);   // limit, offset
 
 for (const item of items) {
@@ -179,10 +179,10 @@ await client.markWatched('a3f9...', 45_000);  // contentHash, ms watched
 ### Python（插件）
 
 ```python
-from aethermesh_media.plugins.base import AetherMeshMediaPlugin
-from aethermesh_media.models import MediaContent, MediaReaction
+from aethernet_media.plugins.base import AetherNetMediaPlugin
+from aethernet_media.models import MediaContent, MediaReaction
 
-class MyPlugin(AetherMeshMediaPlugin):
+class MyPlugin(AetherNetMediaPlugin):
     @property
     def name(self) -> str:
         return "My Plugin"
@@ -201,7 +201,7 @@ class MyPlugin(AetherMeshMediaPlugin):
 ### Kotlin（Android / JVM）
 
 ```kotlin
-import aethermesh.media.social.SocialGraph
+import aethernet.media.social.SocialGraph
 
 val graph = SocialGraph()
 graph.follow("KXJB7-MN2P4")
@@ -214,7 +214,7 @@ println(graph.count)                        // 0
 ### Rust
 
 ```rust
-use aethermesh_media::feed::{FeedStore, FeedEntry};
+use aethernet_media::feed::{FeedStore, FeedEntry};
 
 let mut store = FeedStore::new(500);
 let entry = FeedEntry {
@@ -243,7 +243,7 @@ fmt.Println(g.Following())                 // [KXJB7-MN2P4]
 ### Swift
 
 ```swift
-import AetherMeshMedia
+import AetherNetMedia
 
 let graph = SocialGraph()
 try await graph.follow(uhid: "KXJB7-MN2P4")
@@ -254,12 +254,12 @@ print(following) // ["KXJB7-MN2P4"]
 ### C
 
 ```c
-#include "aethermesh_media/social.h"
+#include "aethernet_media/social.h"
 
-aethermesh_social_graph_t *graph = aethermesh_social_graph_create();
-aethermesh_social_graph_follow(graph, "KXJB7-MN2P4");
-printf("Following: %d\n", aethermesh_social_graph_is_following(graph, "KXJB7-MN2P4")); // 1
-aethermesh_social_graph_destroy(graph);
+aethernet_social_graph_t *graph = aethernet_social_graph_create();
+aethernet_social_graph_follow(graph, "KXJB7-MN2P4");
+printf("Following: %d\n", aethernet_social_graph_is_following(graph, "KXJB7-MN2P4")); // 1
+aethernet_social_graph_destroy(graph);
 ```
 
 ---
@@ -283,30 +283,30 @@ aethermesh_social_graph_destroy(graph);
 ```
 aether-media/
   src/
-    AetherMesh.Media.Core/            Domain models and interfaces (MediaContent, IMediaLibrary, etc.)
-    AetherMesh.Media.Identity/        Profile management, avatar, profile sync
-    AetherMesh.Media.Content/         Media library scanner, metadata resolver, LRU cache, thumbnails
-    AetherMesh.Media.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
-    AetherMesh.Media.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
-    AetherMesh.Media.AI/              ContentRanker, ContentModerator, CreatorReputationView
-    AetherMesh.Media.DependencyInjection/  AddAetherMeshMedia() extension + AetherMeshMediaBuilder fluent API
-    AetherMesh.Media.Desktop/         LibVLCSharp integration for Windows / Linux / macOS
+    AetherNet.Media.Core/            Domain models and interfaces (MediaContent, IMediaLibrary, etc.)
+    AetherNet.Media.Identity/        Profile management, avatar, profile sync
+    AetherNet.Media.Content/         Media library scanner, metadata resolver, LRU cache, thumbnails
+    AetherNet.Media.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
+    AetherNet.Media.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
+    AetherNet.Media.AI/              ContentRanker, ContentModerator, CreatorReputationView
+    AetherNet.Media.DependencyInjection/  AddAetherNetMedia() extension + AetherNetMediaBuilder fluent API
+    AetherNet.Media.Desktop/         LibVLCSharp integration for Windows / Linux / macOS
   samples/
-    AetherMesh.Media.Demo.Console/    Interactive console demo showing all subsystems
-    AetherMesh.Media.RelayTest/       HTTP relay round-trip test (requires AetherMesh.RelayServer)
+    AetherNet.Media.Demo.Console/    Interactive console demo showing all subsystems
+    AetherNet.Media.RelayTest/       HTTP relay round-trip test (requires AetherNet.RelayServer)
   tests/
-    AetherMesh.Media.Core.Tests/      Unit tests for domain models and InMemoryMediaLibrary
-    AetherMesh.Media.Social.Tests/    Unit tests for SocialGraph and FeedAggregator
+    AetherNet.Media.Core.Tests/      Unit tests for domain models and InMemoryMediaLibrary
+    AetherNet.Media.Social.Tests/    Unit tests for SocialGraph and FeedAggregator
   typescript/                     TypeScript web player and social SDK (@bhengubv/aether-media)
     src/
-      player/   AetherMeshMediaPlayer (HLS.js + Shaka Player + native MSE)
+      player/   AetherNetMediaPlayer (HLS.js + Shaka Player + native MSE)
       social/   FeedClient, ReactionClient
       identity/ ProfileClient
-      streaming/ AetherMeshStreamClient
+      streaming/ AetherNetStreamClient
       models/   TypeScript mirrors of the C# domain models
   python/                         Python plugin engine and metadata library (aether-media on PyPI)
-    aethermesh_media/
-      plugins/  AetherMeshMediaPlugin base class, PluginHost
+    aethernet_media/
+      plugins/  AetherNetMediaPlugin base class, PluginHost
       metadata/ Tag reader/writer (mutagen wrapper)
       cli/      Command-line entry points
   rust/                           Rust feed engine (aether-media on crates.io)
@@ -329,13 +329,13 @@ aether-media/
       streaming/ Stream session models
     android/    Gradle Android module with media3-exoplayer dependency
   swift/                          Swift / Apple platform player (SwiftPM package)
-    Sources/AetherMeshMedia/
+    Sources/AetherNetMedia/
       social/   SocialGraph (actor-based, Swift Concurrency)
       player/   AVFoundation player
       feed/     Feed models
       streaming/ Stream models
   c/                              C11 feed and social models for embedded targets
-    include/aethermesh_media/         Public headers
+    include/aethernet_media/         Public headers
     src/                          Implementations
     tests/                        CTest-based test suite
   android/                        Android Gradle modules
@@ -351,7 +351,7 @@ aether-media/
 ### C#
 
 ```bash
-dotnet build AetherMeshMedia.slnx
+dotnet build AetherNetMedia.slnx
 dotnet test
 ```
 

@@ -6,12 +6,12 @@ import { type MediaReaction, type MediaReactionWire, toWire, fromWire } from "..
  *
  * Reactions are serialised to JSON and dispatched over the Aether relay
  * HTTP API.  Future versions will use the native mesh transport once the
- * @bhengubv/aethermesh-protocol package exposes a browser-compatible IPC.
+ * @bhengubv/aethernet-protocol package exposes a browser-compatible IPC.
  */
 export class ReactionClient {
   private readonly baseUrl: string;
 
-  constructor(baseUrl: string = "https://relay.aethermesh.network/media") {
+  constructor(baseUrl: string = "https://relay.aethernet.network/media") {
     this.baseUrl = baseUrl.replace(/\/$/, "");
   }
 

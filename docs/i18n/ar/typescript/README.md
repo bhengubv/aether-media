@@ -42,10 +42,10 @@ npm test
 ## البدء السريع
 
 ```typescript
-import { AetherMeshMediaPlayer, FeedClient, ProfileClient } from '@bhengubv/aether-media';
+import { AetherNetMediaPlayer, FeedClient, ProfileClient } from '@bhengubv/aether-media';
 
 // Play a piece of content by hash
-const player = new AetherMeshMediaPlayer();
+const player = new AetherNetMediaPlayer();
 await player.load('sha256abc');
 player.play();
 
@@ -68,23 +68,23 @@ console.log(profile.displayName, profile.aetherTag);
 
 | الوحدة | التصدير | الوصف |
 |--------|--------|-------------|
-| `player` | `AetherMeshMediaPlayer` | محرك التشغيل التكيّفي HLS.js + Shaka Player |
+| `player` | `AetherNetMediaPlayer` | محرك التشغيل التكيّفي HLS.js + Shaka Player |
 | `social` | `FeedClient`, `ReactionClient` | تصفح الخلاصة وإرسال التفاعلات |
-| `streaming` | `AetherMeshStreamClient` | اشتراك البث المباشر وتخزين الشرائح مؤقتاً |
+| `streaming` | `AetherNetStreamClient` | اشتراك البث المباشر وتخزين الشرائح مؤقتاً |
 | `content` | `ContentClient` | اكتشاف وتنزيل قطع المحتوى P2P |
-| `identity` | `ProfileClient` | تحليل ملفات الشخصية بـ AetherMeshTag |
+| `identity` | `ProfileClient` | تحليل ملفات الشخصية بـ AetherNetTag |
 | `models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` | أنواع المجال المشتركة |
 
 ---
 
 ## المشغّل
 
-يلفّ `AetherMeshMediaPlayer` كلاً من HLS.js (لمصادر HTTP/HLS) وShaka Player (لتدفقات DASH وشبكة Aether)، ويختار المحرك الأفضل تلقائياً:
+يلفّ `AetherNetMediaPlayer` كلاً من HLS.js (لمصادر HTTP/HLS) وShaka Player (لتدفقات DASH وشبكة Aether)، ويختار المحرك الأفضل تلقائياً:
 
 ```typescript
-import { AetherMeshMediaPlayer } from '@bhengubv/aether-media';
+import { AetherNetMediaPlayer } from '@bhengubv/aether-media';
 
-const player = new AetherMeshMediaPlayer({
+const player = new AetherNetMediaPlayer({
     container: document.getElementById('video-container')!,
     autoQuality: true,
 });
@@ -108,9 +108,9 @@ player.on('error',  (err) => console.error(err));
 ## البث المباشر
 
 ```typescript
-import { AetherMeshStreamClient } from '@bhengubv/aether-media';
+import { AetherNetStreamClient } from '@bhengubv/aether-media';
 
-const client = new AetherMeshStreamClient();
+const client = new AetherNetStreamClient();
 await client.subscribe('host-uhid-abc123');
 
 client.on('segment', (segment) => {
@@ -171,9 +171,9 @@ typescript/
 │   ├── content/         # P2P content chunk client
 │   ├── identity/        # ProfileClient
 │   ├── models/          # Domain types + computed properties
-│   ├── player/          # AetherMeshMediaPlayer (HLS.js + Shaka)
+│   ├── player/          # AetherNetMediaPlayer (HLS.js + Shaka)
 │   ├── social/          # FeedClient, ReactionClient
-│   ├── streaming/       # AetherMeshStreamClient
+│   ├── streaming/       # AetherNetStreamClient
 │   └── index.ts         # Public re-exports
 ├── package.json
 └── tsconfig.json

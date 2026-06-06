@@ -1,5 +1,5 @@
 [package]
-name = "aethermesh-media"
+name = "aethernet-media"
 version = "1.0.0"
 edition = "2021"
 description = "Rust implementation of Aether Media — decentralised social media player"

@@ -27,7 +27,7 @@ targets: [
     .target(
         name: "MyApp",
         dependencies: [
-            .product(name: "AetherMeshMedia", package: "aether-media")
+            .product(name: "AetherNetMedia", package: "aether-media")
         ]
     ),
 ]
@@ -63,7 +63,7 @@ swift test
 ### النماذج
 
 ```swift
-import AetherMeshMedia
+import AetherNetMedia
 
 let content = MediaContent(
     contentHash: "sha256abc",
@@ -82,7 +82,7 @@ print(content.isVideo)             // true
 ### الرسم البياني الاجتماعي
 
 ```swift
-import AetherMeshMedia
+import AetherNetMedia
 
 let graph = SocialGraph()
 await graph.follow("peer-uhid-abc123")
@@ -97,7 +97,7 @@ await graph.unfollow("peer-uhid-abc123")
 ### مجمّع الخلاصة
 
 ```swift
-import AetherMeshMedia
+import AetherNetMedia
 import Combine
 
 let aggregator = FeedAggregator(capacity: 500)
@@ -115,10 +115,10 @@ aggregator.push(feedItem)
 ### المشغّل
 
 ```swift
-import AetherMeshMedia
+import AetherNetMedia
 import AVFoundation
 
-let player = AetherMeshMediaPlayer()
+let player = AetherNetMediaPlayer()
 
 try await player.load(contentHash: "sha256abc")
 player.play()
@@ -139,7 +139,7 @@ player.$state
 ### البث المباشر
 
 ```swift
-import AetherMeshMedia
+import AetherNetMedia
 
 let client = StreamSubscriber()
 try await client.subscribe(to: hostUhid)
@@ -155,7 +155,7 @@ for await segment in client.segments {
 
 ```swift
 import SwiftUI
-import AetherMeshMedia
+import AetherNetMedia
 
 struct ContentView: View {
     @StateObject private var feedVM = FeedViewModel()
@@ -193,7 +193,7 @@ swift test
 ```
 swift/
 ├── Sources/
-│   └── AetherMeshMedia/
+│   └── AetherNetMedia/
 │       ├── Content/     # P2P chunk download and cache
 │       ├── Feed/        # FeedAggregator + Combine publisher
 │       ├── Models/      # Domain structs (Codable, Sendable)
@@ -202,7 +202,7 @@ swift/
 │       ├── Streaming/   # Live stream subscription
 │       └── UI/          # SwiftUI views and view models
 ├── Tests/
-│   └── AetherMeshMediaTests/
+│   └── AetherNetMediaTests/
 └── Package.swift
 ```
 

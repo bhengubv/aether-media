@@ -1,25 +1,25 @@
 cmake_minimum_required(VERSION 3.20)
-project(aethermesh_space VERSION 1.0.0 LANGUAGES C)
+project(aethernet_space VERSION 1.0.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-add_library(aethermesh_space STATIC
+add_library(aethernet_space STATIC
     src/space.c
 )
 
-target_include_directories(aethermesh_space
+target_include_directories(aethernet_space
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
-target_compile_options(aethermesh_space PRIVATE
+target_compile_options(aethernet_space PRIVATE
     $<$<C_COMPILER_ID:GNU,Clang>:-Wall -Wextra -Wpedantic>
     $<$<C_COMPILER_ID:MSVC>:/W4>
 )
 
-install(TARGETS aethermesh_space
+install(TARGETS aethernet_space
     ARCHIVE DESTINATION lib
 )
-install(FILES include/aethermesh_space.h DESTINATION include)
+install(FILES include/aethernet_space.h DESTINATION include)

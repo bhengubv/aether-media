@@ -1,1 +1,1 @@
-rootProject.name = "aethermesh-media-kotlin"
+rootProject.name = "aethernet-media-kotlin"

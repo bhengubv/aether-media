@@ -1,5 +1,5 @@
 [package]
-name = "aethermesh-vault"
+name = "aethernet-vault"
 version = "1.0.0"
 edition = "2021"
 description = "Erasure-coded encrypted distributed backup for the Aether protocol"

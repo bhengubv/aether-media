@@ -1,0 +1,43 @@
+<Solution>
+  <Project Path="src\AetherNet.Media.Core\AetherNet.Media.Core.csproj" />
+  <Project Path="src\AetherNet.Media.Identity\AetherNet.Media.Identity.csproj" />
+  <Project Path="src\AetherNet.Media.Content\AetherNet.Media.Content.csproj" />
+  <Project Path="src\AetherNet.Media.Social\AetherNet.Media.Social.csproj" />
+  <Project Path="src\AetherNet.Media.Streaming\AetherNet.Media.Streaming.csproj" />
+  <Project Path="src\AetherNet.Media.AI\AetherNet.Media.AI.csproj" />
+  <Project Path="src\AetherNet.Media.Distribution\AetherNet.Media.Distribution.csproj" />
+  <Project Path="src\AetherNet.Media.LocalLibrary\AetherNet.Media.LocalLibrary.csproj" />
+  <Project Path="src\AetherNet.Media.Reel\AetherNet.Media.Reel.csproj" />
+  <Project Path="src\AetherNet.Media.UI.Shared\AetherNet.Media.UI.Shared.csproj" />
+  <Project Path="src\AetherNet.Media.Mobile\AetherNet.Media.Mobile.csproj" />
+  <Project Path="src\AetherNet.Media.Web\AetherNet.Media.Web.csproj" />
+  <Project Path="src\AetherNet.Media.DependencyInjection\AetherNet.Media.DependencyInjection.csproj" />
+  <Project Path="tests\AetherNet.Media.Core.Tests\AetherNet.Media.Core.Tests.csproj" />
+  <Project Path="tests\AetherNet.Media.Social.Tests\AetherNet.Media.Social.Tests.csproj" />
+  <Project Path="tests\AetherNet.Media.Streaming.Tests\AetherNet.Media.Streaming.Tests.csproj" />
+  <Project Path="tests\AetherNet.Media.Content.Tests\AetherNet.Media.Content.Tests.csproj" />
+  <Project Path="tests\AetherNet.Media.Identity.Tests\AetherNet.Media.Identity.Tests.csproj" />
+  <Project Path="tests\AetherNet.Media.AI.Tests\AetherNet.Media.AI.Tests.csproj" />
+  <Project Path="tests\AetherNet.Media.Distribution.Tests\AetherNet.Media.Distribution.Tests.csproj" />
+  <Project Path="tests\AetherNet.Media.LocalLibrary.Tests\AetherNet.Media.LocalLibrary.Tests.csproj" />
+  <Project Path="tests\AetherNet.Media.Reel.Tests\AetherNet.Media.Reel.Tests.csproj" />
+  <Project Path="samples\AetherNet.Media.Demo.Console\AetherNet.Media.Demo.Console.csproj" />
+  <Project Path="samples\AetherNet.Media.RelayTest\AetherNet.Media.RelayTest.csproj" />
+  <!-- Phase 2 Extensions — Trust Rings -->
+  <Project Path="extensions\aether-trust\src\AetherNet.Trust.Core\AetherNet.Trust.Core.csproj" />
+  <Project Path="extensions\aether-trust\src\AetherNet.Trust.Verification\AetherNet.Trust.Verification.csproj" />
+  <Project Path="extensions\aether-trust\tests\AetherNet.Trust.Tests\AetherNet.Trust.Tests.csproj" />
+  <!-- Phase 2 Extensions -->
+  <Project Path="extensions\aether-space\src\AetherNet.Space.Core\AetherNet.Space.Core.csproj" />
+  <Project Path="extensions\aether-space\src\AetherNet.Space.Protocol\AetherNet.Space.Protocol.csproj" />
+  <Project Path="extensions\aether-space\tests\AetherNet.Space.Tests\AetherNet.Space.Tests.csproj" />
+  <Project Path="extensions\aether-forge\src\AetherNet.Forge.Core\AetherNet.Forge.Core.csproj" />
+  <Project Path="extensions\aether-forge\src\AetherNet.Forge.Proxy\AetherNet.Forge.Proxy.csproj" />
+  <Project Path="extensions\aether-forge\tests\AetherNet.Forge.Tests\AetherNet.Forge.Tests.csproj" />
+  <Project Path="extensions\aether-vault\src\AetherNet.Vault.Core\AetherNet.Vault.Core.csproj" />
+  <Project Path="extensions\aether-vault\src\AetherNet.Vault.ErasureCoding\AetherNet.Vault.ErasureCoding.csproj" />
+  <Project Path="extensions\aether-vault\tests\AetherNet.Vault.Tests\AetherNet.Vault.Tests.csproj" />
+  <Project Path="extensions\aether-market\src\AetherNet.Market.Core\AetherNet.Market.Core.csproj" />
+  <Project Path="extensions\aether-market\src\AetherNet.Market.Protocol\AetherNet.Market.Protocol.csproj" />
+  <Project Path="extensions\aether-market\tests\AetherNet.Market.Tests\AetherNet.Market.Tests.csproj" />
+</Solution>

@@ -10,7 +10,7 @@
 
     <application
         android:label="Aether Media"
-        android:theme="@style/Theme.AetherMeshMedia"
+        android:theme="@style/Theme.AetherNetMedia"
         android:supportsRtl="true">
         <activity
             android:name=".MainActivity"

@@ -10,8 +10,8 @@
 
 | 模块 | 包名 | 目标平台 |
 |--------|---------|--------|
-| `media/` | `aethermesh.media` | 手机 / 平板（Jetpack Compose） |
-| `media-tv/` | `aethermesh.media.tv` | Android TV（lean-back，方向键导航） |
+| `media/` | `aethernet.media` | 手机 / 平板（Jetpack Compose） |
+| `media-tv/` | `aethernet.media.tv` | Android TV（lean-back，方向键导航） |
 
 ---
 
@@ -74,7 +74,7 @@ Data Layer     — 通过 aether-protocol Android 绑定实现的 Aether 网状�
 | Nearby | 网状网络发现的直播流（无需网络连接） |
 | Library | 本地及已下载媒体 |
 | Watch Together | 活跃的共同观影会话 |
-| Profile | AetherMeshTag 身份与创作者频道 |
+| Profile | AetherNetTag 身份与创作者频道 |
 
 ### 主要界面（TV 应用）
 
@@ -120,7 +120,7 @@ aetherClient.handshake.peerNegotiated
 // Host a watch party
 val session = watchTogether.hostAsync(contentHash)
 
-// Guests join by AetherMeshTag
+// Guests join by AetherNetTag
 watchTogether.joinAsync(hostUhid)
 ```
 

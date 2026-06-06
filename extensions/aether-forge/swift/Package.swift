@@ -2,26 +2,26 @@
 import PackageDescription
 
 let package = Package(
-    name: "AetherMeshForge",
+    name: "AetherNetForge",
     platforms: [
         .iOS(.v15),
         .macOS(.v12)
     ],
     products: [
         .library(
-            name: "AetherMeshForge",
-            targets: ["AetherMeshForge"]
+            name: "AetherNetForge",
+            targets: ["AetherNetForge"]
         )
     ],
     targets: [
         .target(
-            name: "AetherMeshForge",
-            path: "Sources/AetherMeshForge"
+            name: "AetherNetForge",
+            path: "Sources/AetherNetForge"
         ),
         .testTarget(
-            name: "AetherMeshForgeTests",
-            dependencies: ["AetherMeshForge"],
-            path: "Tests/AetherMeshForgeTests"
+            name: "AetherNetForgeTests",
+            dependencies: ["AetherNetForge"],
+            path: "Tests/AetherNetForgeTests"
         )
     ]
 )

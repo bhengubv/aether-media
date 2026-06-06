@@ -2,26 +2,26 @@
 import PackageDescription
 
 let package = Package(
-    name: "AetherMeshVault",
+    name: "AetherNetVault",
     platforms: [
         .iOS(.v15),
         .macOS(.v12)
     ],
     products: [
         .library(
-            name: "AetherMeshVault",
-            targets: ["AetherMeshVault"]
+            name: "AetherNetVault",
+            targets: ["AetherNetVault"]
         )
     ],
     targets: [
         .target(
-            name: "AetherMeshVault",
-            path: "Sources/AetherMeshVault"
+            name: "AetherNetVault",
+            path: "Sources/AetherNetVault"
         ),
         .testTarget(
-            name: "AetherMeshVaultTests",
-            dependencies: ["AetherMeshVault"],
-            path: "Tests/AetherMeshVaultTests"
+            name: "AetherNetVaultTests",
+            dependencies: ["AetherNetVault"],
+            path: "Tests/AetherNetVaultTests"
         )
     ]
 )

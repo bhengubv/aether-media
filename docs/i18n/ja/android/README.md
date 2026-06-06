@@ -10,8 +10,8 @@ Jetpack Compose と media3/ExoPlayer をベースに構築された 2 つの And
 
 | モジュール | パッケージ | ターゲット |
 |--------|---------|--------|
-| `media/` | `aethermesh.media` | スマートフォン / タブレット (Jetpack Compose) |
-| `media-tv/` | `aethermesh.media.tv` | Android TV (リーンバック、D パッドナビゲーション) |
+| `media/` | `aethernet.media` | スマートフォン / タブレット (Jetpack Compose) |
+| `media-tv/` | `aethernet.media.tv` | Android TV (リーンバック、D パッドナビゲーション) |
 
 ---
 
@@ -74,7 +74,7 @@ Data Layer     — Aether mesh transport via aether-protocol Android bindings
 | Nearby | メッシュで検出されたライブストリーム（インターネット不要） |
 | Library | ローカルおよびダウンロード済みメディア |
 | Watch Together | 進行中のウォッチパーティセッション |
-| Profile | AetherMeshTag アイデンティティとクリエイターチャンネル |
+| Profile | AetherNetTag アイデンティティとクリエイターチャンネル |
 
 ### 主要画面（TV アプリ）
 
@@ -120,7 +120,7 @@ aetherClient.handshake.peerNegotiated
 // Host a watch party
 val session = watchTogether.hostAsync(contentHash)
 
-// Guests join by AetherMeshTag
+// Guests join by AetherNetTag
 watchTogether.joinAsync(hostUhid)
 ```
 

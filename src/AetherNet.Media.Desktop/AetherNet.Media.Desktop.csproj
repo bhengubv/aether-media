@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia"                   Version="12.0.3" />
+    <PackageReference Include="Avalonia.Desktop"           Version="12.0.3" />
+    <PackageReference Include="Avalonia.Themes.Fluent"    Version="12.0.3" />
+    <PackageReference Include="Avalonia.Fonts.Inter"      Version="12.0.3" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm"     Version="8.4.1" />
+    <!-- LibVLC for 500+ format support including HLS/M3U8, MKV, HEVC, VP9 -->
+    <PackageReference Include="LibVLCSharp"               Version="3.9.0" />
+    <PackageReference Include="LibVLCSharp.Avalonia"      Version="3.9.0" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows"   Version="3.0.21" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <!-- QR code generation for the "Install From a Friend" share screen -->
+    <PackageReference Include="QRCoder"                                 Version="1.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherNet.Media.DependencyInjection\AetherNet.Media.DependencyInjection.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Distribution\AetherNet.Media.Distribution.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.LocalLibrary\AetherNet.Media.LocalLibrary.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Streaming\AetherNet.Media.Streaming.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Social\AetherNet.Media.Social.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.AI\AetherNet.Media.AI.csproj" />
+  </ItemGroup>
+</Project>

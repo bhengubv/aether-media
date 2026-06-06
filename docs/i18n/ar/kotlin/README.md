@@ -65,7 +65,7 @@ data class MediaContent(
 
 ### `MediaProfile`
 
-هوية المنشئ مرتبطة بـ AetherMeshTag.
+هوية المنشئ مرتبطة بـ AetherNetTag.
 
 ```kotlin
 data class MediaProfile(

@@ -1,8 +1,8 @@
 package feed
 
-import aethermesh.media.feed.FeedAggregator
-import aethermesh.media.models.MediaContent
-import aethermesh.media.models.MediaFeedItem
+import aethernet.media.feed.FeedAggregator
+import aethernet.media.models.MediaContent
+import aethernet.media.models.MediaFeedItem
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

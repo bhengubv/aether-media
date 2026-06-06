@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherNet.Media.Core</PackageId>
+    <Description>Domain models and interfaces for the Aether Media decentralised social media network.</Description>
+  </PropertyGroup>
+
+</Project>

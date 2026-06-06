@@ -40,10 +40,10 @@ npm test
 ## 빠른 시작
 
 ```typescript
-import { AetherMeshMediaPlayer, FeedClient, ProfileClient } from '@bhengubv/aether-media';
+import { AetherNetMediaPlayer, FeedClient, ProfileClient } from '@bhengubv/aether-media';
 
 // Play a piece of content by hash
-const player = new AetherMeshMediaPlayer();
+const player = new AetherNetMediaPlayer();
 await player.load('sha256abc');
 player.play();
 
@@ -66,23 +66,23 @@ console.log(profile.displayName, profile.aetherTag);
 
 | 모듈 | 내보내기 | 설명 |
 |--------|--------|-------------|
-| `player` | `AetherMeshMediaPlayer` | HLS.js + Shaka Player 적응형 재생 엔진 |
+| `player` | `AetherNetMediaPlayer` | HLS.js + Shaka Player 적응형 재생 엔진 |
 | `social` | `FeedClient`, `ReactionClient` | 피드 탐색 및 반응 전송 |
-| `streaming` | `AetherMeshStreamClient` | 라이브 스트림 구독 및 세그먼트 버퍼링 |
+| `streaming` | `AetherNetStreamClient` | 라이브 스트림 구독 및 세그먼트 버퍼링 |
 | `content` | `ContentClient` | P2P 콘텐츠 청크 발견 및 다운로드 |
-| `identity` | `ProfileClient` | AetherMeshTag 프로필 조회 |
+| `identity` | `ProfileClient` | AetherNetTag 프로필 조회 |
 | `models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` | 공유 도메인 타입 |
 
 ---
 
 ## 플레이어
 
-`AetherMeshMediaPlayer`는 HLS.js(HTTP/HLS 소스용)와 Shaka Player(DASH 및 Aether 메시 스트림용)를 모두 래핑하여 최적의 엔진을 자동으로 선택합니다:
+`AetherNetMediaPlayer`는 HLS.js(HTTP/HLS 소스용)와 Shaka Player(DASH 및 Aether 메시 스트림용)를 모두 래핑하여 최적의 엔진을 자동으로 선택합니다:
 
 ```typescript
-import { AetherMeshMediaPlayer } from '@bhengubv/aether-media';
+import { AetherNetMediaPlayer } from '@bhengubv/aether-media';
 
-const player = new AetherMeshMediaPlayer({
+const player = new AetherNetMediaPlayer({
     container: document.getElementById('video-container')!,
     autoQuality: true,
 });
@@ -106,9 +106,9 @@ player.on('error',  (err) => console.error(err));
 ## 라이브 스트리밍
 
 ```typescript
-import { AetherMeshStreamClient } from '@bhengubv/aether-media';
+import { AetherNetStreamClient } from '@bhengubv/aether-media';
 
-const client = new AetherMeshStreamClient();
+const client = new AetherNetStreamClient();
 await client.subscribe('host-uhid-abc123');
 
 client.on('segment', (segment) => {
@@ -169,9 +169,9 @@ typescript/
 │   ├── content/         # P2P content chunk client
 │   ├── identity/        # ProfileClient
 │   ├── models/          # Domain types + computed properties
-│   ├── player/          # AetherMeshMediaPlayer (HLS.js + Shaka)
+│   ├── player/          # AetherNetMediaPlayer (HLS.js + Shaka)
 │   ├── social/          # FeedClient, ReactionClient
-│   ├── streaming/       # AetherMeshStreamClient
+│   ├── streaming/       # AetherNetStreamClient
 │   └── index.ts         # Public re-exports
 ├── package.json
 └── tsconfig.json

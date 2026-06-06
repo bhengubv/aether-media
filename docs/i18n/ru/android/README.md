@@ -10,8 +10,8 @@
 
 | Модуль | Пакет | Целевое устройство |
 |--------|-------|--------------------|
-| `media/` | `aethermesh.media` | Телефон / планшет (Jetpack Compose) |
-| `media-tv/` | `aethermesh.media.tv` | Android TV (lean-back, навигация с D-pad) |
+| `media/` | `aethernet.media` | Телефон / планшет (Jetpack Compose) |
+| `media-tv/` | `aethernet.media.tv` | Android TV (lean-back, навигация с D-pad) |
 
 ---
 
@@ -74,7 +74,7 @@ Data Layer     — Aether mesh transport via aether-protocol Android bindings
 | Nearby | Прямые трансляции, обнаруженные через меш-сеть (без интернета) |
 | Library | Локальные и загруженные медиафайлы |
 | Watch Together | Активные сессии совместного просмотра |
-| Profile | Идентификатор AetherMeshTag и канал автора |
+| Profile | Идентификатор AetherNetTag и канал автора |
 
 ### Ключевые экраны (приложение для TV)
 
@@ -120,7 +120,7 @@ aetherClient.handshake.peerNegotiated
 // Host a watch party
 val session = watchTogether.hostAsync(contentHash)
 
-// Guests join by AetherMeshTag
+// Guests join by AetherNetTag
 watchTogether.joinAsync(hostUhid)
 ```
 

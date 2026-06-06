@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherNet.Vault.ErasureCoding</PackageId>
+    <Description>Erasure-coding primitives (Reed-Solomon) for Aether Vault shard encoding and decoding.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AetherNet.Vault.Core/AetherNet.Vault.Core.csproj" />
+    <ProjectReference Include="../../../../src/AetherNet.Media.DependencyInjection/AetherNet.Media.DependencyInjection.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <ProjectReference Include="../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <PackageReference Include="AetherNet.Core" Version="1.1.0" />
+  </ItemGroup>
+
+</Project>

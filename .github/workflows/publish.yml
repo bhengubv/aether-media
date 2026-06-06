@@ -38,11 +38,11 @@ jobs:
           echo "SUFFIX=$suffix"     >> $env:GITHUB_OUTPUT
 
       - name: Restore
-        run: dotnet restore AetherMeshMedia.slnx
+        run: dotnet restore AetherNetMedia.slnx
 
       - name: Pack (release)
         run: >
-          dotnet pack AetherMeshMedia.slnx
+          dotnet pack AetherNetMedia.slnx
           --no-restore
           --configuration Release
           -p:VersionPrefix=${{ steps.version.outputs.PREFIX }}

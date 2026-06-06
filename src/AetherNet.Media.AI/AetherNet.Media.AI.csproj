@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherNet.Media.AI</PackageId>
+    <Description>AI-powered content curation and creator reputation via IAetherNetAiProvider for Aether Media.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherNet.Media.Core\AetherNet.Media.Core.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Social\AetherNet.Media.Social.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <PackageReference Include="AetherNet.Core" Version="1.1.0" />
+  </ItemGroup>
+
+</Project>

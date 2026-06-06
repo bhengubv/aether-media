@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherNet.Trust.Core</PackageId>
+    <Description>Domain models and interfaces for Aether Trust Rings — local cryptographic attestation of content blocks against configurable rings of trusted Ed25519 keys.</Description>
+  </PropertyGroup>
+
+</Project>

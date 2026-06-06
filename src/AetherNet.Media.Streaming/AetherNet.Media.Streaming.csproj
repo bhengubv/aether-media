@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherNet.Media.Streaming</PackageId>
+    <Description>Live streaming, watch-together, and video call integration for Aether Media.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherNet.Media.Core\AetherNet.Media.Core.csproj" />
+    <ProjectReference Include="..\AetherNet.Media.Content\AetherNet.Media.Content.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Streaming/AetherNet.Streaming.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Voice/AetherNet.Voice.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <PackageReference Include="AetherNet.Core"      Version="1.1.0" />
+    <PackageReference Include="AetherNet.Streaming" Version="1.1.0" />
+    <PackageReference Include="AetherNet.Voice"     Version="1.1.0" />
+  </ItemGroup>
+
+</Project>

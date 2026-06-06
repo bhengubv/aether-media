@@ -2,7 +2,7 @@
 // This substitution is active on all machines regardless of GITHUB_TOKEN availability.
 includeBuild("../../../aether-protocol/kotlin") {
     dependencySubstitution {
-        substitute(module("dev.aethermesh:aethermesh-protocol-kotlin")).using(project(":"))
+        substitute(module("dev.aethernet:aethernet-protocol-kotlin")).using(project(":"))
     }
 }
 
@@ -21,5 +21,5 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.pkg.github.com/bhengubv/aether-protocol") }
     }
 }
-rootProject.name = "AetherMeshMedia"
+rootProject.name = "AetherNetMedia"
 include(":app")

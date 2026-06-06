@@ -1,0 +1,65 @@
+@page "/nearby"
+@inherits ViewModelComponentBase<NearbyViewModel>
+@inject NavigationManager Nav
+
+<div class="am-page">
+    <div class="am-page-header">
+        <h1>Nearby</h1>
+        <button class="am-btn am-btn-primary"
+                @onclick="() => ViewModel.StartScanCommand.Execute(null)"
+                disabled="@ViewModel.IsScanning">
+            @(ViewModel.IsScanning ? "Scanning…" : "📡 Scan")
+        </button>
+    </div>
+
+    <p class="am-peer-count">@ViewModel.PeerCount peer@(ViewModel.PeerCount == 1 ? "" : "s") discovered</p>
+
+    @if (ViewModel.ActiveStreams.Count > 0)
+    {
+        <section class="am-section">
+            <h2>Active Streams</h2>
+            @foreach (var stream in ViewModel.ActiveStreams)
+            {
+                <div class="am-stream-card" @onclick="() => WatchStream(stream)">
+                    <div class="am-live-badge">LIVE</div>
+                    <p class="am-stream-title">@stream.Title</p>
+                    <p class="am-stream-meta">@stream.CreatorUhid · @stream.ViewerCount viewers · @stream.ElapsedFormatted</p>
+                </div>
+            }
+        </section>
+    }
+
+    @if (ViewModel.NearbyCreators.Count > 0)
+    {
+        <section class="am-section">
+            <h2>Creators</h2>
+            @foreach (var creator in ViewModel.NearbyCreators)
+            {
+                <div class="am-creator-card" @onclick="() => ViewProfile(creator)">
+                    <p class="am-creator-name">@creator.DisplayName @(creator.IsVerified ? "✓" : "")</p>
+                    <p class="am-creator-tag">@creator.AetherNetTagValue</p>
+                    <p class="am-creator-bio">@creator.ShortBio</p>
+                </div>
+            }
+        </section>
+    }
+
+    @if (!ViewModel.IsScanning && ViewModel.NearbyCreators.Count == 0 && ViewModel.ActiveStreams.Count == 0)
+    {
+        <p class="am-empty">No peers found. Tap Scan to search for nearby nodes.</p>
+    }
+</div>
+
+@code {
+    private void WatchStream(LiveStreamViewModel stream)
+    {
+        ViewModel.WatchStreamCommand.Execute(stream);
+        Nav.NavigateTo("/player");
+    }
+
+    private void ViewProfile(MediaProfileViewModel creator)
+    {
+        ViewModel.ViewProfileCommand.Execute(creator);
+        Nav.NavigateTo($"/profile/{creator.Source.Uhid}");
+    }
+}

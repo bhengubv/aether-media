@@ -4,7 +4,7 @@ plugins {
     `maven-publish`
 }
 
-group = "dev.aethermesh"
+group = "dev.aethernet"
 version = "1.0.0"
 
 repositories {
@@ -41,8 +41,8 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
-            groupId    = "dev.aethermesh"
-            artifactId = "aethermesh-media"
+            groupId    = "dev.aethernet"
+            artifactId = "aethernet-media"
             version    = project.version.toString()
         }
     }

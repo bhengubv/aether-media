@@ -40,11 +40,11 @@ pytest
 
 | モジュール | 説明 |
 |--------|-------------|
-| `aethermesh_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
-| `aethermesh_media.metadata` | ID3 および MP4 タグの読み書き（Mutagen 経由）; NFO XML スクレイピング |
-| `aethermesh_media.playlist` | M3U および XSPF プレイリストの解析とシリアライゼーション |
-| `aethermesh_media.plugins` | プラグインホスト — VLC スタイルの拡張スクリプトの読み込み・アクティベート・呼び出し |
-| `aethermesh_media.cli` | コマンドラインエントリポイント（`aether-media` コマンド） |
+| `aethernet_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
+| `aethernet_media.metadata` | ID3 および MP4 タグの読み書き（Mutagen 経由）; NFO XML スクレイピング |
+| `aethernet_media.playlist` | M3U および XSPF プレイリストの解析とシリアライゼーション |
+| `aethernet_media.plugins` | プラグインホスト — VLC スタイルの拡張スクリプトの読み込み・アクティベート・呼び出し |
+| `aethernet_media.cli` | コマンドラインエントリポイント（`aether-media` コマンド） |
 
 ---
 
@@ -53,7 +53,7 @@ pytest
 ### メタデータの読み取り
 
 ```python
-from aethermesh_media.metadata import read_tags
+from aethernet_media.metadata import read_tags
 
 tags = read_tags("/media/music/track.mp3")
 print(tags.title)    # "Song Title"
@@ -64,7 +64,7 @@ print(tags.duration) # 213.4 (seconds)
 ### メタデータの書き込み
 
 ```python
-from aethermesh_media.metadata import write_tags, TagUpdate
+from aethernet_media.metadata import write_tags, TagUpdate
 
 write_tags("/media/music/track.mp3", TagUpdate(
     title="Updated Title",
@@ -75,7 +75,7 @@ write_tags("/media/music/track.mp3", TagUpdate(
 ### プレイリストの解析
 
 ```python
-from aethermesh_media.playlist import parse_m3u, parse_xspf
+from aethernet_media.playlist import parse_m3u, parse_xspf
 
 tracks = parse_m3u("/media/playlists/summer.m3u")
 for track in tracks:
@@ -87,7 +87,7 @@ tracks = parse_xspf("/media/playlists/podcast.xspf")
 ### NFO ファイルのスクレイピング
 
 ```python
-from aethermesh_media.metadata import read_nfo
+from aethernet_media.metadata import read_nfo
 
 movie = read_nfo("/media/movies/Inception/Inception.nfo")
 print(movie.title)   # "Inception"
@@ -98,7 +98,7 @@ print(movie.plot)    # "A thief who steals corporate secrets..."
 ### プラグインの読み込み
 
 ```python
-from aethermesh_media.plugins import PluginHost
+from aethernet_media.plugins import PluginHost
 
 host = PluginHost()
 host.load("/path/to/my_plugin.py")
@@ -163,7 +163,7 @@ aether-media plugins activate my_plugin
 ## モデル
 
 ```python
-from aethermesh_media.models import MediaContent, MediaProfile, MediaFeedItem
+from aethernet_media.models import MediaContent, MediaProfile, MediaFeedItem
 
 content = MediaContent(
     content_hash="sha256abc",
@@ -185,7 +185,7 @@ print(content.is_video)             # True
 
 ```
 python/
-├── aethermesh_media/
+├── aethernet_media/
 │   ├── __init__.py
 │   ├── models.py            # Domain models
 │   ├── metadata/            # Tag reading/writing, NFO scraping

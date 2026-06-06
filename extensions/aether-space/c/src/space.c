@@ -1,4 +1,4 @@
-#include "aethermesh_space.h"
+#include "aethernet_space.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,11 +9,11 @@ static void log_not_implemented(const char *fn_name) {
     fprintf(stderr, "[aether-space] %s: not implemented\n", fn_name);
 }
 
-static AetherMeshSpaceBreadcrumb *copy_breadcrumb(const AetherMeshSpaceBreadcrumb *src) {
+static AetherNetSpaceBreadcrumb *copy_breadcrumb(const AetherNetSpaceBreadcrumb *src) {
     if (!src) return NULL;
-    AetherMeshSpaceBreadcrumb *dst = (AetherMeshSpaceBreadcrumb *)calloc(1, sizeof(AetherMeshSpaceBreadcrumb));
+    AetherNetSpaceBreadcrumb *dst = (AetherNetSpaceBreadcrumb *)calloc(1, sizeof(AetherNetSpaceBreadcrumb));
     if (!dst) return NULL;
-    memcpy(dst, src, sizeof(AetherMeshSpaceBreadcrumb));
+    memcpy(dst, src, sizeof(AetherNetSpaceBreadcrumb));
     /* deep-copy heap strings */
     dst->title = src->title ? strdup(src->title) : NULL;
     dst->body  = src->body  ? strdup(src->body)  : NULL;
@@ -22,41 +22,41 @@ static AetherMeshSpaceBreadcrumb *copy_breadcrumb(const AetherMeshSpaceBreadcrum
 
 /* ── Public API stubs ──────────────────────────────────────────────────────── */
 
-AetherMeshSpaceBreadcrumb *aethermesh_space_drop(const AetherMeshSpaceBreadcrumb *breadcrumb) {
-    log_not_implemented("aethermesh_space_drop");
+AetherNetSpaceBreadcrumb *aethernet_space_drop(const AetherNetSpaceBreadcrumb *breadcrumb) {
+    log_not_implemented("aethernet_space_drop");
     (void)breadcrumb;
     return NULL;
 }
 
-AetherMeshSpaceScanResult *aethermesh_space_scan(const char *geo_hash, double radius_km) {
-    log_not_implemented("aethermesh_space_scan");
+AetherNetSpaceScanResult *aethernet_space_scan(const char *geo_hash, double radius_km) {
+    log_not_implemented("aethernet_space_scan");
     (void)geo_hash;
     (void)radius_km;
     return NULL;
 }
 
-AetherMeshSpaceBreadcrumb *aethermesh_space_pin(const char *breadcrumb_id, const char *space_id) {
-    log_not_implemented("aethermesh_space_pin");
+AetherNetSpaceBreadcrumb *aethernet_space_pin(const char *breadcrumb_id, const char *space_id) {
+    log_not_implemented("aethernet_space_pin");
     (void)breadcrumb_id;
     (void)space_id;
     return NULL;
 }
 
-int aethermesh_space_delete(const char *breadcrumb_id, const char *requester_id) {
-    log_not_implemented("aethermesh_space_delete");
+int aethernet_space_delete(const char *breadcrumb_id, const char *requester_id) {
+    log_not_implemented("aethernet_space_delete");
     (void)breadcrumb_id;
     (void)requester_id;
     return 0;
 }
 
-void aethermesh_space_free(AetherMeshSpaceBreadcrumb *breadcrumb) {
+void aethernet_space_free(AetherNetSpaceBreadcrumb *breadcrumb) {
     if (!breadcrumb) return;
     free(breadcrumb->title);
     free(breadcrumb->body);
     free(breadcrumb);
 }
 
-void aethermesh_space_free_scan(AetherMeshSpaceScanResult *result) {
+void aethernet_space_free_scan(AetherNetSpaceScanResult *result) {
     if (!result) return;
     for (size_t i = 0; i < result->count; ++i) {
         free(result->items[i].title);

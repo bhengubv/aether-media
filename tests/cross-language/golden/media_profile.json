@@ -3,7 +3,7 @@
   "display_name":    "Test Creator",
   "avatar_hash":     null,
   "bio":             "Hello from Aether.",
-  "aethermesh_tag":      "@testcreator",
+  "aethernet_tag":      "@testcreator",
   "follower_count":  100,
   "following_count": 10,
   "content_count":   5,

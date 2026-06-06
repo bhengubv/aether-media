@@ -1,4 +1,4 @@
-package aethermesh.media.social
+package aethernet.media.social
 
 import java.util.concurrent.ConcurrentHashMap
 

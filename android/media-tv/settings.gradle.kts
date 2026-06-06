@@ -13,5 +13,5 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.pkg.github.com/bhengubv/aether-protocol") }
     }
 }
-rootProject.name = "AetherMeshMediaTV"
+rootProject.name = "AetherNetMediaTV"
 include(":app")

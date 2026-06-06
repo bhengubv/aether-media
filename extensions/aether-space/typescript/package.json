@@ -1,5 +1,5 @@
 {
-  "name": "@bhengubv/aethermesh-space",
+  "name": "@bhengubv/aethernet-space",
   "version": "1.0.0",
   "type": "module",
   "description": "TypeScript SDK for Aether Space — geo-anchored breadcrumb layer for the Aether mesh network.",

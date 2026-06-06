@@ -1,4 +1,4 @@
-#include "aethermesh_forge.h"
+#include "aethernet_forge.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,32 +7,32 @@ static void log_not_implemented(const char *fn_name) {
     fprintf(stderr, "[aether-forge] %s: not implemented\n", fn_name);
 }
 
-AetherMeshForgeQueryResult *aethermesh_forge_query(
+AetherNetForgeQueryResult *aethernet_forge_query(
     const char *package_id,
     const char *ecosystem,
     const char *version
 ) {
-    log_not_implemented("aethermesh_forge_query");
+    log_not_implemented("aethernet_forge_query");
     (void)package_id;
     (void)ecosystem;
     (void)version;
     return NULL;
 }
 
-int aethermesh_forge_cache(const AetherMeshForgeEntry *entry) {
-    log_not_implemented("aethermesh_forge_cache");
+int aethernet_forge_cache(const AetherNetForgeEntry *entry) {
+    log_not_implemented("aethernet_forge_cache");
     (void)entry;
     return 0;
 }
 
-int aethermesh_forge_fetch(
+int aethernet_forge_fetch(
     const char *package_id,
     const char *ecosystem,
     const char *version,
     uint8_t   **out_data,
     size_t     *out_size
 ) {
-    log_not_implemented("aethermesh_forge_fetch");
+    log_not_implemented("aethernet_forge_fetch");
     (void)package_id;
     (void)ecosystem;
     (void)version;
@@ -41,12 +41,12 @@ int aethermesh_forge_fetch(
     return 0;
 }
 
-AetherMeshForgeStats *aethermesh_forge_stats(void) {
-    log_not_implemented("aethermesh_forge_stats");
+AetherNetForgeStats *aethernet_forge_stats(void) {
+    log_not_implemented("aethernet_forge_stats");
     return NULL;
 }
 
-void aethermesh_forge_free_entry(AetherMeshForgeEntry *entry) {
+void aethernet_forge_free_entry(AetherNetForgeEntry *entry) {
     if (!entry) return;
     free(entry->package_id);
     free(entry->ecosystem);
@@ -58,12 +58,12 @@ void aethermesh_forge_free_entry(AetherMeshForgeEntry *entry) {
     free(entry);
 }
 
-void aethermesh_forge_free_query(AetherMeshForgeQueryResult *result) {
+void aethernet_forge_free_query(AetherNetForgeQueryResult *result) {
     if (!result) return;
-    aethermesh_forge_free_entry(result->entry);
+    aethernet_forge_free_entry(result->entry);
     free(result);
 }
 
-void aethermesh_forge_free_stats(AetherMeshForgeStats *stats) {
+void aethernet_forge_free_stats(AetherNetForgeStats *stats) {
     free(stats);
 }

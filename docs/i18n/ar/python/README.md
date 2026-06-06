@@ -42,11 +42,11 @@ pytest
 
 | الوحدة | الوصف |
 |--------|-------------|
-| `aethermesh_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
-| `aethermesh_media.metadata` | قراءة وكتابة وسوم ID3 وMP4 (عبر Mutagen)؛ استخراج XML من ملفات NFO |
-| `aethermesh_media.playlist` | تحليل وتسلسل قوائم التشغيل M3U وXSPF |
-| `aethermesh_media.plugins` | مضيف المكوّنات الإضافية — تحميل وتفعيل واستدعاء نصوص VLC-style |
-| `aethermesh_media.cli` | نقطة دخول سطر الأوامر (أمر `aether-media`) |
+| `aethernet_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
+| `aethernet_media.metadata` | قراءة وكتابة وسوم ID3 وMP4 (عبر Mutagen)؛ استخراج XML من ملفات NFO |
+| `aethernet_media.playlist` | تحليل وتسلسل قوائم التشغيل M3U وXSPF |
+| `aethernet_media.plugins` | مضيف المكوّنات الإضافية — تحميل وتفعيل واستدعاء نصوص VLC-style |
+| `aethernet_media.cli` | نقطة دخول سطر الأوامر (أمر `aether-media`) |
 
 ---
 
@@ -55,7 +55,7 @@ pytest
 ### قراءة البيانات الوصفية
 
 ```python
-from aethermesh_media.metadata import read_tags
+from aethernet_media.metadata import read_tags
 
 tags = read_tags("/media/music/track.mp3")
 print(tags.title)    # "Song Title"
@@ -66,7 +66,7 @@ print(tags.duration) # 213.4 (seconds)
 ### كتابة البيانات الوصفية
 
 ```python
-from aethermesh_media.metadata import write_tags, TagUpdate
+from aethernet_media.metadata import write_tags, TagUpdate
 
 write_tags("/media/music/track.mp3", TagUpdate(
     title="Updated Title",
@@ -77,7 +77,7 @@ write_tags("/media/music/track.mp3", TagUpdate(
 ### تحليل قائمة تشغيل
 
 ```python
-from aethermesh_media.playlist import parse_m3u, parse_xspf
+from aethernet_media.playlist import parse_m3u, parse_xspf
 
 tracks = parse_m3u("/media/playlists/summer.m3u")
 for track in tracks:
@@ -89,7 +89,7 @@ tracks = parse_xspf("/media/playlists/podcast.xspf")
 ### استخراج ملف NFO
 
 ```python
-from aethermesh_media.metadata import read_nfo
+from aethernet_media.metadata import read_nfo
 
 movie = read_nfo("/media/movies/Inception/Inception.nfo")
 print(movie.title)   # "Inception"
@@ -100,7 +100,7 @@ print(movie.plot)    # "A thief who steals corporate secrets..."
 ### تحميل مكوّن إضافي
 
 ```python
-from aethermesh_media.plugins import PluginHost
+from aethernet_media.plugins import PluginHost
 
 host = PluginHost()
 host.load("/path/to/my_plugin.py")
@@ -165,7 +165,7 @@ aether-media plugins activate my_plugin
 ## النماذج
 
 ```python
-from aethermesh_media.models import MediaContent, MediaProfile, MediaFeedItem
+from aethernet_media.models import MediaContent, MediaProfile, MediaFeedItem
 
 content = MediaContent(
     content_hash="sha256abc",
@@ -187,7 +187,7 @@ print(content.is_video)             # True
 
 ```
 python/
-├── aethermesh_media/
+├── aethernet_media/
 │   ├── __init__.py
 │   ├── models.py            # Domain models
 │   ├── metadata/            # Tag reading/writing, NFO scraping

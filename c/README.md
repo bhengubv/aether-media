@@ -53,61 +53,61 @@ ctest --output-on-failure
 Include the single umbrella header:
 
 ```c
-#include "aethermesh_media/aethermesh_media.h"
+#include "aethernet_media/aethernet_media.h"
 ```
 
 ### Content model
 
 ```c
-AetherMeshMediaContent content;
+AetherNetMediaContent content;
 memset(&content, 0, sizeof(content));
 strncpy(content.title, "My Video", sizeof(content.title) - 1);
 content.duration_ms = 300000; /* 5 minutes */
 
 /* Format duration for display */
 char buf[16];
-aethermesh_format_duration(content.duration_ms, buf, sizeof(buf));
+aethernet_format_duration(content.duration_ms, buf, sizeof(buf));
 printf("%s\n", buf); /* "5:00" */
 ```
 
 ### Social graph
 
 ```c
-AetherMeshSocialGraph *graph = aethermesh_social_graph_create();
+AetherNetSocialGraph *graph = aethernet_social_graph_create();
 
-aethermesh_social_graph_follow(graph, "peer-uhid-abc123");
-aethermesh_social_graph_follow(graph, "peer-uhid-def456");
+aethernet_social_graph_follow(graph, "peer-uhid-abc123");
+aethernet_social_graph_follow(graph, "peer-uhid-def456");
 
-printf("following: %zu\n", aethermesh_social_graph_following_count(graph));
+printf("following: %zu\n", aethernet_social_graph_following_count(graph));
 
-bool is_following = aethermesh_social_graph_is_following(graph, "peer-uhid-abc123");
+bool is_following = aethernet_social_graph_is_following(graph, "peer-uhid-abc123");
 
-aethermesh_social_graph_unfollow(graph, "peer-uhid-abc123");
-aethermesh_social_graph_destroy(graph);
+aethernet_social_graph_unfollow(graph, "peer-uhid-abc123");
+aethernet_social_graph_destroy(graph);
 ```
 
 ### Feed aggregator
 
 ```c
-AetherMeshFeedAggregator *feed = aethermesh_feed_aggregator_create(500);
+AetherNetFeedAggregator *feed = aethernet_feed_aggregator_create(500);
 
-AetherMeshMediaFeedItem item = {0};
+AetherNetMediaFeedItem item = {0};
 strncpy(item.content_hash, "sha256...", sizeof(item.content_hash) - 1);
-aethermesh_feed_aggregator_push(feed, &item);
+aethernet_feed_aggregator_push(feed, &item);
 
-printf("feed size: %zu\n", aethermesh_feed_aggregator_size(feed));
-aethermesh_feed_aggregator_destroy(feed);
+printf("feed size: %zu\n", aethernet_feed_aggregator_size(feed));
+aethernet_feed_aggregator_destroy(feed);
 ```
 
 ### Player (requires LibVLC)
 
 ```c
-AetherMeshPlayer *player = aethermesh_player_create();
-aethermesh_player_open(player, "aether://content/sha256abc");
-aethermesh_player_play(player);
+AetherNetPlayer *player = aethernet_player_create();
+aethernet_player_open(player, "aether://content/sha256abc");
+aethernet_player_play(player);
 /* ... */
-aethermesh_player_stop(player);
-aethermesh_player_destroy(player);
+aethernet_player_stop(player);
+aethernet_player_destroy(player);
 ```
 
 ---
@@ -117,7 +117,7 @@ aethermesh_player_destroy(player);
 ```
 c/
 ├── include/
-│   └── aethermesh_media.h      # Public API — single umbrella header
+│   └── aethernet_media.h      # Public API — single umbrella header
 ├── src/
 │   ├── main.c              # CLI entry point
 │   ├── player/             # LibVLC playback wrapper

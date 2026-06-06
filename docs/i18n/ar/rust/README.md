@@ -51,7 +51,7 @@ cargo bench
 ## البدء السريع
 
 ```rust
-use aethermesh_media::{
+use aethernet_media::{
     models::{MediaContent, MediaFeedItem},
     feed::FeedStore,
     social::SocialGraph,
@@ -118,7 +118,7 @@ aether-media = { version = "1.0.0", features = ["player", "ui"] }
 ## المشغّل (LibVLC)
 
 ```rust
-use aethermesh_media::player::Player;
+use aethernet_media::player::Player;
 
 #[tokio::main]
 async fn main() {
@@ -137,7 +137,7 @@ async fn main() {
 ## البث غير المتزامن
 
 ```rust
-use aethermesh_media::streaming::StreamClient;
+use aethernet_media::streaming::StreamClient;
 
 #[tokio::main]
 async fn main() {

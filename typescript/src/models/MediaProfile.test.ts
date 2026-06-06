@@ -12,7 +12,7 @@ function makeProfile(bio: string | null): MediaProfile {
     displayName:    "Test User",
     avatarHash:     null,
     bio,
-    aethermeshTag:      "@testuser",
+    aethernetTag:      "@testuser",
     followerCount:  0,
     followingCount: 0,
     contentCount:   0,
@@ -92,7 +92,7 @@ describe("toWire / fromWire", () => {
     assert.equal(restored.displayName,    p.displayName);
     assert.equal(restored.avatarHash,     p.avatarHash);
     assert.equal(restored.bio,            p.bio);
-    assert.equal(restored.aethermeshTag,      p.aethermeshTag);
+    assert.equal(restored.aethernetTag,      p.aethernetTag);
     assert.equal(restored.followerCount,  p.followerCount);
     assert.equal(restored.followingCount, p.followingCount);
     assert.equal(restored.contentCount,   p.contentCount);
@@ -104,7 +104,7 @@ describe("toWire / fromWire", () => {
     const wire = toWire(makeProfile(null));
     assert.ok("display_name"    in wire);
     assert.ok("avatar_hash"     in wire);
-    assert.ok("aethermesh_tag"      in wire);
+    assert.ok("aethernet_tag"      in wire);
     assert.ok("follower_count"  in wire);
     assert.ok("following_count" in wire);
     assert.ok("content_count"   in wire);

@@ -40,10 +40,10 @@ npm test
 ## Быстрый старт
 
 ```typescript
-import { AetherMeshMediaPlayer, FeedClient, ProfileClient } from '@bhengubv/aether-media';
+import { AetherNetMediaPlayer, FeedClient, ProfileClient } from '@bhengubv/aether-media';
 
 // Play a piece of content by hash
-const player = new AetherMeshMediaPlayer();
+const player = new AetherNetMediaPlayer();
 await player.load('sha256abc');
 player.play();
 
@@ -66,23 +66,23 @@ console.log(profile.displayName, profile.aetherTag);
 
 | Модуль | Экспорт | Описание |
 |--------|--------|-------------|
-| `player` | `AetherMeshMediaPlayer` | Адаптивный движок воспроизведения HLS.js + Shaka Player |
+| `player` | `AetherNetMediaPlayer` | Адаптивный движок воспроизведения HLS.js + Shaka Player |
 | `social` | `FeedClient`, `ReactionClient` | Просмотр ленты и отправка реакций |
-| `streaming` | `AetherMeshStreamClient` | Подписка на трансляцию в реальном времени и буферизация сегментов |
+| `streaming` | `AetherNetStreamClient` | Подписка на трансляцию в реальном времени и буферизация сегментов |
 | `content` | `ContentClient` | Одноранговые обнаружение и загрузка фрагментов контента |
-| `identity` | `ProfileClient` | Разрешение профилей AetherMeshTag |
+| `identity` | `ProfileClient` | Разрешение профилей AetherNetTag |
 | `models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` | Общие доменные типы |
 
 ---
 
 ## Проигрыватель
 
-`AetherMeshMediaPlayer` оборачивает как HLS.js (для источников HTTP/HLS), так и Shaka Player (для потоков DASH и Aether mesh), автоматически выбирая лучший движок:
+`AetherNetMediaPlayer` оборачивает как HLS.js (для источников HTTP/HLS), так и Shaka Player (для потоков DASH и Aether mesh), автоматически выбирая лучший движок:
 
 ```typescript
-import { AetherMeshMediaPlayer } from '@bhengubv/aether-media';
+import { AetherNetMediaPlayer } from '@bhengubv/aether-media';
 
-const player = new AetherMeshMediaPlayer({
+const player = new AetherNetMediaPlayer({
     container: document.getElementById('video-container')!,
     autoQuality: true,
 });
@@ -106,9 +106,9 @@ player.on('error',  (err) => console.error(err));
 ## Трансляция в реальном времени
 
 ```typescript
-import { AetherMeshStreamClient } from '@bhengubv/aether-media';
+import { AetherNetStreamClient } from '@bhengubv/aether-media';
 
-const client = new AetherMeshStreamClient();
+const client = new AetherNetStreamClient();
 await client.subscribe('host-uhid-abc123');
 
 client.on('segment', (segment) => {
@@ -169,9 +169,9 @@ typescript/
 │   ├── content/         # P2P content chunk client
 │   ├── identity/        # ProfileClient
 │   ├── models/          # Domain types + computed properties
-│   ├── player/          # AetherMeshMediaPlayer (HLS.js + Shaka)
+│   ├── player/          # AetherNetMediaPlayer (HLS.js + Shaka)
 │   ├── social/          # FeedClient, ReactionClient
-│   ├── streaming/       # AetherMeshStreamClient
+│   ├── streaming/       # AetherNetStreamClient
 │   └── index.ts         # Public re-exports
 ├── package.json
 └── tsconfig.json

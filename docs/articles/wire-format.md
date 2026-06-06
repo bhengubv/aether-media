@@ -88,7 +88,7 @@ conventions.
   "display_name":    "Alice Aether",
   "avatar_hash":     "sha256-of-avatar",
   "bio":             "Building the decentralised video network.",
-  "aethermesh_tag":      "@alice",
+  "aethernet_tag":      "@alice",
   "follower_count":  12450,
   "following_count": 87,
   "content_count":   234,
@@ -103,7 +103,7 @@ conventions.
 | `display_name` | `string` | Public display name. |
 | `avatar_hash` | `string\|null` | SHA-256 hex of avatar image, or `null`. |
 | `bio` | `string\|null` | Creator bio, or `null`. |
-| `aethermesh_tag` | `string` | Short @handle on the Aether network. |
+| `aethernet_tag` | `string` | Short @handle on the Aether network. |
 | `follower_count` | `integer` | Number of followers. |
 | `following_count` | `integer` | Number of accounts followed. |
 | `content_count` | `integer` | Number of published content items. |
