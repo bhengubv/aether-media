@@ -1,4 +1,4 @@
-"""Tests for aethernet_media.playlist.xspf_parser."""
+"""Tests for aethermedia.playlist.xspf_parser."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 
 import pytest
 
-from aethernet_media.playlist.xspf_parser import parse_xspf
+from aethermedia.playlist.xspf_parser import parse_xspf
 
 
 _NS = "http://xspf.org/ns/0/"

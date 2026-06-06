@@ -1,4 +1,4 @@
-#include "aethernet_media.h"
+#include "aethermedia.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

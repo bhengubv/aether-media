@@ -107,7 +107,7 @@ jobs:
         continue-on-error: true
         run: |
           pip install black
-          black --check aethernet_media/ tests/
+          black --check aethermedia/ tests/
 
       - name: Test
         working-directory: python

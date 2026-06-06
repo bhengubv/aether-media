@@ -1,0 +1,203 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AetherMedia.Desktop.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AetherMedia.Desktop.Views.ProfileView"
+             x:DataType="vm:ProfileViewModel"
+             Background="Transparent">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Loading indicator -->
+        <ProgressBar Grid.Row="0"
+                     IsVisible="{Binding IsLoading}"
+                     IsIndeterminate="True"
+                     Height="3"
+                     Foreground="#2196F3"
+                     Background="Transparent"/>
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Hidden"
+                      HorizontalScrollBarVisibility="Disabled"
+                      IsVisible="{Binding !IsLoading}">
+            <StackPanel Spacing="0">
+
+                <!-- Profile hero -->
+                <Border IsVisible="{Binding Profile, Converter={x:Static ObjectConverters.IsNotNull}}"
+                        Background="#12121f"
+                        Padding="20,20,20,16"
+                        Margin="0,0,0,8">
+                    <Grid ColumnDefinitions="64,*,Auto">
+                        <!-- Avatar -->
+                        <Border Grid.Column="0"
+                                Width="60"
+                                Height="60"
+                                CornerRadius="30"
+                                Background="#2c2c50"
+                                VerticalAlignment="Top">
+                            <TextBlock Text="👤"
+                                       FontSize="28"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+
+                        <!-- Info -->
+                        <StackPanel Grid.Column="1" Margin="14,0" Spacing="4">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="{Binding Profile.DisplayName}"
+                                           Foreground="White"
+                                           FontSize="18"
+                                           FontWeight="Bold"/>
+                                <TextBlock IsVisible="{Binding Profile.IsVerified}"
+                                           Text="✓"
+                                           Foreground="#2196F3"
+                                           FontSize="14"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding Profile.AetherNetTagValue}"
+                                       Foreground="#888"
+                                       FontSize="13"/>
+                            <TextBlock Text="{Binding Profile.ShortBio}"
+                                       Foreground="#aaa"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       IsVisible="{Binding Profile.ShortBio, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                            <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,4,0,0">
+                                <TextBlock Foreground="#888" FontSize="12">
+                                    <Run Text="{Binding Profile.FollowerCount}" FontWeight="SemiBold" Foreground="White"/>
+                                    <Run Text=" followers"/>
+                                </TextBlock>
+                                <TextBlock Foreground="#888" FontSize="12">
+                                    <Run Text="{Binding Profile.FollowingCount}" FontWeight="SemiBold" Foreground="White"/>
+                                    <Run Text=" following"/>
+                                </TextBlock>
+                                <TextBlock Foreground="#888" FontSize="12">
+                                    <Run Text="{Binding Profile.ContentCount}" FontWeight="SemiBold" Foreground="White"/>
+                                    <Run Text=" posts"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Follow / Unfollow -->
+                        <StackPanel Grid.Column="2"
+                                    VerticalAlignment="Top"
+                                    IsVisible="{Binding !IsOwnProfile}">
+                            <Button Command="{Binding FollowCommand}"
+                                    IsVisible="{Binding !IsFollowing}"
+                                    Content="Follow"
+                                    Background="#2196F3"
+                                    Foreground="White"
+                                    Padding="16,8"
+                                    CornerRadius="6"/>
+                            <Button Command="{Binding UnfollowCommand}"
+                                    IsVisible="{Binding IsFollowing}"
+                                    Content="Following"
+                                    Background="#252540"
+                                    Foreground="#aaa"
+                                    Padding="16,8"
+                                    CornerRadius="6"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Live streams -->
+                <StackPanel IsVisible="{Binding CreatorStreams.Count}" Margin="0,0,0,8">
+                    <TextBlock Text="LIVE NOW"
+                               Margin="20,0,20,8"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="#e53935"
+                               LetterSpacing="2"/>
+                    <ItemsControl ItemsSource="{Binding CreatorStreams}" Margin="16,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:LiveStreamViewModel">
+                                <Border Margin="0,4"
+                                        CornerRadius="10"
+                                        Background="#1e1e38"
+                                        Padding="16,12"
+                                        Cursor="Hand">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding Title}"
+                                                   Foreground="White"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold"/>
+                                        <TextBlock Foreground="#888" FontSize="12">
+                                            <Run Text="{Binding ViewerCount}"/>
+                                            <Run Text=" viewers · "/>
+                                            <Run Text="{Binding ElapsedFormatted}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- Content grid -->
+                <TextBlock Text="CONTENT"
+                           Margin="20,0,20,8"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           Foreground="#888"
+                           LetterSpacing="2"/>
+
+                <TextBlock IsVisible="{Binding !CreatorContent.Count}"
+                           Text="No content published yet."
+                           Foreground="#555"
+                           FontSize="14"
+                           Margin="20,0"/>
+
+                <ItemsControl ItemsSource="{Binding CreatorContent}" Margin="16,0,16,16">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:MediaContentViewModel">
+                            <Border Margin="0,4"
+                                    CornerRadius="10"
+                                    Background="#1e1e38"
+                                    Cursor="Hand">
+                                <Border.Styles>
+                                    <Style Selector="Border:pointerover">
+                                        <Setter Property="Background" Value="#272744"/>
+                                    </Style>
+                                </Border.Styles>
+                                <Grid ColumnDefinitions="80,*" Margin="0">
+                                    <Border Grid.Column="0"
+                                            Width="80"
+                                            Height="60"
+                                            CornerRadius="10,0,0,10"
+                                            Background="#2c2c50"
+                                            ClipToBounds="True">
+                                        <TextBlock Text="▶"
+                                                   Foreground="#555"
+                                                   FontSize="22"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1"
+                                                Margin="12,0"
+                                                VerticalAlignment="Center"
+                                                Spacing="3">
+                                        <TextBlock Text="{Binding Title}"
+                                                   Foreground="White"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Foreground="#888" FontSize="12">
+                                            <Run Text="{Binding FormattedDuration}"/>
+                                            <Run Text=" · "/>
+                                            <Run Text="{Binding SizeFormatted}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+
+</UserControl>

@@ -10,8 +10,8 @@ Deux applications Android construites sur Jetpack Compose et media3/ExoPlayer, o
 
 | Module | Package | Cible |
 |--------|---------|-------|
-| `media/` | `aethernet.media` | Téléphone / tablette (Jetpack Compose) |
-| `media-tv/` | `aethernet.media.tv` | Android TV (lean-back, navigation D-pad) |
+| `media/` | `aethermedia` | Téléphone / tablette (Jetpack Compose) |
+| `media-tv/` | `aethermedia.tv` | Android TV (lean-back, navigation D-pad) |
 
 ---
 

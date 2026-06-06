@@ -40,11 +40,11 @@ pytest
 
 | 模块 | 说明 |
 |--------|-------------|
-| `aethernet_media.models` | `MediaContent`、`MediaProfile`、`MediaFeedItem`、`MediaReaction` |
-| `aethernet_media.metadata` | ID3 和 MP4 标签读写（通过 Mutagen）；NFO XML 抓取 |
-| `aethernet_media.playlist` | M3U 和 XSPF 播放列表解析与序列化 |
-| `aethernet_media.plugins` | 插件宿主——加载、激活并调用 VLC 风格的扩展脚本 |
-| `aethernet_media.cli` | 命令行入口点（`aether-media` 命令） |
+| `aethermedia.models` | `MediaContent`、`MediaProfile`、`MediaFeedItem`、`MediaReaction` |
+| `aethermedia.metadata` | ID3 和 MP4 标签读写（通过 Mutagen）；NFO XML 抓取 |
+| `aethermedia.playlist` | M3U 和 XSPF 播放列表解析与序列化 |
+| `aethermedia.plugins` | 插件宿主——加载、激活并调用 VLC 风格的扩展脚本 |
+| `aethermedia.cli` | 命令行入口点（`aether-media` 命令） |
 
 ---
 
@@ -53,7 +53,7 @@ pytest
 ### 读取元数据
 
 ```python
-from aethernet_media.metadata import read_tags
+from aethermedia.metadata import read_tags
 
 tags = read_tags("/media/music/track.mp3")
 print(tags.title)    # "Song Title"
@@ -64,7 +64,7 @@ print(tags.duration) # 213.4 (seconds)
 ### 写入元数据
 
 ```python
-from aethernet_media.metadata import write_tags, TagUpdate
+from aethermedia.metadata import write_tags, TagUpdate
 
 write_tags("/media/music/track.mp3", TagUpdate(
     title="Updated Title",
@@ -75,7 +75,7 @@ write_tags("/media/music/track.mp3", TagUpdate(
 ### 解析播放列表
 
 ```python
-from aethernet_media.playlist import parse_m3u, parse_xspf
+from aethermedia.playlist import parse_m3u, parse_xspf
 
 tracks = parse_m3u("/media/playlists/summer.m3u")
 for track in tracks:
@@ -87,7 +87,7 @@ tracks = parse_xspf("/media/playlists/podcast.xspf")
 ### 抓取 NFO 文件
 
 ```python
-from aethernet_media.metadata import read_nfo
+from aethermedia.metadata import read_nfo
 
 movie = read_nfo("/media/movies/Inception/Inception.nfo")
 print(movie.title)   # "Inception"
@@ -98,7 +98,7 @@ print(movie.plot)    # "A thief who steals corporate secrets..."
 ### 加载插件
 
 ```python
-from aethernet_media.plugins import PluginHost
+from aethermedia.plugins import PluginHost
 
 host = PluginHost()
 host.load("/path/to/my_plugin.py")
@@ -163,7 +163,7 @@ aether-media plugins activate my_plugin
 ## 模型
 
 ```python
-from aethernet_media.models import MediaContent, MediaProfile, MediaFeedItem
+from aethermedia.models import MediaContent, MediaProfile, MediaFeedItem
 
 content = MediaContent(
     content_hash="sha256abc",
@@ -185,7 +185,7 @@ print(content.is_video)             # True
 
 ```
 python/
-├── aethernet_media/
+├── aethermedia/
 │   ├── __init__.py
 │   ├── models.py            # Domain models
 │   ├── metadata/            # Tag reading/writing, NFO scraping

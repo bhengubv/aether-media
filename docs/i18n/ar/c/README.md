@@ -55,7 +55,7 @@ ctest --output-on-failure
 أدرج ملف الرأس الشامل الوحيد:
 
 ```c
-#include "aethernet_media/aethernet_media.h"
+#include "aethermedia/aethermedia.h"
 ```
 
 ### نموذج المحتوى
@@ -119,7 +119,7 @@ aethernet_player_destroy(player);
 ```
 c/
 ├── include/
-│   └── aethernet_media.h      # Public API — single umbrella header
+│   └── aethermedia.h      # Public API — single umbrella header
 ├── src/
 │   ├── main.c              # CLI entry point
 │   ├── player/             # LibVLC playback wrapper

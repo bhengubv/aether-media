@@ -49,7 +49,7 @@ Benchmarks verwenden Criterion und erzeugen HTML-Ergebnisse unter `target/criter
 ## Schnellstart
 
 ```rust
-use aethernet_media::{
+use aethermedia::{
     models::{MediaContent, MediaFeedItem},
     feed::FeedStore,
     social::SocialGraph,
@@ -116,7 +116,7 @@ Wird das Crate ohne Features gebaut, stellt es Modelle, Feed, Social und asynchr
 ## Player (LibVLC)
 
 ```rust
-use aethernet_media::player::Player;
+use aethermedia::player::Player;
 
 #[tokio::main]
 async fn main() {
@@ -135,7 +135,7 @@ LibVLC muss auf dem Hostsystem installiert sein. Das Feature-Flag aktiviert die 
 ## Asynchrones Streaming
 
 ```rust
-use aethernet_media::streaming::StreamClient;
+use aethermedia::streaming::StreamClient;
 
 #[tokio::main]
 async fn main() {

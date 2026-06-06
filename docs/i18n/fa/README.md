@@ -112,7 +112,7 @@ Aether Media در ۸ زبان پیاده‌سازی ارائه می‌دهد ت�
 ```bash
 git clone https://github.com/bhengubv/aether-media.git
 cd aether-media
-dotnet run --project samples/AetherNet.Media.Demo.Console
+dotnet run --project samples/AetherMedia.Demo.Console
 ```
 
 همه زیرسیستم‌ها را ثبت کنید:
@@ -184,8 +184,8 @@ await client.markWatched('a3f9...', 45_000);  // contentHash، میلی‌ثان
 ### Python (پلاگین)
 
 ```python
-from aethernet_media.plugins.base import AetherNetMediaPlugin
-from aethernet_media.models import MediaContent, MediaReaction
+from aethermedia.plugins.base import AetherNetMediaPlugin
+from aethermedia.models import MediaContent, MediaReaction
 
 class MyPlugin(AetherNetMediaPlugin):
     @property
@@ -206,7 +206,7 @@ class MyPlugin(AetherNetMediaPlugin):
 ### Kotlin (Android / JVM)
 
 ```kotlin
-import aethernet.media.social.SocialGraph
+import aethermedia.social.SocialGraph
 
 val graph = SocialGraph()
 graph.follow("KXJB7-MN2P4")
@@ -219,7 +219,7 @@ println(graph.count)                        // 0
 ### Rust
 
 ```rust
-use aethernet_media::feed::{FeedStore, FeedEntry};
+use aethermedia::feed::{FeedStore, FeedEntry};
 
 let mut store = FeedStore::new(500);
 let entry = FeedEntry {
@@ -259,7 +259,7 @@ print(following) // ["KXJB7-MN2P4"]
 ### C
 
 ```c
-#include "aethernet_media/social.h"
+#include "aethermedia/social.h"
 
 aethernet_social_graph_t *graph = aethernet_social_graph_create();
 aethernet_social_graph_follow(graph, "KXJB7-MN2P4");
@@ -289,20 +289,20 @@ aethernet_social_graph_destroy(graph);
 ```
 aether-media/
   src/
-    AetherNet.Media.Core/            مدل‌های دامنه و رابط‌ها (MediaContent، IMediaLibrary و غیره)
-    AetherNet.Media.Identity/        مدیریت پروفایل، آواتار، همگام‌سازی پروفایل
-    AetherNet.Media.Content/         اسکنر کتابخانه رسانه، رزولور متادیتا، cache LRU، thumbnail
-    AetherNet.Media.Social/          SocialGraph، FeedAggregator، ReactionService، DiscoveryService
-    AetherNet.Media.Streaming/       LiveStreamPublisher، WatchPartyCoordinator، AbrController
-    AetherNet.Media.AI/              ContentRanker، ContentModerator، CreatorReputationView
-    AetherNet.Media.DependencyInjection/  پسوند AddAetherNetMedia() + API fluent AetherNetMediaBuilder
-    AetherNet.Media.Desktop/         یکپارچه‌سازی LibVLCSharp برای Windows / Linux / macOS
+    AetherMedia.Core/            مدل‌های دامنه و رابط‌ها (MediaContent، IMediaLibrary و غیره)
+    AetherMedia.Identity/        مدیریت پروفایل، آواتار، همگام‌سازی پروفایل
+    AetherMedia.Content/         اسکنر کتابخانه رسانه، رزولور متادیتا، cache LRU، thumbnail
+    AetherMedia.Social/          SocialGraph، FeedAggregator، ReactionService، DiscoveryService
+    AetherMedia.Streaming/       LiveStreamPublisher، WatchPartyCoordinator، AbrController
+    AetherMedia.AI/              ContentRanker، ContentModerator، CreatorReputationView
+    AetherMedia.DependencyInjection/  پسوند AddAetherNetMedia() + API fluent AetherNetMediaBuilder
+    AetherMedia.Desktop/         یکپارچه‌سازی LibVLCSharp برای Windows / Linux / macOS
   samples/
-    AetherNet.Media.Demo.Console/    دمو کنسول تعاملی نشان‌دهنده همه زیرسیستم‌ها
-    AetherNet.Media.RelayTest/       آزمون رفت‌وبرگشت رله HTTP (نیاز به AetherNet.RelayServer)
+    AetherMedia.Demo.Console/    دمو کنسول تعاملی نشان‌دهنده همه زیرسیستم‌ها
+    AetherMedia.RelayTest/       آزمون رفت‌وبرگشت رله HTTP (نیاز به AetherNet.RelayServer)
   tests/
-    AetherNet.Media.Core.Tests/      آزمون‌های واحد برای مدل‌های دامنه و InMemoryMediaLibrary
-    AetherNet.Media.Social.Tests/    آزمون‌های واحد برای SocialGraph و FeedAggregator
+    AetherMedia.Core.Tests/      آزمون‌های واحد برای مدل‌های دامنه و InMemoryMediaLibrary
+    AetherMedia.Social.Tests/    آزمون‌های واحد برای SocialGraph و FeedAggregator
   typescript/                     پلیر وب TypeScript و SDK اجتماعی (@bhengubv/aether-media)
     src/
       player/   AetherNetMediaPlayer (HLS.js + Shaka Player + MSE بومی)
@@ -311,7 +311,7 @@ aether-media/
       streaming/ AetherNetStreamClient
       models/   آینه‌های TypeScript از مدل‌های دامنه C#
   python/                         موتور پلاگین Python و کتابخانه متادیتا (aether-media در PyPI)
-    aethernet_media/
+    aethermedia/
       plugins/  کلاس پایه AetherNetMediaPlugin، PluginHost
       metadata/ خواننده/نویسنده Tag (wrapper mutagen)
       cli/      نقاط ورودی خط فرمان
@@ -341,7 +341,7 @@ aether-media/
       feed/     مدل‌های فید
       streaming/ مدل‌های استریم
   c/                              مدل‌های فید و اجتماعی C11 برای اهداف embedded
-    include/aethernet_media/         هدرهای عمومی
+    include/aethermedia/         هدرهای عمومی
     src/                          پیاده‌سازی‌ها
     tests/                        مجموعه آزمون مبتنی بر CTest
   android/                        ماژول‌های Android Gradle

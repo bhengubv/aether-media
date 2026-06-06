@@ -110,7 +110,7 @@ interoperable soziale Pakete, die durch sprachübergreifende Fixtures in CI veri
 ```bash
 git clone https://github.com/bhengubv/aether-media.git
 cd aether-media
-dotnet run --project samples/AetherNet.Media.Demo.Console
+dotnet run --project samples/AetherMedia.Demo.Console
 ```
 
 Alle Subsysteme registrieren:
@@ -182,8 +182,8 @@ await client.markWatched('a3f9...', 45_000);  // contentHash, ms watched
 ### Python (Plugin)
 
 ```python
-from aethernet_media.plugins.base import AetherNetMediaPlugin
-from aethernet_media.models import MediaContent, MediaReaction
+from aethermedia.plugins.base import AetherNetMediaPlugin
+from aethermedia.models import MediaContent, MediaReaction
 
 class MyPlugin(AetherNetMediaPlugin):
     @property
@@ -204,7 +204,7 @@ class MyPlugin(AetherNetMediaPlugin):
 ### Kotlin (Android / JVM)
 
 ```kotlin
-import aethernet.media.social.SocialGraph
+import aethermedia.social.SocialGraph
 
 val graph = SocialGraph()
 graph.follow("KXJB7-MN2P4")
@@ -217,7 +217,7 @@ println(graph.count)                        // 0
 ### Rust
 
 ```rust
-use aethernet_media::feed::{FeedStore, FeedEntry};
+use aethermedia::feed::{FeedStore, FeedEntry};
 
 let mut store = FeedStore::new(500);
 let entry = FeedEntry {
@@ -257,7 +257,7 @@ print(following) // ["KXJB7-MN2P4"]
 ### C
 
 ```c
-#include "aethernet_media/social.h"
+#include "aethermedia/social.h"
 
 aethernet_social_graph_t *graph = aethernet_social_graph_create();
 aethernet_social_graph_follow(graph, "KXJB7-MN2P4");
@@ -300,20 +300,20 @@ Mal, wenn eines von ihnen in Funkreichweite kommt.
 ```
 aether-media/
   src/
-    AetherNet.Media.Core/            Domänenmodelle und Schnittstellen (MediaContent, IMediaLibrary usw.)
-    AetherNet.Media.Identity/        Profilverwaltung, Avatar, Profil-Sync
-    AetherNet.Media.Content/         Medienbibliotheks-Scanner, Metadaten-Resolver, LRU-Cache, Vorschaubilder
-    AetherNet.Media.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
-    AetherNet.Media.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
-    AetherNet.Media.AI/              ContentRanker, ContentModerator, CreatorReputationView
-    AetherNet.Media.DependencyInjection/  AddAetherNetMedia()-Erweiterung + AetherNetMediaBuilder Fluent-API
-    AetherNet.Media.Desktop/         LibVLCSharp-Integration für Windows / Linux / macOS
+    AetherMedia.Core/            Domänenmodelle und Schnittstellen (MediaContent, IMediaLibrary usw.)
+    AetherMedia.Identity/        Profilverwaltung, Avatar, Profil-Sync
+    AetherMedia.Content/         Medienbibliotheks-Scanner, Metadaten-Resolver, LRU-Cache, Vorschaubilder
+    AetherMedia.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
+    AetherMedia.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
+    AetherMedia.AI/              ContentRanker, ContentModerator, CreatorReputationView
+    AetherMedia.DependencyInjection/  AddAetherNetMedia()-Erweiterung + AetherNetMediaBuilder Fluent-API
+    AetherMedia.Desktop/         LibVLCSharp-Integration für Windows / Linux / macOS
   samples/
-    AetherNet.Media.Demo.Console/    Interaktive Konsoldemo mit allen Subsystemen
-    AetherNet.Media.RelayTest/       HTTP-Relay-Hin-und-Rücklauf-Test (erfordert AetherNet.RelayServer)
+    AetherMedia.Demo.Console/    Interaktive Konsoldemo mit allen Subsystemen
+    AetherMedia.RelayTest/       HTTP-Relay-Hin-und-Rücklauf-Test (erfordert AetherNet.RelayServer)
   tests/
-    AetherNet.Media.Core.Tests/      Unit-Tests für Domänenmodelle und InMemoryMediaLibrary
-    AetherNet.Media.Social.Tests/    Unit-Tests für SocialGraph und FeedAggregator
+    AetherMedia.Core.Tests/      Unit-Tests für Domänenmodelle und InMemoryMediaLibrary
+    AetherMedia.Social.Tests/    Unit-Tests für SocialGraph und FeedAggregator
   typescript/                     TypeScript-Web-Player und soziales SDK (@bhengubv/aether-media)
     src/
       player/   AetherNetMediaPlayer (HLS.js + Shaka Player + natives MSE)
@@ -322,7 +322,7 @@ aether-media/
       streaming/ AetherNetStreamClient
       models/   TypeScript-Spiegelungen der C#-Domänenmodelle
   python/                         Python-Plugin-Engine und Metadatenbibliothek (aether-media auf PyPI)
-    aethernet_media/
+    aethermedia/
       plugins/  AetherNetMediaPlugin-Basisklasse, PluginHost
       metadata/ Tag-Leser/-Schreiber (mutagen-Wrapper)
       cli/      Kommandozeilen-Einstiegspunkte
@@ -352,7 +352,7 @@ aether-media/
       feed/     Feed-Modelle
       streaming/ Stream-Modelle
   c/                              C11-Feed- und Sozialmodelle für eingebettete Ziele
-    include/aethernet_media/         Öffentliche Header
+    include/aethermedia/         Öffentliche Header
     src/                          Implementierungen
     tests/                        CTest-basierte Testsuite
   android/                        Android-Gradle-Module

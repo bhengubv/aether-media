@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-using AetherNet.Market.Core;
-using AetherNet.Vault.Core;
+using AetherMedia.Market.Core;
+using AetherMedia.Vault.Core;
 
 namespace AetherNet.Market.Tests;
 

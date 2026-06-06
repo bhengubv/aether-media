@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/AetherNet.Space.Core/AetherNet.Space.Core.csproj" />
-    <ProjectReference Include="../../src/AetherNet.Space.Protocol/AetherNet.Space.Protocol.csproj" />
+    <ProjectReference Include="../../src/AetherMedia.Space.Core/AetherMedia.Space.Core.csproj" />
+    <ProjectReference Include="../../src/AetherMedia.Space.Protocol/AetherMedia.Space.Protocol.csproj" />
   </ItemGroup>
 
 </Project>

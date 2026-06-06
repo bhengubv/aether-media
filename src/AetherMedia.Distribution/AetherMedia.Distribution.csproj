@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherMedia.Distribution</PackageId>
+    <Description>
+      Mesh-first app distribution for Aether Media — share the app like a file,
+      update from Cloudflare, discover the full ecosystem from a single install.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherMedia.Core\AetherMedia.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Content/AetherNet.Content.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <PackageReference Include="AetherNet.Core"    Version="1.1.0" />
+    <PackageReference Include="AetherNet.Content" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
+  </ItemGroup>
+
+</Project>

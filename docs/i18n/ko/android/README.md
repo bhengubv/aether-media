@@ -10,8 +10,8 @@ Jetpack Compose와 media3/ExoPlayer를 기반으로 제작된 두 가지 Android
 
 | 모듈 | 패키지 | 대상 |
 |--------|---------|--------|
-| `media/` | `aethernet.media` | 스마트폰 / 태블릿 (Jetpack Compose) |
-| `media-tv/` | `aethernet.media.tv` | Android TV (린백, D-패드 탐색) |
+| `media/` | `aethermedia` | 스마트폰 / 태블릿 (Jetpack Compose) |
+| `media-tv/` | `aethermedia.tv` | Android TV (린백, D-패드 탐색) |
 
 ---
 

@@ -53,7 +53,7 @@ ctest --output-on-failure
 단일 umbrella 헤더를 포함하세요:
 
 ```c
-#include "aethernet_media/aethernet_media.h"
+#include "aethermedia/aethermedia.h"
 ```
 
 ### 콘텐츠 모델
@@ -117,7 +117,7 @@ aethernet_player_destroy(player);
 ```
 c/
 ├── include/
-│   └── aethernet_media.h      # Public API — single umbrella header
+│   └── aethermedia.h      # Public API — single umbrella header
 ├── src/
 │   ├── main.c              # CLI entry point
 │   ├── player/             # LibVLC playback wrapper

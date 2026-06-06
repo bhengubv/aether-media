@@ -101,7 +101,7 @@ ctest --test-dir build
 All Aether Media subsystems are registered through a single extension method on `IServiceCollection`. Each subsystem is opt-in; use only what your application needs.
 
 ```csharp
-using AetherNet.Media.DependencyInjection;
+using AetherMedia.DependencyInjection;
 
 services.AddAetherNetMedia(media =>
     media.AddIdentity()    // IProfileService, IProfileSyncService, IAvatarService
@@ -124,7 +124,7 @@ All registrations use `TryAddSingleton`, so you can override any service by regi
 The interactive console demo exercises all five subsystems without a live mesh. It uses no-op stubs for `IDtnService` and `IMeshSender`:
 
 ```bash
-dotnet run --project samples/AetherNet.Media.Demo.Console
+dotnet run --project samples/AetherMedia.Demo.Console
 ```
 
 Expected output:
@@ -201,10 +201,10 @@ for (const item of items) {
 
 ## Running the Social Protocol Integration Test
 
-The `AetherNet.Media.Social.Tests` project contains a full end-to-end integration test that verifies the follow → publish → feed flow without any network access. All mesh transport is simulated by in-process fakes.
+The `AetherMedia.Social.Tests` project contains a full end-to-end integration test that verifies the follow → publish → feed flow without any network access. All mesh transport is simulated by in-process fakes.
 
 ```bash
-dotnet test tests/AetherNet.Media.Social.Tests
+dotnet test tests/AetherMedia.Social.Tests
 ```
 
 The integration test (`SocialProtocolIntegrationTests`) covers:
@@ -220,7 +220,7 @@ The integration test (`SocialProtocolIntegrationTests`) covers:
 Run a specific test by name:
 
 ```bash
-dotnet test tests/AetherNet.Media.Social.Tests \
+dotnet test tests/AetherMedia.Social.Tests \
   --filter "DisplayName~NodeB publishes content"
 ```
 

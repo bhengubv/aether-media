@@ -10,8 +10,8 @@ Jetpack Compose と media3/ExoPlayer をベースに構築された 2 つの And
 
 | モジュール | パッケージ | ターゲット |
 |--------|---------|--------|
-| `media/` | `aethernet.media` | スマートフォン / タブレット (Jetpack Compose) |
-| `media-tv/` | `aethernet.media.tv` | Android TV (リーンバック、D パッドナビゲーション) |
+| `media/` | `aethermedia` | スマートフォン / タブレット (Jetpack Compose) |
+| `media-tv/` | `aethermedia.tv` | Android TV (リーンバック、D パッドナビゲーション) |
 
 ---
 

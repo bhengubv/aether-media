@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherMedia.Forge.Proxy</PackageId>
+    <Description>HTTP CONNECT proxy for Aether Forge — serves cached packages from the mesh before falling back to the internet.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AetherMedia.Forge.Core/AetherMedia.Forge.Core.csproj" />
+    <ProjectReference Include="../../../../src/AetherMedia.DependencyInjection/AetherMedia.DependencyInjection.csproj" />
+  </ItemGroup>
+
+</Project>

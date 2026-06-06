@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "aethernet.media"
+    namespace = "aethermedia"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "aethernet.media"
+        applicationId = "aethermedia"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

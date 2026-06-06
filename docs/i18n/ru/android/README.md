@@ -10,8 +10,8 @@
 
 | Модуль | Пакет | Целевое устройство |
 |--------|-------|--------------------|
-| `media/` | `aethernet.media` | Телефон / планшет (Jetpack Compose) |
-| `media-tv/` | `aethernet.media.tv` | Android TV (lean-back, навигация с D-pad) |
+| `media/` | `aethermedia` | Телефон / планшет (Jetpack Compose) |
+| `media-tv/` | `aethermedia.tv` | Android TV (lean-back, навигация с D-pad) |
 
 ---
 

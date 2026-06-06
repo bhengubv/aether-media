@@ -40,11 +40,11 @@ pytest
 
 | Module | Description |
 |--------|-------------|
-| `aethernet_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
-| `aethernet_media.metadata` | ID3 and MP4 tag reading/writing (via Mutagen); NFO XML scraping |
-| `aethernet_media.playlist` | M3U and XSPF playlist parsing and serialisation |
-| `aethernet_media.plugins` | Plugin host — load, activate, and call VLC-style extension scripts |
-| `aethernet_media.cli` | Command-line entry point (`aether-media` command) |
+| `aethermedia.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
+| `aethermedia.metadata` | ID3 and MP4 tag reading/writing (via Mutagen); NFO XML scraping |
+| `aethermedia.playlist` | M3U and XSPF playlist parsing and serialisation |
+| `aethermedia.plugins` | Plugin host — load, activate, and call VLC-style extension scripts |
+| `aethermedia.cli` | Command-line entry point (`aether-media` command) |
 
 ---
 
@@ -53,7 +53,7 @@ pytest
 ### Read metadata
 
 ```python
-from aethernet_media.metadata import read_tags
+from aethermedia.metadata import read_tags
 
 tags = read_tags("/media/music/track.mp3")
 print(tags.title)    # "Song Title"
@@ -64,7 +64,7 @@ print(tags.duration) # 213.4 (seconds)
 ### Write metadata
 
 ```python
-from aethernet_media.metadata import write_tags, TagUpdate
+from aethermedia.metadata import write_tags, TagUpdate
 
 write_tags("/media/music/track.mp3", TagUpdate(
     title="Updated Title",
@@ -75,7 +75,7 @@ write_tags("/media/music/track.mp3", TagUpdate(
 ### Parse a playlist
 
 ```python
-from aethernet_media.playlist import parse_m3u, parse_xspf
+from aethermedia.playlist import parse_m3u, parse_xspf
 
 tracks = parse_m3u("/media/playlists/summer.m3u")
 for track in tracks:
@@ -87,7 +87,7 @@ tracks = parse_xspf("/media/playlists/podcast.xspf")
 ### Scrape an NFO file
 
 ```python
-from aethernet_media.metadata import read_nfo
+from aethermedia.metadata import read_nfo
 
 movie = read_nfo("/media/movies/Inception/Inception.nfo")
 print(movie.title)   # "Inception"
@@ -98,7 +98,7 @@ print(movie.plot)    # "A thief who steals corporate secrets..."
 ### Load a plugin
 
 ```python
-from aethernet_media.plugins import PluginHost
+from aethermedia.plugins import PluginHost
 
 host = PluginHost()
 host.load("/path/to/my_plugin.py")
@@ -163,7 +163,7 @@ aether-media plugins activate my_plugin
 ## Models
 
 ```python
-from aethernet_media.models import MediaContent, MediaProfile, MediaFeedItem
+from aethermedia.models import MediaContent, MediaProfile, MediaFeedItem
 
 content = MediaContent(
     content_hash="sha256abc",
@@ -185,7 +185,7 @@ print(content.is_video)             # True
 
 ```
 python/
-├── aethernet_media/
+├── aethermedia/
 │   ├── __init__.py
 │   ├── models.py            # Domain models
 │   ├── metadata/            # Tag reading/writing, NFO scraping

@@ -1,4 +1,4 @@
-"""Tests for aethernet_media.plugins.base and aethernet_media.plugins.host."""
+"""Tests for aethermedia.plugins.base and aethermedia.plugins.host."""
 
 from __future__ import annotations
 
@@ -8,9 +8,9 @@ from unittest.mock import MagicMock, patch, call
 
 import pytest
 
-from aethernet_media.plugins.base import AetherNetMediaPlugin
-from aethernet_media.plugins.host import PluginHost
-from aethernet_media.models import (
+from aethermedia.plugins.base import AetherNetMediaPlugin
+from aethermedia.plugins.host import PluginHost
+from aethermedia.models import (
     MediaContent,
     MediaReaction,
     MediaReactionType,
@@ -287,7 +287,7 @@ def test_broken_plugin_content_loaded_is_isolated(caplog):
     host.register(good)
     content = _content()
 
-    with caplog.at_level(logging.ERROR, logger="aethernet_media.plugins.host"):
+    with caplog.at_level(logging.ERROR, logger="aethermedia.plugins.host"):
         host.notify_content_loaded(content)
 
     # Good plugin must still have received the event
@@ -304,7 +304,7 @@ def test_broken_plugin_reaction_received_is_isolated(caplog):
     host.register(good)
     r = _reaction()
 
-    with caplog.at_level(logging.ERROR, logger="aethernet_media.plugins.host"):
+    with caplog.at_level(logging.ERROR, logger="aethermedia.plugins.host"):
         host.notify_reaction_received(r)
 
     assert good.reactions == [r]
@@ -319,7 +319,7 @@ def test_broken_plugin_stream_started_is_isolated(caplog):
     host.register(stream_p)
     s = _stream()
 
-    with caplog.at_level(logging.ERROR, logger="aethernet_media.plugins.host"):
+    with caplog.at_level(logging.ERROR, logger="aethermedia.plugins.host"):
         host.notify_stream_started(s)
 
     assert stream_p.streams == [s]
@@ -339,7 +339,7 @@ def test_multiple_broken_plugins_all_isolated(caplog):
     good = _GoodPlugin()
     host.register(good)
 
-    with caplog.at_level(logging.ERROR, logger="aethernet_media.plugins.host"):
+    with caplog.at_level(logging.ERROR, logger="aethermedia.plugins.host"):
         host.notify_content_loaded(_content())
 
     assert len(good.loaded) == 1
@@ -349,7 +349,7 @@ def test_multiple_broken_plugins_all_isolated(caplog):
 
 def test_register_logs_debug(caplog):
     host = PluginHost()
-    with caplog.at_level(logging.DEBUG, logger="aethernet_media.plugins.host"):
+    with caplog.at_level(logging.DEBUG, logger="aethermedia.plugins.host"):
         host.register(_GoodPlugin())
     assert any("good-plugin" in r.message for r in caplog.records)
 
@@ -357,6 +357,6 @@ def test_register_logs_debug(caplog):
 def test_unregister_logs_debug(caplog):
     host = PluginHost()
     host.register(_GoodPlugin())
-    with caplog.at_level(logging.DEBUG, logger="aethernet_media.plugins.host"):
+    with caplog.at_level(logging.DEBUG, logger="aethermedia.plugins.host"):
         host.unregister("good-plugin")
     assert any("good-plugin" in r.message for r in caplog.records)

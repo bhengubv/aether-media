@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 using System.Text.Json;
-using AetherNet.Space.Core;
-using AetherNet.Space.Protocol;
+using AetherMedia.Space.Core;
+using AetherMedia.Space.Protocol;
 
 namespace AetherNet.Space.Tests;
 

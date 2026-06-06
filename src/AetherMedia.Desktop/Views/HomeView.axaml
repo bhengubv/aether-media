@@ -1,0 +1,223 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AetherMedia.Desktop.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AetherMedia.Desktop.Views.HomeView"
+             x:DataType="vm:HomeViewModel"
+             Background="Transparent">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header row -->
+        <DockPanel Grid.Row="0" Margin="20,16,20,8">
+            <TextBlock DockPanel.Dock="Left"
+                       Text="Home"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       VerticalAlignment="Center"/>
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding RefreshCommand}"
+                    Content="⟳ Refresh"
+                    Background="#2196F3"
+                    Foreground="White"
+                    Padding="12,6"
+                    CornerRadius="6"/>
+        </DockPanel>
+
+        <!-- Content area -->
+        <Grid Grid.Row="1">
+
+            <!-- Empty-state overlay -->
+            <StackPanel IsVisible="{Binding HasNoContent}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Spacing="12">
+                <TextBlock Text="No content yet"
+                           Foreground="#888"
+                           FontSize="16"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="Pull to refresh or wait for nearby peers"
+                           Foreground="#555"
+                           FontSize="13"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Loading spinner -->
+            <ProgressBar IsIndeterminate="True"
+                         IsVisible="{Binding IsLoading}"
+                         VerticalAlignment="Top"
+                         Height="3"
+                         Foreground="#2196F3"
+                         Background="Transparent"/>
+
+            <!-- Main scroll content -->
+            <ScrollViewer IsVisible="{Binding !HasNoContent}"
+                          VerticalScrollBarVisibility="Hidden"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Spacing="0">
+
+                    <!-- Nearby live streams -->
+                    <StackPanel IsVisible="{Binding NearbyStreams.Count}"
+                                Margin="0,8,0,0">
+                        <TextBlock Text="LIVE NEARBY"
+                                   Margin="20,0,20,8"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="#2196F3"
+                                   LetterSpacing="2"/>
+                        <ItemsControl ItemsSource="{Binding NearbyStreams}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="16,0"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:LiveStreamViewModel">
+                                    <Border Width="180"
+                                            Height="110"
+                                            Margin="4,0"
+                                            CornerRadius="8"
+                                            Background="#252540"
+                                            Cursor="Hand">
+                                        <Border.Styles>
+                                            <Style Selector="Border:pointerover">
+                                                <Setter Property="Background" Value="#2d2d55"/>
+                                            </Style>
+                                        </Border.Styles>
+                                        <Grid>
+                                            <StackPanel Margin="10" VerticalAlignment="Bottom">
+                                                <Border Background="#e53935"
+                                                        CornerRadius="3"
+                                                        Padding="4,2"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="0,0,0,4">
+                                                    <TextBlock Text="● LIVE"
+                                                               Foreground="White"
+                                                               FontSize="10"
+                                                               FontWeight="Bold"/>
+                                                </Border>
+                                                <TextBlock Text="{Binding Title}"
+                                                           Foreground="White"
+                                                           FontSize="13"
+                                                           FontWeight="SemiBold"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           MaxLines="2"/>
+                                                <TextBlock FontSize="11"
+                                                           Foreground="#aaa"
+                                                           Margin="0,2,0,0">
+                                                    <Run Text="{Binding ViewerCount}"/>
+                                                    <Run Text=" viewers · "/>
+                                                    <Run Text="{Binding ElapsedFormatted}"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <!-- Feed items -->
+                    <TextBlock Text="FOR YOU"
+                               Margin="20,16,20,8"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="#888"
+                               LetterSpacing="2"/>
+
+                    <ItemsControl ItemsSource="{Binding FeedItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MediaFeedItemViewModel">
+                                <Border Margin="16,4"
+                                        CornerRadius="10"
+                                        Background="#1e1e38"
+                                        Cursor="Hand">
+                                    <Border.Styles>
+                                        <Style Selector="Border:pointerover">
+                                            <Setter Property="Background" Value="#272744"/>
+                                        </Style>
+                                    </Border.Styles>
+                                    <Grid ColumnDefinitions="120,*" Margin="0">
+                                        <!-- Thumbnail placeholder -->
+                                        <Border Grid.Column="0"
+                                                Width="120"
+                                                Height="72"
+                                                CornerRadius="10,0,0,10"
+                                                Background="#2c2c50"
+                                                ClipToBounds="True">
+                                            <Grid>
+                                                <TextBlock Text="▶"
+                                                           Foreground="#555"
+                                                           FontSize="24"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                                <Border IsVisible="{Binding IsLive}"
+                                                        Background="#e53935"
+                                                        CornerRadius="3"
+                                                        Padding="4,2"
+                                                        HorizontalAlignment="Right"
+                                                        VerticalAlignment="Top"
+                                                        Margin="0,4,4,0">
+                                                    <TextBlock Text="LIVE"
+                                                               Foreground="White"
+                                                               FontSize="9"
+                                                               FontWeight="Bold"/>
+                                                </Border>
+                                                <Border IsVisible="{Binding !IsLive}"
+                                                        Background="#80000000"
+                                                        CornerRadius="3"
+                                                        Padding="4,2"
+                                                        HorizontalAlignment="Right"
+                                                        VerticalAlignment="Bottom"
+                                                        Margin="0,0,4,4">
+                                                    <TextBlock Text="{Binding FormattedDuration}"
+                                                               Foreground="White"
+                                                               FontSize="10"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Info column -->
+                                        <StackPanel Grid.Column="1"
+                                                    Margin="12,10,12,10"
+                                                    Spacing="4"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Title}"
+                                                       Foreground="White"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       MaxLines="2"/>
+                                            <TextBlock Text="{Binding CreatorUhid}"
+                                                       Foreground="#888"
+                                                       FontSize="12"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                                <TextBlock Foreground="#666" FontSize="11">
+                                                    <Run Text="❤️ "/>
+                                                    <Run Text="{Binding LikeCount}"/>
+                                                </TextBlock>
+                                                <TextBlock Foreground="#666" FontSize="11">
+                                                    <Run Text="👁 "/>
+                                                    <Run Text="{Binding WatchCount}"/>
+                                                </TextBlock>
+                                                <TextBlock Text="{Binding PublishedAgo}"
+                                                           Foreground="#555"
+                                                           FontSize="11"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </StackPanel>
+            </ScrollViewer>
+
+        </Grid>
+    </Grid>
+
+</UserControl>

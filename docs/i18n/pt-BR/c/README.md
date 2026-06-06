@@ -53,7 +53,7 @@ ctest --output-on-failure
 Inclua o único cabeçalho abrangente:
 
 ```c
-#include "aethernet_media/aethernet_media.h"
+#include "aethermedia/aethermedia.h"
 ```
 
 ### Modelo de conteúdo
@@ -117,7 +117,7 @@ aethernet_player_destroy(player);
 ```
 c/
 ├── include/
-│   └── aethernet_media.h      # API pública — único cabeçalho abrangente
+│   └── aethermedia.h      # API pública — único cabeçalho abrangente
 ├── src/
 │   ├── main.c              # Ponto de entrada da CLI
 │   ├── player/             # Wrapper de reprodução LibVLC

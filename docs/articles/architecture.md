@@ -80,14 +80,14 @@ The social layer has no server. Every follow, unfollow, reaction, and profile up
 
 | Project | Responsibility |
 |---------|----------------|
-| `AetherNet.Media.Core` | Domain models (`MediaContent`, `MediaFeedItem`, `MediaReaction`, `MediaProfile`, `LiveStream`) and core interfaces (`IMediaLibrary`, `IFeedAggregator`, `ISocialGraph`) |
-| `AetherNet.Media.Identity` | Local profile store, avatar management, `ProfileSyncService` for mesh broadcast of profile updates |
-| `AetherNet.Media.Content` | Library scanner (SHA-256 hashing, metadata resolution, thumbnail extraction), `LruContentCache` (500 MiB default, O(1) eviction) |
-| `AetherNet.Media.Social` | `SocialGraph` (DTN-backed follow), `FeedAggregator` (mesh event aggregation), `ReactionService` (live reaction routing), `DiscoveryService` (nearby creator detection) |
-| `AetherNet.Media.Streaming` | `LiveStreamPublisher`, `WatchPartyCoordinator`, `AbrController` |
-| `AetherNet.Media.AI` | `ContentRanker`, `ContentModerator`, `CreatorReputationView` — on-device AI curation with no data leaving the device |
-| `AetherNet.Media.Desktop` | Avalonia UI host with LibVLCSharp media engine |
-| `AetherNet.Media.DependencyInjection` | `AddAetherNetMedia()` extension and `AetherNetMediaBuilder` fluent API |
+| `AetherMedia.Core` | Domain models (`MediaContent`, `MediaFeedItem`, `MediaReaction`, `MediaProfile`, `LiveStream`) and core interfaces (`IMediaLibrary`, `IFeedAggregator`, `ISocialGraph`) |
+| `AetherMedia.Identity` | Local profile store, avatar management, `ProfileSyncService` for mesh broadcast of profile updates |
+| `AetherMedia.Content` | Library scanner (SHA-256 hashing, metadata resolution, thumbnail extraction), `LruContentCache` (500 MiB default, O(1) eviction) |
+| `AetherMedia.Social` | `SocialGraph` (DTN-backed follow), `FeedAggregator` (mesh event aggregation), `ReactionService` (live reaction routing), `DiscoveryService` (nearby creator detection) |
+| `AetherMedia.Streaming` | `LiveStreamPublisher`, `WatchPartyCoordinator`, `AbrController` |
+| `AetherMedia.AI` | `ContentRanker`, `ContentModerator`, `CreatorReputationView` — on-device AI curation with no data leaving the device |
+| `AetherMedia.Desktop` | Avalonia UI host with LibVLCSharp media engine |
+| `AetherMedia.DependencyInjection` | `AddAetherNetMedia()` extension and `AetherNetMediaBuilder` fluent API |
 
 ---
 

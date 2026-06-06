@@ -12,8 +12,8 @@
 
 | ماژول | پکیج | هدف |
 |--------|---------|--------|
-| `media/` | `aethernet.media` | گوشی / تبلت (Jetpack Compose) |
-| `media-tv/` | `aethernet.media.tv` | Android TV (lean-back، ناوبری با D-pad) |
+| `media/` | `aethermedia` | گوشی / تبلت (Jetpack Compose) |
+| `media-tv/` | `aethermedia.tv` | Android TV (lean-back، ناوبری با D-pad) |
 
 ---
 

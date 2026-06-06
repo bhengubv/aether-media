@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
 using System.Security.Cryptography;
-using AetherNet.Trust.Core;
-using AetherNet.Trust.Verification;
+using AetherMedia.Trust.Core;
+using AetherMedia.Trust.Verification;
 using Xunit;
 
 namespace AetherNet.Trust.Tests;

@@ -109,7 +109,7 @@ CI의 언어 간 픽스처로 검증된 상호 운용 가능한 소셜 패킷을
 ```bash
 git clone https://github.com/bhengubv/aether-media.git
 cd aether-media
-dotnet run --project samples/AetherNet.Media.Demo.Console
+dotnet run --project samples/AetherMedia.Demo.Console
 ```
 
 모든 서브시스템 등록:
@@ -181,8 +181,8 @@ await client.markWatched('a3f9...', 45_000);  // contentHash, ms watched
 ### Python (플러그인)
 
 ```python
-from aethernet_media.plugins.base import AetherNetMediaPlugin
-from aethernet_media.models import MediaContent, MediaReaction
+from aethermedia.plugins.base import AetherNetMediaPlugin
+from aethermedia.models import MediaContent, MediaReaction
 
 class MyPlugin(AetherNetMediaPlugin):
     @property
@@ -203,7 +203,7 @@ class MyPlugin(AetherNetMediaPlugin):
 ### Kotlin (Android / JVM)
 
 ```kotlin
-import aethernet.media.social.SocialGraph
+import aethermedia.social.SocialGraph
 
 val graph = SocialGraph()
 graph.follow("KXJB7-MN2P4")
@@ -216,7 +216,7 @@ println(graph.count)                        // 0
 ### Rust
 
 ```rust
-use aethernet_media::feed::{FeedStore, FeedEntry};
+use aethermedia::feed::{FeedStore, FeedEntry};
 
 let mut store = FeedStore::new(500);
 let entry = FeedEntry {
@@ -256,7 +256,7 @@ print(following) // ["KXJB7-MN2P4"]
 ### C
 
 ```c
-#include "aethernet_media/social.h"
+#include "aethermedia/social.h"
 
 aethernet_social_graph_t *graph = aethernet_social_graph_create();
 aethernet_social_graph_follow(graph, "KXJB7-MN2P4");
@@ -300,20 +300,20 @@ DTN 번들로 방송됩니다. 이를 수신하는 모든 기기 — 직접 또�
 ```
 aether-media/
   src/
-    AetherNet.Media.Core/            도메인 모델 및 인터페이스 (MediaContent, IMediaLibrary 등)
-    AetherNet.Media.Identity/        프로필 관리, 아바타, 프로필 동기화
-    AetherNet.Media.Content/         미디어 라이브러리 스캐너, 메타데이터 확인자, LRU 캐시, 썸네일
-    AetherNet.Media.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
-    AetherNet.Media.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
-    AetherNet.Media.AI/              ContentRanker, ContentModerator, CreatorReputationView
-    AetherNet.Media.DependencyInjection/  AddAetherNetMedia() 확장 + AetherNetMediaBuilder 플루언트 API
-    AetherNet.Media.Desktop/         Windows / Linux / macOS용 LibVLCSharp 통합
+    AetherMedia.Core/            도메인 모델 및 인터페이스 (MediaContent, IMediaLibrary 등)
+    AetherMedia.Identity/        프로필 관리, 아바타, 프로필 동기화
+    AetherMedia.Content/         미디어 라이브러리 스캐너, 메타데이터 확인자, LRU 캐시, 썸네일
+    AetherMedia.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
+    AetherMedia.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
+    AetherMedia.AI/              ContentRanker, ContentModerator, CreatorReputationView
+    AetherMedia.DependencyInjection/  AddAetherNetMedia() 확장 + AetherNetMediaBuilder 플루언트 API
+    AetherMedia.Desktop/         Windows / Linux / macOS용 LibVLCSharp 통합
   samples/
-    AetherNet.Media.Demo.Console/    모든 서브시스템을 보여주는 인터랙티브 콘솔 데모
-    AetherNet.Media.RelayTest/       HTTP 중계 왕복 테스트 (AetherNet.RelayServer 필요)
+    AetherMedia.Demo.Console/    모든 서브시스템을 보여주는 인터랙티브 콘솔 데모
+    AetherMedia.RelayTest/       HTTP 중계 왕복 테스트 (AetherNet.RelayServer 필요)
   tests/
-    AetherNet.Media.Core.Tests/      도메인 모델 및 InMemoryMediaLibrary 단위 테스트
-    AetherNet.Media.Social.Tests/    SocialGraph 및 FeedAggregator 단위 테스트
+    AetherMedia.Core.Tests/      도메인 모델 및 InMemoryMediaLibrary 단위 테스트
+    AetherMedia.Social.Tests/    SocialGraph 및 FeedAggregator 단위 테스트
   typescript/                     TypeScript 웹 플레이어 및 소셜 SDK (@bhengubv/aether-media)
     src/
       player/   AetherNetMediaPlayer (HLS.js + Shaka Player + 네이티브 MSE)
@@ -322,7 +322,7 @@ aether-media/
       streaming/ AetherNetStreamClient
       models/   C# 도메인 모델의 TypeScript 미러
   python/                         Python 플러그인 엔진 및 메타데이터 라이브러리 (PyPI의 aether-media)
-    aethernet_media/
+    aethermedia/
       plugins/  AetherNetMediaPlugin 기본 클래스, PluginHost
       metadata/ 태그 리더/라이터 (mutagen 래퍼)
       cli/      커맨드라인 진입점
@@ -352,7 +352,7 @@ aether-media/
       feed/     피드 모델
       streaming/ 스트림 모델
   c/                              임베디드 대상용 C11 피드 및 소셜 모델
-    include/aethernet_media/         공개 헤더
+    include/aethermedia/         공개 헤더
     src/                          구현체
     tests/                        CTest 기반 테스트 스위트
   android/                        Android Gradle 모듈

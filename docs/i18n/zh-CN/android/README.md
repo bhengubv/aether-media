@@ -10,8 +10,8 @@
 
 | 模块 | 包名 | 目标平台 |
 |--------|---------|--------|
-| `media/` | `aethernet.media` | 手机 / 平板（Jetpack Compose） |
-| `media-tv/` | `aethernet.media.tv` | Android TV（lean-back，方向键导航） |
+| `media/` | `aethermedia` | 手机 / 平板（Jetpack Compose） |
+| `media-tv/` | `aethermedia.tv` | Android TV（lean-back，方向键导航） |
 
 ---
 

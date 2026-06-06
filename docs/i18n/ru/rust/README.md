@@ -49,7 +49,7 @@ cargo bench
 ## Быстрый старт
 
 ```rust
-use aethernet_media::{
+use aethermedia::{
     models::{MediaContent, MediaFeedItem},
     feed::FeedStore,
     social::SocialGraph,
@@ -116,7 +116,7 @@ aether-media = { version = "1.0.0", features = ["player", "ui"] }
 ## Проигрыватель (LibVLC)
 
 ```rust
-use aethernet_media::player::Player;
+use aethermedia::player::Player;
 
 #[tokio::main]
 async fn main() {
@@ -135,7 +135,7 @@ LibVLC должен быть установлен в хост-системе. Ф
 ## Асинхронный стриминг
 
 ```rust
-use aethernet_media::streaming::StreamClient;
+use aethermedia::streaming::StreamClient;
 
 #[tokio::main]
 async fn main() {

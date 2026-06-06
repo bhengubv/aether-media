@@ -75,7 +75,7 @@ This means a creator can publish content while offline on a remote location. The
 
 ## LRU Content Cache
 
-`LruContentCache` in `AetherNet.Media.Content` provides an in-memory content cache with O(1) get, set, and eviction, backed by a doubly-linked list and a hash index.
+`LruContentCache` in `AetherMedia.Content` provides an in-memory content cache with O(1) get, set, and eviction, backed by a doubly-linked list and a hash index.
 
 **Default capacity.** 500 MiB. Configurable at construction time.
 

@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/AetherNet.Vault.Core/AetherNet.Vault.Core.csproj" />
-    <ProjectReference Include="../../src/AetherNet.Vault.ErasureCoding/AetherNet.Vault.ErasureCoding.csproj" />
+    <ProjectReference Include="../../src/AetherMedia.Vault.Core/AetherMedia.Vault.Core.csproj" />
+    <ProjectReference Include="../../src/AetherMedia.Vault.ErasureCoding/AetherMedia.Vault.ErasureCoding.csproj" />
   </ItemGroup>
 
 </Project>

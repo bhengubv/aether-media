@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherMedia.Market.Core</PackageId>
+    <Description>Domain models and interfaces for Aether Market — decentralised peer-to-peer marketplace with Proof-of-Vicinity trust and escrow over the Aether mesh network.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../../src/AetherMedia.Core/AetherMedia.Core.csproj" />
+    <ProjectReference Include="../../../../extensions/aether-space/src/AetherMedia.Space.Core/AetherMedia.Space.Core.csproj" />
+    <ProjectReference Include="../../../../extensions/aether-vault/src/AetherMedia.Vault.Core/AetherMedia.Vault.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <ProjectReference Include="../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <PackageReference Include="AetherNet.Core" Version="1.1.0" />
+  </ItemGroup>
+
+</Project>

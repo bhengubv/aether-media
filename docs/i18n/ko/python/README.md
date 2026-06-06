@@ -40,11 +40,11 @@ pytest
 
 | 모듈 | 설명 |
 |--------|-------------|
-| `aethernet_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
-| `aethernet_media.metadata` | ID3 및 MP4 태그 읽기/쓰기 (Mutagen 사용); NFO XML 스크래핑 |
-| `aethernet_media.playlist` | M3U 및 XSPF 플레이리스트 파싱 및 직렬화 |
-| `aethernet_media.plugins` | 플러그인 호스트 — VLC 스타일 확장 스크립트 로드, 활성화 및 호출 |
-| `aethernet_media.cli` | 커맨드라인 진입점 (`aether-media` 명령) |
+| `aethermedia.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
+| `aethermedia.metadata` | ID3 및 MP4 태그 읽기/쓰기 (Mutagen 사용); NFO XML 스크래핑 |
+| `aethermedia.playlist` | M3U 및 XSPF 플레이리스트 파싱 및 직렬화 |
+| `aethermedia.plugins` | 플러그인 호스트 — VLC 스타일 확장 스크립트 로드, 활성화 및 호출 |
+| `aethermedia.cli` | 커맨드라인 진입점 (`aether-media` 명령) |
 
 ---
 
@@ -53,7 +53,7 @@ pytest
 ### 메타데이터 읽기
 
 ```python
-from aethernet_media.metadata import read_tags
+from aethermedia.metadata import read_tags
 
 tags = read_tags("/media/music/track.mp3")
 print(tags.title)    # "Song Title"
@@ -64,7 +64,7 @@ print(tags.duration) # 213.4 (seconds)
 ### 메타데이터 쓰기
 
 ```python
-from aethernet_media.metadata import write_tags, TagUpdate
+from aethermedia.metadata import write_tags, TagUpdate
 
 write_tags("/media/music/track.mp3", TagUpdate(
     title="Updated Title",
@@ -75,7 +75,7 @@ write_tags("/media/music/track.mp3", TagUpdate(
 ### 플레이리스트 파싱
 
 ```python
-from aethernet_media.playlist import parse_m3u, parse_xspf
+from aethermedia.playlist import parse_m3u, parse_xspf
 
 tracks = parse_m3u("/media/playlists/summer.m3u")
 for track in tracks:
@@ -87,7 +87,7 @@ tracks = parse_xspf("/media/playlists/podcast.xspf")
 ### NFO 파일 스크래핑
 
 ```python
-from aethernet_media.metadata import read_nfo
+from aethermedia.metadata import read_nfo
 
 movie = read_nfo("/media/movies/Inception/Inception.nfo")
 print(movie.title)   # "Inception"
@@ -98,7 +98,7 @@ print(movie.plot)    # "A thief who steals corporate secrets..."
 ### 플러그인 로드
 
 ```python
-from aethernet_media.plugins import PluginHost
+from aethermedia.plugins import PluginHost
 
 host = PluginHost()
 host.load("/path/to/my_plugin.py")
@@ -163,7 +163,7 @@ aether-media plugins activate my_plugin
 ## 모델
 
 ```python
-from aethernet_media.models import MediaContent, MediaProfile, MediaFeedItem
+from aethermedia.models import MediaContent, MediaProfile, MediaFeedItem
 
 content = MediaContent(
     content_hash="sha256abc",
@@ -185,7 +185,7 @@ print(content.is_video)             # True
 
 ```
 python/
-├── aethernet_media/
+├── aethermedia/
 │   ├── __init__.py
 │   ├── models.py            # Domain models
 │   ├── metadata/            # Tag reading/writing, NFO scraping

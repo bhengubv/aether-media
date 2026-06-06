@@ -12,8 +12,8 @@
 
 | الوحدة | الحزمة | الهدف |
 |--------|---------|--------|
-| `media/` | `aethernet.media` | الهاتف / الجهاز اللوحي (Jetpack Compose) |
-| `media-tv/` | `aethernet.media.tv` | Android TV (تنقل بـ D-pad، واجهة lean-back) |
+| `media/` | `aethermedia` | الهاتف / الجهاز اللوحي (Jetpack Compose) |
+| `media-tv/` | `aethermedia.tv` | Android TV (تنقل بـ D-pad، واجهة lean-back) |
 
 ---
 

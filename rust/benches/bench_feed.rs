@@ -1,7 +1,7 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
-use aethernet_media::feed::{FeedAggregator, MediaFeedItem, FEED_CAP};
-use aethernet_media::models::MediaContent;
+use aethermedia::feed::{FeedAggregator, MediaFeedItem, FEED_CAP};
+use aethermedia::models::MediaContent;
 
 fn make_item(i: usize) -> MediaFeedItem {
     MediaFeedItem {

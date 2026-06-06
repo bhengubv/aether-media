@@ -1,4 +1,4 @@
-package aethernet.media.models
+package aethermedia.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

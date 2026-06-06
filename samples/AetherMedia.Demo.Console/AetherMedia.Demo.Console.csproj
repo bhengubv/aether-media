@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Description>
+      Interactive console demo for Aether Media showing all five subsystems:
+      Identity, Content, Social, Streaming, and AI — running fully offline.
+    </Description>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AetherMedia.DependencyInjection\AetherMedia.DependencyInjection.csproj" />
+  </ItemGroup>
+
+  <!-- AetherNet.Core provides IDtnService, IMeshSender, DtnBundle, MeshPacket, PeerInfo -->
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <PackageReference Include="AetherNet.Core" Version="1.1.0" />
+  </ItemGroup>
+
+  <!-- AetherNet.DependencyInjection provides AddAetherNetProtocol() + the in-memory offline service stack -->
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherNet.DependencyInjection/AetherNet.DependencyInjection.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.DependencyInjection/AetherNet.DependencyInjection.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.DependencyInjection/AetherNet.DependencyInjection.csproj')">
+    <PackageReference Include="AetherNet.DependencyInjection" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting"             Version="10.0.0" />
+  </ItemGroup>
+
+</Project>

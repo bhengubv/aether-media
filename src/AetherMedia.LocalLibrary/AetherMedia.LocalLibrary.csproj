@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherMedia.LocalLibrary</PackageId>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Description>
+      Privacy-first local media management for Aether Media — metadata editing,
+      manual and smart collections, and subtitle discovery via OpenSubtitles.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherMedia.Core\AetherMedia.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Same version as AetherMedia.Content — no duplication in restore graph -->
+    <PackageReference Include="TagLibSharp"                           Version="2.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
+  </ItemGroup>
+
+</Project>

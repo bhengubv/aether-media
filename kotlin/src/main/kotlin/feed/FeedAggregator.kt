@@ -1,6 +1,6 @@
-package aethernet.media.feed
+package aethermedia.feed
 
-import aethernet.media.models.MediaFeedItem
+import aethermedia.models.MediaFeedItem
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write

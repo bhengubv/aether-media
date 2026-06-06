@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-using AetherNet.Vault.ErasureCoding;
+using AetherMedia.Vault.ErasureCoding;
 
 namespace AetherNet.Vault.Tests;
 

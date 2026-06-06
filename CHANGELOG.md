@@ -15,7 +15,7 @@ CircleAI surface area for Aether Media.
 
 ### Added
 
-**AI layer (`AetherNet.Media.AI`)**
+**AI layer (`AetherMedia.AI`)**
 - `IRoutePreseeder` — interface for pre-warming AODV routing-table entries
   for feed creators before the user taps on content.
 - `RoutePreseeder` — implementation that uses
@@ -30,7 +30,7 @@ CircleAI surface area for Aether Media.
   - Per-creator and per-route exceptions are swallowed (best-effort).
   - Probe payload hint: 1 KiB (presence probe, not media payload).
 
-**DI (`AetherNet.Media.DependencyInjection`)**
+**DI (`AetherMedia.DependencyInjection`)**
 - `AddAI()` registers `IRoutePreseeder` → `RoutePreseeder` with optional
   `IRoutingService` (silently no-op when routing is absent from the container).
 
@@ -57,7 +57,7 @@ detection, and per-segment AI transport-bias in the ABR controller.
 
 ### Added
 
-**AI layer (`AetherNet.Media.AI`)**
+**AI layer (`AetherMedia.AI`)**
 - `IWatchHistoryStore` — interface for recording and retrieving per-viewer
   content completion rates.
 - `InMemoryWatchHistoryStore` — thread-safe, insertion-ordered EWMA
@@ -73,13 +73,13 @@ detection, and per-segment AI transport-bias in the ABR controller.
   20 events / 30 s; all other social packet types threshold 5 events / 60 s.
   Operates independently of AI availability.
 
-**Streaming layer (`AetherNet.Media.Streaming`)**
+**Streaming layer (`AetherMedia.Streaming`)**
 - `AbrController` now accepts an optional `IAetherNetAiProvider` dependency.
   Transport biases are fetched at most once every 5 s, averaged, clamped to
   [0.5, 1.5], and applied to the raw bandwidth sample before the EMA update.
   Falls back to neutral (1.0) when AI is unavailable or throws.
 
-**DI (`AetherNet.Media.DependencyInjection`)**
+**DI (`AetherMedia.DependencyInjection`)**
 - `AddAI()` registers `IWatchHistoryStore` → `InMemoryWatchHistoryStore` and
   wires the updated `ContentRanker` constructor.
 - `AddStreaming()` passes `IAetherNetAiProvider` (optional) into `AbrController`.
@@ -106,7 +106,7 @@ respective package registries from a single CI/CD pipeline.
 
 ### Added
 
-**Core domain (`AetherNet.Media.Core`)**
+**Core domain (`AetherMedia.Core`)**
 - `MediaContent` — immutable record keyed by SHA-256 `ContentHash`; computed
   `IsVideo`, `IsAudio`, `FormattedDuration` properties
 - `MediaFeedItem` — content + reaction counts + watch count
@@ -117,7 +117,7 @@ respective package registries from a single CI/CD pipeline.
 - `IMediaLibrary`, `IMediaFeed`, `IMediaPlayer`, `IContentNode`,
   `ICreatorChannel` — core interface contracts
 
-**Social layer (`AetherNet.Media.Social`)**
+**Social layer (`AetherMedia.Social`)**
 - `FeedAggregator` — thread-safe, capped at 500 items, deduplicates by
   `ContentHash`, subscribes to `IStreamingService.StreamAnnounced` and
   `IContentService.ContentAnnounced`
@@ -127,7 +127,7 @@ respective package registries from a single CI/CD pipeline.
   `IHandshakeService.PeerNegotiated`
 - DTN-backed follow gossip via `IDtnService.CreateBundleAsync`
 
-**Streaming layer (`AetherNet.Media.Streaming`)**
+**Streaming layer (`AetherMedia.Streaming`)**
 - `ILiveStreamPublisher` — captures encoded frames, feeds `IStreamingService`
 - `IWatchPartyCoordinator` — manages invite flow, latency compensation,
   reaction overlay
@@ -136,7 +136,7 @@ respective package registries from a single CI/CD pipeline.
 - Full leverage of `IStreamingService`, `IWatchTogetherService`,
   `IVideoCallService`, `IGroupVideoService`
 
-**Content layer (`AetherNet.Media.Content`)**
+**Content layer (`AetherMedia.Content`)**
 - `IMediaLibraryScanner` — indexes local files into `ContentDescriptor` records
 - `IContentCache` — LRU cache with 500 MiB default capacity
 - `IThumbnailService` — extracts and distributes video thumbnails by hash
@@ -144,12 +144,12 @@ respective package registries from a single CI/CD pipeline.
 - Hash-verified P2P distribution via `IContentService`; BitTorrent metadata
   via `IWatchTogetherService.BroadcastTorrentAsync`
 
-**Identity layer (`AetherNet.Media.Identity`)**
+**Identity layer (`AetherMedia.Identity`)**
 - `IProfileService` — create / update / fetch `MediaProfile`
 - `IProfileSyncService` — gossips profile updates via `ProfileSync(23)` packet
 - `IAvatarService` — distributes avatars as `IContentService` chunks
 
-**AI layer (`AetherNet.Media.AI`)**
+**AI layer (`AetherMedia.AI`)**
 - `IContentRanker` — scores feed items using reputation + CircleAI bias +
   watch history; degrades gracefully to reputation-only when
   `IAetherNetAiProvider.IsAvailable` is `false`
@@ -158,16 +158,16 @@ respective package registries from a single CI/CD pipeline.
 - `IContentModerator` — flags content from low-reputation or high-threat nodes
   via `IAetherNetAiProvider.AssessThreatAsync`
 
-**Local library (`AetherNet.Media.LocalLibrary`)**
+**Local library (`AetherMedia.LocalLibrary`)**
 - Scanner, watcher, and LRU cache for the local media library
 
-**Reel layer (`AetherNet.Media.Reel`)**
+**Reel layer (`AetherMedia.Reel`)**
 - Short-form vertical video feed (TikTok-style) built on `FeedAggregator`
 
-**Distribution layer (`AetherNet.Media.Distribution`)**
+**Distribution layer (`AetherMedia.Distribution`)**
 - P2P chunk scheduling and reassembly coordinator
 
-**DI wiring (`AetherNet.Media.DependencyInjection`)**
+**DI wiring (`AetherMedia.DependencyInjection`)**
 - `services.AddAetherNetMedia()` fluent builder:
   ```csharp
   services.AddAetherNetMedia(aether =>
@@ -189,11 +189,11 @@ respective package registries from a single CI/CD pipeline.
 - `android/media-tv/` — Android TV lean-back variant (D-pad navigation)
 
 **Platform applications**
-- `AetherNet.Media.Desktop` — Avalonia MVVM desktop (Windows, Linux, macOS)
+- `AetherMedia.Desktop` — Avalonia MVVM desktop (Windows, Linux, macOS)
   with LibVLCSharp VideoView, NativeControlHost overlay pattern,
   MeshStatusBar showing transport / peer count / bandwidth / AetherNetTag
-- `AetherNet.Media.Mobile` — .NET MAUI cross-platform mobile shell
-- `AetherNet.Media.Web` — Blazor web player
+- `AetherMedia.Mobile` — .NET MAUI cross-platform mobile shell
+- `AetherMedia.Web` — Blazor web player
 
 **TypeScript web player**
 - HLS.js + Shaka Player integration

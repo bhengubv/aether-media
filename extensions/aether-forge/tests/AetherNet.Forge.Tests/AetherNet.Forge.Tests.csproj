@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/AetherNet.Forge.Core/AetherNet.Forge.Core.csproj" />
-    <ProjectReference Include="../../src/AetherNet.Forge.Proxy/AetherNet.Forge.Proxy.csproj" />
+    <ProjectReference Include="../../src/AetherMedia.Forge.Core/AetherMedia.Forge.Core.csproj" />
+    <ProjectReference Include="../../src/AetherMedia.Forge.Proxy/AetherMedia.Forge.Proxy.csproj" />
   </ItemGroup>
 
 </Project>

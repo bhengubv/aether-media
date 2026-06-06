@@ -1,6 +1,6 @@
-use aethernet_media::feed::{FeedAggregator, MediaFeedItem};
-use aethernet_media::models::{MediaContent, MediaReaction, MediaReactionType, MediaProfile};
-use aethernet_media::social::SocialGraph;
+use aethermedia::feed::{FeedAggregator, MediaFeedItem};
+use aethermedia::models::{MediaContent, MediaReaction, MediaReactionType, MediaProfile};
+use aethermedia::social::SocialGraph;
 
 fn main() {
     // ── Social graph demo ────────────────────────────────────────────────────

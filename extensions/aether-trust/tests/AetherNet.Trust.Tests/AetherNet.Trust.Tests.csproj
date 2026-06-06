@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/AetherNet.Trust.Verification/AetherNet.Trust.Verification.csproj" />
+    <ProjectReference Include="../../src/AetherMedia.Trust.Verification/AetherMedia.Trust.Verification.csproj" />
   </ItemGroup>
 
 </Project>

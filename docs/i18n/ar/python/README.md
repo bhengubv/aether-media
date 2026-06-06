@@ -42,11 +42,11 @@ pytest
 
 | الوحدة | الوصف |
 |--------|-------------|
-| `aethernet_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
-| `aethernet_media.metadata` | قراءة وكتابة وسوم ID3 وMP4 (عبر Mutagen)؛ استخراج XML من ملفات NFO |
-| `aethernet_media.playlist` | تحليل وتسلسل قوائم التشغيل M3U وXSPF |
-| `aethernet_media.plugins` | مضيف المكوّنات الإضافية — تحميل وتفعيل واستدعاء نصوص VLC-style |
-| `aethernet_media.cli` | نقطة دخول سطر الأوامر (أمر `aether-media`) |
+| `aethermedia.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
+| `aethermedia.metadata` | قراءة وكتابة وسوم ID3 وMP4 (عبر Mutagen)؛ استخراج XML من ملفات NFO |
+| `aethermedia.playlist` | تحليل وتسلسل قوائم التشغيل M3U وXSPF |
+| `aethermedia.plugins` | مضيف المكوّنات الإضافية — تحميل وتفعيل واستدعاء نصوص VLC-style |
+| `aethermedia.cli` | نقطة دخول سطر الأوامر (أمر `aether-media`) |
 
 ---
 
@@ -55,7 +55,7 @@ pytest
 ### قراءة البيانات الوصفية
 
 ```python
-from aethernet_media.metadata import read_tags
+from aethermedia.metadata import read_tags
 
 tags = read_tags("/media/music/track.mp3")
 print(tags.title)    # "Song Title"
@@ -66,7 +66,7 @@ print(tags.duration) # 213.4 (seconds)
 ### كتابة البيانات الوصفية
 
 ```python
-from aethernet_media.metadata import write_tags, TagUpdate
+from aethermedia.metadata import write_tags, TagUpdate
 
 write_tags("/media/music/track.mp3", TagUpdate(
     title="Updated Title",
@@ -77,7 +77,7 @@ write_tags("/media/music/track.mp3", TagUpdate(
 ### تحليل قائمة تشغيل
 
 ```python
-from aethernet_media.playlist import parse_m3u, parse_xspf
+from aethermedia.playlist import parse_m3u, parse_xspf
 
 tracks = parse_m3u("/media/playlists/summer.m3u")
 for track in tracks:
@@ -89,7 +89,7 @@ tracks = parse_xspf("/media/playlists/podcast.xspf")
 ### استخراج ملف NFO
 
 ```python
-from aethernet_media.metadata import read_nfo
+from aethermedia.metadata import read_nfo
 
 movie = read_nfo("/media/movies/Inception/Inception.nfo")
 print(movie.title)   # "Inception"
@@ -100,7 +100,7 @@ print(movie.plot)    # "A thief who steals corporate secrets..."
 ### تحميل مكوّن إضافي
 
 ```python
-from aethernet_media.plugins import PluginHost
+from aethermedia.plugins import PluginHost
 
 host = PluginHost()
 host.load("/path/to/my_plugin.py")
@@ -165,7 +165,7 @@ aether-media plugins activate my_plugin
 ## النماذج
 
 ```python
-from aethernet_media.models import MediaContent, MediaProfile, MediaFeedItem
+from aethermedia.models import MediaContent, MediaProfile, MediaFeedItem
 
 content = MediaContent(
     content_hash="sha256abc",
@@ -187,7 +187,7 @@ print(content.is_video)             # True
 
 ```
 python/
-├── aethernet_media/
+├── aethermedia/
 │   ├── __init__.py
 │   ├── models.py            # Domain models
 │   ├── metadata/            # Tag reading/writing, NFO scraping

@@ -107,7 +107,7 @@ Aether Mediaはエコシステム内のすべてのプラットフォームで�
 ```bash
 git clone https://github.com/bhengubv/aether-media.git
 cd aether-media
-dotnet run --project samples/AetherNet.Media.Demo.Console
+dotnet run --project samples/AetherMedia.Demo.Console
 ```
 
 全サブシステムを登録:
@@ -179,8 +179,8 @@ await client.markWatched('a3f9...', 45_000);  // contentHash, 視聴時間(ms)
 ### Python（プラグイン）
 
 ```python
-from aethernet_media.plugins.base import AetherNetMediaPlugin
-from aethernet_media.models import MediaContent, MediaReaction
+from aethermedia.plugins.base import AetherNetMediaPlugin
+from aethermedia.models import MediaContent, MediaReaction
 
 class MyPlugin(AetherNetMediaPlugin):
     @property
@@ -201,7 +201,7 @@ class MyPlugin(AetherNetMediaPlugin):
 ### Kotlin（Android / JVM）
 
 ```kotlin
-import aethernet.media.social.SocialGraph
+import aethermedia.social.SocialGraph
 
 val graph = SocialGraph()
 graph.follow("KXJB7-MN2P4")
@@ -214,7 +214,7 @@ println(graph.count)                        // 0
 ### Rust
 
 ```rust
-use aethernet_media::feed::{FeedStore, FeedEntry};
+use aethermedia::feed::{FeedStore, FeedEntry};
 
 let mut store = FeedStore::new(500);
 let entry = FeedEntry {
@@ -254,7 +254,7 @@ print(following) // ["KXJB7-MN2P4"]
 ### C
 
 ```c
-#include "aethernet_media/social.h"
+#include "aethermedia/social.h"
 
 aethernet_social_graph_t *graph = aethernet_social_graph_create();
 aethernet_social_graph_follow(graph, "KXJB7-MN2P4");
@@ -283,20 +283,20 @@ aethernet_social_graph_destroy(graph);
 ```
 aether-media/
   src/
-    AetherNet.Media.Core/            ドメインモデルとインターフェース (MediaContent, IMediaLibrary等)
-    AetherNet.Media.Identity/        プロフィール管理、アバター、プロフィール同期
-    AetherNet.Media.Content/         メディアライブラリスキャナー、メタデータリゾルバー、LRUキャッシュ、サムネイル
-    AetherNet.Media.Social/          SocialGraph、FeedAggregator、ReactionService、DiscoveryService
-    AetherNet.Media.Streaming/       LiveStreamPublisher、WatchPartyCoordinator、AbrController
-    AetherNet.Media.AI/              ContentRanker、ContentModerator、CreatorReputationView
-    AetherNet.Media.DependencyInjection/  AddAetherNetMedia()拡張 + AetherNetMediaBuilderフルエントAPI
-    AetherNet.Media.Desktop/         Windows / Linux / macOS用LibVLCSharp統合
+    AetherMedia.Core/            ドメインモデルとインターフェース (MediaContent, IMediaLibrary等)
+    AetherMedia.Identity/        プロフィール管理、アバター、プロフィール同期
+    AetherMedia.Content/         メディアライブラリスキャナー、メタデータリゾルバー、LRUキャッシュ、サムネイル
+    AetherMedia.Social/          SocialGraph、FeedAggregator、ReactionService、DiscoveryService
+    AetherMedia.Streaming/       LiveStreamPublisher、WatchPartyCoordinator、AbrController
+    AetherMedia.AI/              ContentRanker、ContentModerator、CreatorReputationView
+    AetherMedia.DependencyInjection/  AddAetherNetMedia()拡張 + AetherNetMediaBuilderフルエントAPI
+    AetherMedia.Desktop/         Windows / Linux / macOS用LibVLCSharp統合
   samples/
-    AetherNet.Media.Demo.Console/    全サブシステムを示すインタラクティブコンソールデモ
-    AetherNet.Media.RelayTest/       HTTPリレーラウンドトリップテスト（AetherNet.RelayServerが必要）
+    AetherMedia.Demo.Console/    全サブシステムを示すインタラクティブコンソールデモ
+    AetherMedia.RelayTest/       HTTPリレーラウンドトリップテスト（AetherNet.RelayServerが必要）
   tests/
-    AetherNet.Media.Core.Tests/      ドメインモデルとInMemoryMediaLibraryのユニットテスト
-    AetherNet.Media.Social.Tests/    SocialGraphとFeedAggregatorのユニットテスト
+    AetherMedia.Core.Tests/      ドメインモデルとInMemoryMediaLibraryのユニットテスト
+    AetherMedia.Social.Tests/    SocialGraphとFeedAggregatorのユニットテスト
   typescript/                     TypeScript Webプレイヤーとソーシャルアプリ (@bhengubv/aether-media)
     src/
       player/   AetherNetMediaPlayer (HLS.js + Shaka Player + ネイティブMSE)
@@ -305,7 +305,7 @@ aether-media/
       streaming/ AetherNetStreamClient
       models/   C#ドメインモデルのTypeScriptミラー
   python/                         Pythonプラグインエンジンとメタデータライブラリ（PyPI上のaether-media）
-    aethernet_media/
+    aethermedia/
       plugins/  AetherNetMediaPluginベースクラス、PluginHost
       metadata/ タグリーダー/ライター（mutagenラッパー）
       cli/      コマンドラインエントリーポイント
@@ -335,7 +335,7 @@ aether-media/
       feed/     フィードモデル
       streaming/ ストリームモデル
   c/                              組み込みターゲット向けC11フィードとソーシャルモデル
-    include/aethernet_media/         公開ヘッダー
+    include/aethermedia/         公開ヘッダー
     src/                          実装
     tests/                        CTestベースのテストスイート
   android/                        Android Gradleモジュール

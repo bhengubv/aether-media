@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-using AetherNet.Space.Core;
+using AetherMedia.Space.Core;
 
 namespace AetherNet.Space.Tests;
 

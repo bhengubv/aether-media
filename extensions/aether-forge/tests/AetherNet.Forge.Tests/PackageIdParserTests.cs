@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-using AetherNet.Forge.Core;
+using AetherMedia.Forge.Core;
 
 namespace AetherNet.Forge.Tests;
 

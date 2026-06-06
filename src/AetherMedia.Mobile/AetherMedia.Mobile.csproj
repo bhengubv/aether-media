@@ -1,0 +1,89 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst;net10.0-windows10.0.19041.0</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AetherMedia.Mobile</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <IsPackable>false</IsPackable>
+
+    <!-- Display name -->
+    <ApplicationTitle>Aether Media</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.bhengubv.aethermedia</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+    <!-- BlazorWebView requires Android 23+ (Android 6.0 Marshmallow) -->
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+
+    <!-- Unpackaged Windows app — no MSIX manifest required -->
+    <WindowsPackageType>None</WindowsPackageType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MauiIcon    Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#1A1A2E" />
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#1A1A2E" BaseSize="128,128" />
+    <MauiFont    Include="Resources\Fonts\*" />
+    <MauiImage   Include="Resources\Images\*" />
+    <MauiAsset   Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- Static web assets from the RCL are bundled manually as MAUI assets.
+       The BlazorWebView serves them under _content/AetherMedia.UI.Shared/... -->
+  <ItemGroup>
+    <MauiAsset Include="..\AetherMedia.UI.Shared\wwwroot\**\*"
+               Link="wwwroot\_content\AetherMedia.UI.Shared\%(RecursiveDir)%(Filename)%(Extension)"
+               TargetPath="wwwroot\_content\AetherMedia.UI.Shared\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls"                              Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui"         Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug"                   Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherMedia.UI.Shared\AetherMedia.UI.Shared.csproj" />
+    <ProjectReference Include="..\AetherMedia.DependencyInjection\AetherMedia.DependencyInjection.csproj" />
+  </ItemGroup>
+
+  <!--
+    Microsoft.AspNetCore.Components.WebView.Maui (10.0.0) references targets and tasks that are
+    only available in Microsoft.NET.Sdk.Web. Since this is a MAUI project (Microsoft.NET.Sdk),
+    we stub the missing pieces:
+
+    1. Three no-op targets satisfy the DependsOnTargets list on ConvertStaticWebAssetsToMauiAssets.
+    2. A RoslynCodeTaskFactory inline task provides a no-op ComputeStaticWebAssetsTargetPaths —
+       the real task (which copies RCL assets to output) is not needed because we already
+       declared the RCL's wwwroot as explicit MauiAsset items above.
+  -->
+  <Target Name="StaticWebAssetsPrepareForRun" />
+  <Target Name="StaticWebAssetsPrepareForPublish" />
+  <Target Name="LoadStaticWebAssetsPublishManifest" />
+
+  <UsingTask
+    TaskName="ComputeStaticWebAssetsTargetPaths"
+    TaskFactory="RoslynCodeTaskFactory"
+    AssemblyFile="$(MSBuildBinPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Assets         ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="false" />
+      <PathPrefix     ParameterType="System.String"                          Required="false" />
+      <UsePathBase    ParameterType="System.Boolean"                         Required="false" />
+      <AssetsWithTargetPath ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        // No-op: RCL static web assets are bundled via explicit MauiAsset items.
+        AssetsWithTargetPath = System.Array.Empty<Microsoft.Build.Framework.ITaskItem>();
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+</Project>
