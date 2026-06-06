@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Description>AetherNet Media — audio depth: loudness normalization (ITU-R BS.1770 / EBU R128 / ReplayGain), equalizer, DSP chain, crossfade, visualization. The Winamp lesson made real for the streaming-and-mesh age.</Description>
+    <PackageTags>aether;aethernet;media;audio;loudness;replaygain;ebu-r128;equalizer;dsp;crossfade</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AetherNet.Core" Version="1.1.0" />
+  </ItemGroup>
+</Project>

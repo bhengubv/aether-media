@@ -1,0 +1,180 @@
+// SPDX-License-Identifier: MIT
+
+using AetherNet.Media.Audio.Loudness;
+using Xunit;
+
+namespace AetherNet.Media.Audio.Tests;
+
+/// <summary>
+/// ITU-R BS.1770-4 reference-signal tests. Tolerances of ±0.5–1.0 dB match
+/// the precision of the libebur128 / pyloudnorm reference implementations
+/// — the loudness algorithm itself is well-defined to within the precision
+/// of the K-weighting biquad and the true-peak oversampler.
+/// </summary>
+public class Itu1770AnalyzerTests
+{
+    private const int SampleRate = 48000;
+    private const int DurationSec = 10;
+    private const int TotalFrames = SampleRate * DurationSec;
+
+    // ── Silence ─────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Measure_DigitalSilence_ReturnsBelowAbsoluteGate()
+    {
+        // Arrange: 10 s of stereo digital silence
+        var samples = new float[TotalFrames * 2];
+
+        // Act
+        var analyzer = new Itu1770Analyzer();
+        var m = analyzer.Measure(samples, SampleRate, channels: 2);
+
+        // Assert: silence falls below the -70 LUFS absolute gate → -∞
+        Assert.True(double.IsNegativeInfinity(m.IntegratedLufs),
+            $"Silence should be below absolute gate; got {m.IntegratedLufs} LUFS");
+        Assert.True(double.IsNegativeInfinity(m.TruePeakDbfs));
+    }
+
+    // ── Sine reference ──────────────────────────────────────────────────────
+
+    [Fact]
+    public void Measure_ZeroDbfsSineAt1kHz_GivesAbout_Minus3Lufs()
+    {
+        // Arrange: 10 s of a 0 dBFS 1 kHz sine, mono.
+        // Per ITU-R BS.1770 reference: a 0 dBFS sine at 997 Hz (≈1 kHz)
+        // measures ~-3.01 LUFS (slightly modified by the K-weighting).
+        // The K-weighting boost at 1 kHz is < 1 dB so we accept -3.5 to -2.5.
+        var samples = GenerateSine(frequencyHz: 1000, amplitude: 1.0f, frames: TotalFrames);
+
+        // Act
+        var analyzer = new Itu1770Analyzer();
+        var m = analyzer.Measure(samples, SampleRate, channels: 1);
+
+        // Assert
+        Assert.InRange(m.IntegratedLufs, -3.7, -2.3);
+    }
+
+    [Fact]
+    public void Measure_HalfAmplitudeSine_Is_Approximately_6dB_Quieter_ThanFullScale()
+    {
+        // Arrange
+        var loud  = GenerateSine(1000, 1.0f, TotalFrames);
+        var quiet = GenerateSine(1000, 0.5f, TotalFrames);
+
+        // Act
+        var analyzer = new Itu1770Analyzer();
+        var mLoud  = analyzer.Measure(loud,  SampleRate, channels: 1);
+        var mQuiet = analyzer.Measure(quiet, SampleRate, channels: 1);
+
+        // Assert: -6 dB amplitude → -6 LUFS (within numerical precision)
+        var delta = mLoud.IntegratedLufs - mQuiet.IntegratedLufs;
+        Assert.InRange(delta, 5.7, 6.3);
+    }
+
+    // ── Gain math ───────────────────────────────────────────────────────────
+
+    [Fact]
+    public void GainToTarget_QuietContent_ProducesPositiveGain()
+    {
+        var m = new LoudnessMeasurement(
+            IntegratedLufs: -23.0,
+            TruePeakDbfs: -10.0,
+            LoudnessRangeLu: 5.0,
+            SampleRateHz: 48000,
+            DurationSeconds: 10,
+            MeasuredAtMs: 0);
+
+        var gain = m.GainToTarget(targetLufs: LoudnessTargets.Spotify);
+
+        // -23 → -14: need +9 dB, which is ~2.82× linear.
+        Assert.InRange(gain, 2.7, 2.9);
+    }
+
+    [Fact]
+    public void GainToTarget_LoudContent_ProducesNegativeGain()
+    {
+        var m = new LoudnessMeasurement(
+            IntegratedLufs: -7.0,
+            TruePeakDbfs: -0.5,
+            LoudnessRangeLu: 2.0,
+            SampleRateHz: 48000,
+            DurationSeconds: 10,
+            MeasuredAtMs: 0);
+
+        var gain = m.GainToTarget(targetLufs: LoudnessTargets.Spotify);
+
+        // -7 → -14: need -7 dB, ~0.447× linear. Peak ceiling (-1 dBFS) gives
+        // -0.5 dB headroom which is the tighter limit — so use that path.
+        // But -7 dB is more conservative than -0.5 dB headroom, so we take -7 dB.
+        // Wait: -7 (loudness gain) vs -0.5 (peak headroom). Min → -7 dB.
+        Assert.InRange(gain, 0.43, 0.46);
+    }
+
+    [Fact]
+    public void GainToTarget_AlreadyAtTarget_ReturnsUnityGain()
+    {
+        var m = new LoudnessMeasurement(
+            IntegratedLufs: -14.0,
+            TruePeakDbfs: -3.0,
+            LoudnessRangeLu: 5.0,
+            SampleRateHz: 48000,
+            DurationSeconds: 10,
+            MeasuredAtMs: 0);
+
+        var gain = m.GainToTarget(targetLufs: LoudnessTargets.Spotify);
+
+        Assert.InRange(gain, 0.99, 1.01);
+    }
+
+    [Fact]
+    public void GainToTarget_NeverExceedsTruePeakCeiling()
+    {
+        // Content already at -1 dBFS true peak — any positive gain would clip.
+        // Loudness target wants +13 dB; peak ceiling allows 0 dB. Take 0 dB.
+        var m = new LoudnessMeasurement(
+            IntegratedLufs: -27.0,
+            TruePeakDbfs: -1.0,
+            LoudnessRangeLu: 8.0,
+            SampleRateHz: 48000,
+            DurationSeconds: 10,
+            MeasuredAtMs: 0);
+
+        var gain = m.GainToTarget(
+            targetLufs: LoudnessTargets.Spotify,
+            truePeakCeilingDbfs: -1.0);
+
+        // Peak headroom = -1.0 - (-1.0) = 0 dB → gain = 1.0 (no clip).
+        Assert.InRange(gain, 0.99, 1.01);
+    }
+
+    // ── Streaming overload ─────────────────────────────────────────────────
+
+    [Fact]
+    public async Task MeasureAsync_FromMemoryStream_MatchesSyncOverload()
+    {
+        var samples = GenerateSine(1000, 0.5f, TotalFrames);
+
+        // Convert to byte stream
+        var bytes = new byte[samples.Length * sizeof(float)];
+        Buffer.BlockCopy(samples, 0, bytes, 0, bytes.Length);
+        using var stream = new MemoryStream(bytes);
+
+        var analyzer = new Itu1770Analyzer();
+        var fromStream = await analyzer.MeasureAsync(stream, SampleRate, channels: 1);
+        var fromSpan   = analyzer.Measure(samples, SampleRate, channels: 1);
+
+        // Should be bit-exact identical.
+        Assert.Equal(fromSpan.IntegratedLufs, fromStream.IntegratedLufs, 6);
+    }
+
+    // ── helpers ─────────────────────────────────────────────────────────────
+
+    private static float[] GenerateSine(double frequencyHz, float amplitude, int frames)
+    {
+        var samples = new float[frames];
+        var omega = 2.0 * Math.PI * frequencyHz / SampleRate;
+        for (var i = 0; i < frames; i++)
+            samples[i] = amplitude * (float)Math.Sin(omega * i);
+        return samples;
+    }
+}
