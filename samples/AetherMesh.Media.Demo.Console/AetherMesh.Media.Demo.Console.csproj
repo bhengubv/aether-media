@@ -22,7 +22,7 @@
     <ProjectReference Include="../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
-    <PackageReference Include="AetherMesh.Core" Version="1.0.3" />
+    <PackageReference Include="AetherMesh.Core" Version="1.0.4" />
   </ItemGroup>
 
   <!-- AetherMesh.DependencyInjection provides AddAetherMeshProtocol() + the in-memory offline service stack -->
@@ -30,7 +30,7 @@
     <ProjectReference Include="../../../aether-protocol/src/AetherMesh.DependencyInjection/AetherMesh.DependencyInjection.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherMesh.DependencyInjection/AetherMesh.DependencyInjection.csproj')">
-    <PackageReference Include="AetherMesh.DependencyInjection" Version="1.0.3" />
+    <PackageReference Include="AetherMesh.DependencyInjection" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>

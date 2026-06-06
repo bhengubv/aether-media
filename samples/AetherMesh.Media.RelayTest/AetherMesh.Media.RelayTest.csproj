@@ -19,8 +19,8 @@
     <ProjectReference Include="../../../aether-protocol/src/AetherMesh.Transport/AetherMesh.Transport.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
-    <PackageReference Include="AetherMesh.Core"      Version="1.0.3" />
-    <PackageReference Include="AetherMesh.Transport" Version="1.0.3" />
+    <PackageReference Include="AetherMesh.Core"      Version="1.0.4" />
+    <PackageReference Include="AetherMesh.Transport" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>

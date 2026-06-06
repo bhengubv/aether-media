@@ -17,9 +17,9 @@
     <ProjectReference Include="../../../aether-protocol/src/AetherMesh.Voice/AetherMesh.Voice.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
-    <PackageReference Include="AetherMesh.Core"      Version="1.0.3" />
-    <PackageReference Include="AetherMesh.Streaming" Version="1.0.3" />
-    <PackageReference Include="AetherMesh.Voice"     Version="1.0.3" />
+    <PackageReference Include="AetherMesh.Core"      Version="1.0.4" />
+    <PackageReference Include="AetherMesh.Streaming" Version="1.0.4" />
+    <PackageReference Include="AetherMesh.Voice"     Version="1.0.4" />
   </ItemGroup>
 
 </Project>
