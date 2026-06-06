@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "aether.media"
+    namespace = "aethermesh.media"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "aether.media"
+        applicationId = "aethermesh.media"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -54,7 +54,7 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer-hls:1.2.1")
     implementation("androidx.media3:media3-ui:1.2.1")
     // Aether Protocol (resolved from GitHub Packages or local composite build)
-    implementation("dev.aether:aether-protocol-kotlin:1.0.0")
+    implementation("dev.aethermesh:aethermesh-protocol-kotlin:1.0.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
 
     // ── Unit test dependencies ──────────────────────────────────────────────

@@ -1,4 +1,4 @@
-import aether.media.social.SocialGraph
+import aethermesh.media.social.SocialGraph
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

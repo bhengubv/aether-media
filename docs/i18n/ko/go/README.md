@@ -45,7 +45,7 @@ go run ./cmd/aether-media-daemon \
 | 플래그 | 기본값 | 설명 |
 |------|---------|-------------|
 | `--library` | `~/Media` | 로컬 미디어 라이브러리 경로 |
-| `--identity` | `~/.aether/identity.json` | AetherTag 신원 파일 |
+| `--identity` | `~/.aether/identity.json` | AetherMeshTag 신원 파일 |
 | `--transport` | `auto` | 쉼표로 구분된 전송 목록 |
 | `--port` | `7420` | HTTP 릴레이 수신 포트 |
 | `--log-level` | `info` | 로그 상세도 (`debug`, `info`, `warn`, `error`) |
@@ -63,7 +63,7 @@ Commands:
   feed          Browse the content feed from followed creators
   play <hash>   Play content by SHA-256 hash
   search <q>    Search the local library
-  follow <tag>  Follow a creator by AetherTag
+  follow <tag>  Follow a creator by AetherMeshTag
   library       List local media files
   quit
 ```
@@ -84,7 +84,7 @@ go run ./cmd/wire-roundtrip
 |---------|-------------|
 | `models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
 | `feed` | `FeedAggregator` — 최대 500개 항목, 콘텐츠 해시로 중복 제거 |
-| `social` | `SocialGraph` — AetherTag UHID로 팔로우/언팔로우 |
+| `social` | `SocialGraph` — AetherMeshTag UHID로 팔로우/언팔로우 |
 | `streaming` | Aether `IStreamingService` 클라이언트 및 라이브 스트림 구독 |
 | `player` | 오디오/비디오 재생을 위한 LibVLC cgo 바인딩 |
 

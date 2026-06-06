@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "aether-media"
+name = "aethermesh-media"
 version = "1.0.0"
 dependencies = [
  "criterion",

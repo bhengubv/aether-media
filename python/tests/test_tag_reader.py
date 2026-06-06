@@ -1,4 +1,4 @@
-"""Tests for aether_media.metadata.tag_reader."""
+"""Tests for aethermesh_media.metadata.tag_reader."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch, PropertyMock
 
 import pytest
 
-from aether_media.metadata.tag_reader import _first_str, _parse_track_number, read_tags
+from aethermesh_media.metadata.tag_reader import _first_str, _parse_track_number, read_tags
 
 
 # ── _first_str ────────────────────────────────────────────────────────────────
@@ -78,8 +78,8 @@ def test_read_tags_raises_when_file_missing():
 
 # ── read_tags — mutagen returns None ─────────────────────────────────────────
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile", return_value=None)
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile", return_value=None)
 def test_read_tags_mutagen_none_returns_defaults(mock_file, mock_exists):
     result = read_tags("/fake/file.mp3")
     assert result["title"] is None
@@ -138,9 +138,9 @@ def _make_mp3_mock(
     return audio_mock
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
-@patch("aether_media.metadata.tag_reader.isinstance")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.isinstance")
 def test_read_tags_mp3_basic(mock_isinstance, mock_mutagen_file, mock_exists):
     from mutagen.mp3 import MP3
     from mutagen.mp4 import MP4
@@ -216,8 +216,8 @@ def _build_mp3_audio(duration=180.0, title="My Song", artist="Artist",
     return audio
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_mp3_full(mock_mutagen_file, mock_exists):
     from mutagen.mp3 import MP3
 
@@ -239,8 +239,8 @@ def test_read_tags_mp3_full(mock_mutagen_file, mock_exists):
     assert result["artwork_bytes"] is None
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_mp3_with_artwork(mock_mutagen_file, mock_exists):
     from mutagen.mp3 import MP3
 
@@ -252,8 +252,8 @@ def test_read_tags_mp3_with_artwork(mock_mutagen_file, mock_exists):
     assert result["artwork_bytes"] == raw_art
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_mp3_no_tags(mock_mutagen_file, mock_exists):
     from mutagen.mp3 import MP3
 
@@ -271,8 +271,8 @@ def test_read_tags_mp3_no_tags(mock_mutagen_file, mock_exists):
 
 # ── read_tags — MP4 ───────────────────────────────────────────────────────────
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_mp4_basic(mock_mutagen_file, mock_exists):
     from mutagen.mp4 import MP4, MP4Cover
 
@@ -304,8 +304,8 @@ def test_read_tags_mp4_basic(mock_mutagen_file, mock_exists):
     assert result["year"] == 2022
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_mp4_with_cover(mock_mutagen_file, mock_exists):
     from mutagen.mp4 import MP4, MP4Cover
 
@@ -330,7 +330,7 @@ def test_read_tags_mp4_with_cover(mock_mutagen_file, mock_exists):
     audio.tags.get = lambda k: tag_data.get(k)
 
     # Make isinstance(cover_obj, MP4Cover) return True
-    with patch("aether_media.metadata.tag_reader.MP4Cover", _FakeCover):
+    with patch("aethermesh_media.metadata.tag_reader.MP4Cover", _FakeCover):
         mock_mutagen_file.return_value = audio
         result = read_tags("/fake/cover.m4a")
 
@@ -338,8 +338,8 @@ def test_read_tags_mp4_with_cover(mock_mutagen_file, mock_exists):
     assert result["artwork_bytes"] == raw_art
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_mp4_no_tags(mock_mutagen_file, mock_exists):
     from mutagen.mp4 import MP4
 
@@ -356,8 +356,8 @@ def test_read_tags_mp4_no_tags(mock_mutagen_file, mock_exists):
 
 # ── read_tags — FLAC ──────────────────────────────────────────────────────────
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_flac_basic(mock_mutagen_file, mock_exists):
     from mutagen.flac import FLAC
 
@@ -389,8 +389,8 @@ def test_read_tags_flac_basic(mock_mutagen_file, mock_exists):
     assert result["artwork_bytes"] is None
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_flac_with_picture(mock_mutagen_file, mock_exists):
     from mutagen.flac import FLAC, Picture
 
@@ -411,8 +411,8 @@ def test_read_tags_flac_with_picture(mock_mutagen_file, mock_exists):
     assert result["artwork_bytes"] == raw_art
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_flac_year_from_year_tag(mock_mutagen_file, mock_exists):
     """FLAC can store year in 'year' key instead of 'date'."""
     from mutagen.flac import FLAC
@@ -432,8 +432,8 @@ def test_read_tags_flac_year_from_year_tag(mock_mutagen_file, mock_exists):
     assert result["year"] == 1999
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_flac_no_tags(mock_mutagen_file, mock_exists):
     from mutagen.flac import FLAC
 
@@ -452,8 +452,8 @@ def test_read_tags_flac_no_tags(mock_mutagen_file, mock_exists):
 
 # ── read_tags — Generic / Vorbis (OGG etc.) ───────────────────────────────────
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_generic_vorbis(mock_mutagen_file, mock_exists):
     """A generic mutagen object (not MP3/MP4/FLAC) goes through the generic path."""
     # Use a plain MagicMock (not spec=MP3/MP4/FLAC) so isinstance returns False for all
@@ -484,8 +484,8 @@ def test_read_tags_generic_vorbis(mock_mutagen_file, mock_exists):
     assert result["year"] == 2023
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_generic_no_info(mock_mutagen_file, mock_exists):
     """Audio object with no info attribute returns None duration."""
     audio = MagicMock(spec=[])  # no attributes at all
@@ -496,8 +496,8 @@ def test_read_tags_generic_no_info(mock_mutagen_file, mock_exists):
     assert result["duration_ms"] is None
 
 
-@patch("aether_media.metadata.tag_reader.os.path.exists", return_value=True)
-@patch("aether_media.metadata.tag_reader.MutagenFile")
+@patch("aethermesh_media.metadata.tag_reader.os.path.exists", return_value=True)
+@patch("aethermesh_media.metadata.tag_reader.MutagenFile")
 def test_read_tags_generic_year_from_year_key(mock_mutagen_file, mock_exists):
     """Generic path: falls back to 'year' tag when 'date' is absent."""
     audio = MagicMock()

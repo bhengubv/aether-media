@@ -1,5 +1,5 @@
 [package]
-name = "aether-space"
+name = "aethermesh-space"
 version = "1.0.0"
 edition = "2021"
 description = "Geo-pinned mesh noticeboards for the Aether protocol"

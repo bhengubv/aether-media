@@ -49,7 +49,7 @@ Les benchmarks utilisent Criterion et produisent des résultats HTML dans `targe
 ## Démarrage rapide
 
 ```rust
-use aether_media::{
+use aethermesh_media::{
     models::{MediaContent, MediaFeedItem},
     feed::FeedStore,
     social::SocialGraph,
@@ -116,7 +116,7 @@ Compilé sans aucune fonctionnalité, le crate fournit les modèles, le flux, le
 ## Lecteur (LibVLC)
 
 ```rust
-use aether_media::player::Player;
+use aethermesh_media::player::Player;
 
 #[tokio::main]
 async fn main() {
@@ -135,7 +135,7 @@ LibVLC doit être installé sur le système hôte. L'indicateur de fonctionnalit
 ## Streaming asynchrone
 
 ```rust
-use aether_media::streaming::StreamClient;
+use aethermesh_media::streaming::StreamClient;
 
 #[tokio::main]
 async fn main() {

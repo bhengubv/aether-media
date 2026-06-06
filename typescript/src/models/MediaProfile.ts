@@ -5,7 +5,7 @@ export interface MediaProfile {
   displayName: string;
   avatarHash: string | null;
   bio: string | null;
-  aetherTag: string;
+  aethermeshTag: string;
   followerCount: number;
   followingCount: number;
   contentCount: number;
@@ -21,7 +21,7 @@ export interface MediaProfileWire {
   display_name: string;
   avatar_hash: string | null;
   bio: string | null;
-  aether_tag: string;
+  aethermesh_tag: string;
   follower_count: number;
   following_count: number;
   content_count: number;
@@ -35,7 +35,7 @@ export function toWire(profile: MediaProfile): MediaProfileWire {
     display_name:    profile.displayName,
     avatar_hash:     profile.avatarHash,
     bio:             profile.bio,
-    aether_tag:      profile.aetherTag,
+    aethermesh_tag:      profile.aethermeshTag,
     follower_count:  profile.followerCount,
     following_count: profile.followingCount,
     content_count:   profile.contentCount,
@@ -50,7 +50,7 @@ export function fromWire(obj: MediaProfileWire): MediaProfile {
     displayName:    obj.display_name,
     avatarHash:     obj.avatar_hash,
     bio:            obj.bio,
-    aetherTag:      obj.aether_tag,
+    aethermeshTag:      obj.aethermesh_tag,
     followerCount:  obj.follower_count,
     followingCount: obj.following_count,
     contentCount:   obj.content_count,

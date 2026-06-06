@@ -51,7 +51,7 @@ fi
 PY_OUT=$(cd "$ROOT" && python3 - <<'EOF'
 import json, sys, pathlib
 sys.path.insert(0, 'python')
-from aether_media.models import MediaContent, MediaReaction, MediaProfile
+from aethermesh_media.models import MediaContent, MediaReaction, MediaProfile
 
 golden = pathlib.Path('tests/cross-language/golden')
 c = json.loads((golden / 'media_content.json').read_text())

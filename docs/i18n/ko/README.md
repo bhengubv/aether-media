@@ -71,14 +71,14 @@ Aether Media는 [aether-protocol](https://github.com/bhengubv/aether-protocol) �
 
 | Aether 인터페이스 | 패키지 | Aether Media에서의 사용 방식 |
 |---|---|---|
-| `ITransportService` | `Aether.Transport` | 인코딩된 영상/오디오 프레임, 반응, 팔로우 의도를 메시 (BLE / Wi-Fi Direct / NearLink / LoRa / HTTP 중계)를 통해 전송 |
-| `IStreamingService` | `Aether.Streaming` | 라이브 시작 시 `StreamAnnounce` 방송; `FeedAggregator`가 라이브 스트림 피드 유지를 위해 `StreamAnnounced` 및 `StreamEnded` 이벤트 구독 |
-| `IContentService` | `Aether.Content` | 업로드된 미디어에 대한 `ContentDescriptor` 게시; `FeedAggregator`가 VOD 검색을 위해 `ContentAnnounced` 구독 |
-| `IDtnService` | `Aether.Dtn` | 오프라인 크리에이터에게 팔로우 의도 안정적으로 전달; 번들이 최대 72시간 동안 경로를 기다림 |
-| `IMeshSender` | `Aether.Messaging` | DTN 오버헤드 없이 최선형 언팔로우 패킷과 라이브 반응을 메시를 통해 전송 |
-| `IRoutingService` | `Aether.Routing` | 소셜 패킷의 경로 인식 전달; Ed25519 서명 경로 응답을 갖는 AODV 방식 RREQ/RREP |
-| `SignalProtocolService` | `Aether.Security` | X3DH + Double Ratchet으로 직접 메시지, 프로필 동기화 페이로드, 비공개 채널 콘텐츠를 종단 간 암호화 |
-| `IAdaptiveBitrateController` | `Aether.Streaming` | 활성 전송의 실시간 대역폭 추정을 기반으로 최고 지속 가능한 품질 등급 (H.264 / H.265 / VP8) 선택 |
+| `ITransportService` | `AetherMesh.Transport` | 인코딩된 영상/오디오 프레임, 반응, 팔로우 의도를 메시 (BLE / Wi-Fi Direct / NearLink / LoRa / HTTP 중계)를 통해 전송 |
+| `IStreamingService` | `AetherMesh.Streaming` | 라이브 시작 시 `StreamAnnounce` 방송; `FeedAggregator`가 라이브 스트림 피드 유지를 위해 `StreamAnnounced` 및 `StreamEnded` 이벤트 구독 |
+| `IContentService` | `AetherMesh.Content` | 업로드된 미디어에 대한 `ContentDescriptor` 게시; `FeedAggregator`가 VOD 검색을 위해 `ContentAnnounced` 구독 |
+| `IDtnService` | `AetherMesh.Dtn` | 오프라인 크리에이터에게 팔로우 의도 안정적으로 전달; 번들이 최대 72시간 동안 경로를 기다림 |
+| `IMeshSender` | `AetherMesh.Messaging` | DTN 오버헤드 없이 최선형 언팔로우 패킷과 라이브 반응을 메시를 통해 전송 |
+| `IRoutingService` | `AetherMesh.Routing` | 소셜 패킷의 경로 인식 전달; Ed25519 서명 경로 응답을 갖는 AODV 방식 RREQ/RREP |
+| `SignalProtocolService` | `AetherMesh.Security` | X3DH + Double Ratchet으로 직접 메시지, 프로필 동기화 페이로드, 비공개 채널 콘텐츠를 종단 간 암호화 |
+| `IAdaptiveBitrateController` | `AetherMesh.Streaming` | 활성 전송의 실시간 대역폭 추정을 기반으로 최고 지속 가능한 품질 등급 (H.264 / H.265 / VP8) 선택 |
 
 ---
 
@@ -109,13 +109,13 @@ CI의 언어 간 픽스처로 검증된 상호 운용 가능한 소셜 패킷을
 ```bash
 git clone https://github.com/bhengubv/aether-media.git
 cd aether-media
-dotnet run --project samples/Aether.Media.Demo.Console
+dotnet run --project samples/AetherMesh.Media.Demo.Console
 ```
 
 모든 서브시스템 등록:
 
 ```csharp
-services.AddAetherMedia(media =>
+services.AddAetherMeshMedia(media =>
     media.AddIdentity()
          .AddContent()
          .AddSocial()
@@ -150,10 +150,10 @@ await feed.StartAsync();
 ### TypeScript (브라우저)
 
 ```typescript
-import { AetherMediaPlayer } from '@bhengubv/aether-media';
+import { AetherMeshMediaPlayer } from '@bhengubv/aether-media';
 
 const video  = document.querySelector('video') as HTMLVideoElement;
-const player = new AetherMediaPlayer(video);
+const player = new AetherMeshMediaPlayer(video);
 
 // Load an HLS stream published by a peer on the mesh
 await player.load('aether://stream/KXJB7-MN2P4');
@@ -168,7 +168,7 @@ player.feedSegment(encodedBytes, 'video/mp4; codecs="avc1.42E01E"');
 ```typescript
 import { FeedClient } from '@bhengubv/aether-media';
 
-const client = new FeedClient('https://relay.aether.network/media');
+const client = new FeedClient('https://relay.aethermesh.network/media');
 const items  = await client.getFeed(20, 0);   // limit, offset
 
 for (const item of items) {
@@ -181,10 +181,10 @@ await client.markWatched('a3f9...', 45_000);  // contentHash, ms watched
 ### Python (플러그인)
 
 ```python
-from aether_media.plugins.base import AetherMediaPlugin
-from aether_media.models import MediaContent, MediaReaction
+from aethermesh_media.plugins.base import AetherMeshMediaPlugin
+from aethermesh_media.models import MediaContent, MediaReaction
 
-class MyPlugin(AetherMediaPlugin):
+class MyPlugin(AetherMeshMediaPlugin):
     @property
     def name(self) -> str:
         return "My Plugin"
@@ -203,7 +203,7 @@ class MyPlugin(AetherMediaPlugin):
 ### Kotlin (Android / JVM)
 
 ```kotlin
-import aether.media.social.SocialGraph
+import aethermesh.media.social.SocialGraph
 
 val graph = SocialGraph()
 graph.follow("KXJB7-MN2P4")
@@ -216,7 +216,7 @@ println(graph.count)                        // 0
 ### Rust
 
 ```rust
-use aether_media::feed::{FeedStore, FeedEntry};
+use aethermesh_media::feed::{FeedStore, FeedEntry};
 
 let mut store = FeedStore::new(500);
 let entry = FeedEntry {
@@ -245,7 +245,7 @@ fmt.Println(g.Following())                 // [KXJB7-MN2P4]
 ### Swift
 
 ```swift
-import AetherMedia
+import AetherMeshMedia
 
 let graph = SocialGraph()
 try await graph.follow(uhid: "KXJB7-MN2P4")
@@ -256,12 +256,12 @@ print(following) // ["KXJB7-MN2P4"]
 ### C
 
 ```c
-#include "aether_media/social.h"
+#include "aethermesh_media/social.h"
 
-aether_social_graph_t *graph = aether_social_graph_create();
-aether_social_graph_follow(graph, "KXJB7-MN2P4");
-printf("Following: %d\n", aether_social_graph_is_following(graph, "KXJB7-MN2P4")); // 1
-aether_social_graph_destroy(graph);
+aethermesh_social_graph_t *graph = aethermesh_social_graph_create();
+aethermesh_social_graph_follow(graph, "KXJB7-MN2P4");
+printf("Following: %d\n", aethermesh_social_graph_is_following(graph, "KXJB7-MN2P4")); // 1
+aethermesh_social_graph_destroy(graph);
 ```
 
 ---
@@ -300,30 +300,30 @@ DTN 번들로 방송됩니다. 이를 수신하는 모든 기기 — 직접 또�
 ```
 aether-media/
   src/
-    Aether.Media.Core/            도메인 모델 및 인터페이스 (MediaContent, IMediaLibrary 등)
-    Aether.Media.Identity/        프로필 관리, 아바타, 프로필 동기화
-    Aether.Media.Content/         미디어 라이브러리 스캐너, 메타데이터 확인자, LRU 캐시, 썸네일
-    Aether.Media.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
-    Aether.Media.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
-    Aether.Media.AI/              ContentRanker, ContentModerator, CreatorReputationView
-    Aether.Media.DependencyInjection/  AddAetherMedia() 확장 + AetherMediaBuilder 플루언트 API
-    Aether.Media.Desktop/         Windows / Linux / macOS용 LibVLCSharp 통합
+    AetherMesh.Media.Core/            도메인 모델 및 인터페이스 (MediaContent, IMediaLibrary 등)
+    AetherMesh.Media.Identity/        프로필 관리, 아바타, 프로필 동기화
+    AetherMesh.Media.Content/         미디어 라이브러리 스캐너, 메타데이터 확인자, LRU 캐시, 썸네일
+    AetherMesh.Media.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
+    AetherMesh.Media.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
+    AetherMesh.Media.AI/              ContentRanker, ContentModerator, CreatorReputationView
+    AetherMesh.Media.DependencyInjection/  AddAetherMeshMedia() 확장 + AetherMeshMediaBuilder 플루언트 API
+    AetherMesh.Media.Desktop/         Windows / Linux / macOS용 LibVLCSharp 통합
   samples/
-    Aether.Media.Demo.Console/    모든 서브시스템을 보여주는 인터랙티브 콘솔 데모
-    Aether.Media.RelayTest/       HTTP 중계 왕복 테스트 (Aether.RelayServer 필요)
+    AetherMesh.Media.Demo.Console/    모든 서브시스템을 보여주는 인터랙티브 콘솔 데모
+    AetherMesh.Media.RelayTest/       HTTP 중계 왕복 테스트 (AetherMesh.RelayServer 필요)
   tests/
-    Aether.Media.Core.Tests/      도메인 모델 및 InMemoryMediaLibrary 단위 테스트
-    Aether.Media.Social.Tests/    SocialGraph 및 FeedAggregator 단위 테스트
+    AetherMesh.Media.Core.Tests/      도메인 모델 및 InMemoryMediaLibrary 단위 테스트
+    AetherMesh.Media.Social.Tests/    SocialGraph 및 FeedAggregator 단위 테스트
   typescript/                     TypeScript 웹 플레이어 및 소셜 SDK (@bhengubv/aether-media)
     src/
-      player/   AetherMediaPlayer (HLS.js + Shaka Player + 네이티브 MSE)
+      player/   AetherMeshMediaPlayer (HLS.js + Shaka Player + 네이티브 MSE)
       social/   FeedClient, ReactionClient
       identity/ ProfileClient
-      streaming/ AetherStreamClient
+      streaming/ AetherMeshStreamClient
       models/   C# 도메인 모델의 TypeScript 미러
   python/                         Python 플러그인 엔진 및 메타데이터 라이브러리 (PyPI의 aether-media)
-    aether_media/
-      plugins/  AetherMediaPlugin 기본 클래스, PluginHost
+    aethermesh_media/
+      plugins/  AetherMeshMediaPlugin 기본 클래스, PluginHost
       metadata/ 태그 리더/라이터 (mutagen 래퍼)
       cli/      커맨드라인 진입점
   rust/                           Rust 피드 엔진 (crates.io의 aether-media)
@@ -346,13 +346,13 @@ aether-media/
       streaming/ 스트림 세션 모델
     android/    media3-exoplayer 의존성이 있는 Gradle Android 모듈
   swift/                          Swift / Apple 플랫폼 플레이어 (SwiftPM 패키지)
-    Sources/AetherMedia/
+    Sources/AetherMeshMedia/
       social/   SocialGraph (액터 기반, Swift Concurrency)
       player/   AVFoundation 플레이어
       feed/     피드 모델
       streaming/ 스트림 모델
   c/                              임베디드 대상용 C11 피드 및 소셜 모델
-    include/aether_media/         공개 헤더
+    include/aethermesh_media/         공개 헤더
     src/                          구현체
     tests/                        CTest 기반 테스트 스위트
   android/                        Android Gradle 모듈
@@ -368,7 +368,7 @@ aether-media/
 ### C#
 
 ```bash
-dotnet build AetherMedia.slnx
+dotnet build AetherMeshMedia.slnx
 dotnet test
 ```
 

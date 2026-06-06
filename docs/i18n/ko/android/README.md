@@ -10,8 +10,8 @@ Jetpack Compose와 media3/ExoPlayer를 기반으로 제작된 두 가지 Android
 
 | 모듈 | 패키지 | 대상 |
 |--------|---------|--------|
-| `media/` | `aether.media` | 스마트폰 / 태블릿 (Jetpack Compose) |
-| `media-tv/` | `aether.media.tv` | Android TV (린백, D-패드 탐색) |
+| `media/` | `aethermesh.media` | 스마트폰 / 태블릿 (Jetpack Compose) |
+| `media-tv/` | `aethermesh.media.tv` | Android TV (린백, D-패드 탐색) |
 
 ---
 
@@ -74,7 +74,7 @@ Data Layer     — Aether mesh transport via aether-protocol Android bindings
 | Nearby | 메시로 탐색된 라이브 스트림 (인터넷 불필요) |
 | Library | 로컬 및 다운로드한 미디어 |
 | Watch Together | 현재 진행 중인 같이 보기 세션 |
-| Profile | AetherTag 신원 및 크리에이터 채널 |
+| Profile | AetherMeshTag 신원 및 크리에이터 채널 |
 
 ### 주요 화면 (TV 앱)
 
@@ -120,7 +120,7 @@ aetherClient.handshake.peerNegotiated
 // Host a watch party
 val session = watchTogether.hostAsync(contentHash)
 
-// Guests join by AetherTag
+// Guests join by AetherMeshTag
 watchTogether.joinAsync(hostUhid)
 ```
 

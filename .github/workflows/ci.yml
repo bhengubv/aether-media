@@ -20,17 +20,17 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore
-        run: dotnet restore AetherMedia.slnx
+        run: dotnet restore AetherMeshMedia.slnx
 
       - name: Build
-        run: dotnet build AetherMedia.slnx --no-restore --configuration Release
+        run: dotnet build AetherMeshMedia.slnx --no-restore --configuration Release
 
       - name: Format check (dotnet format)
         continue-on-error: true
-        run: dotnet format AetherMedia.slnx --verify-no-changes
+        run: dotnet format AetherMeshMedia.slnx --verify-no-changes
 
       - name: Test
-        run: dotnet test AetherMedia.slnx --no-build --configuration Release --logger "console;verbosity=normal" --logger "trx;LogFileName=results.trx"
+        run: dotnet test AetherMeshMedia.slnx --no-build --configuration Release --logger "console;verbosity=normal" --logger "trx;LogFileName=results.trx"
 
       - name: Upload test results
         if: always()
@@ -107,7 +107,7 @@ jobs:
         continue-on-error: true
         run: |
           pip install black
-          black --check aether_media/ tests/
+          black --check aethermesh_media/ tests/
 
       - name: Test
         working-directory: python

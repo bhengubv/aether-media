@@ -49,7 +49,7 @@ cargo bench
 ## 빠른 시작
 
 ```rust
-use aether_media::{
+use aethermesh_media::{
     models::{MediaContent, MediaFeedItem},
     feed::FeedStore,
     social::SocialGraph,
@@ -116,7 +116,7 @@ aether-media = { version = "1.0.0", features = ["player", "ui"] }
 ## 플레이어 (LibVLC)
 
 ```rust
-use aether_media::player::Player;
+use aethermesh_media::player::Player;
 
 #[tokio::main]
 async fn main() {
@@ -135,7 +135,7 @@ LibVLC는 호스트 시스템에 설치되어 있어야 합니다. 피처 플래
 ## 비동기 스트리밍
 
 ```rust
-use aether_media::streaming::StreamClient;
+use aethermesh_media::streaming::StreamClient;
 
 #[tokio::main]
 async fn main() {

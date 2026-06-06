@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "aether-forge"
+name = "aethermesh-forge"
 version = "1.0.0"
 description = "Mesh-native package cache proxy for the Aether protocol"
 requires-python = ">=3.11"
@@ -17,4 +17,4 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["aether_forge"]
+packages = ["aethermesh_forge"]

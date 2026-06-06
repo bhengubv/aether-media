@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>AetherMesh.Forge.Core</PackageId>
+    <Description>Domain models and interfaces for Aether Forge — decentralised package-cache proxy for the Aether mesh network.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../../src/AetherMesh.Media.Core/AetherMesh.Media.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
+    <ProjectReference Include="../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
+    <PackageReference Include="AetherMesh.Core" Version="1.0.3" />
+  </ItemGroup>
+
+</Project>

@@ -31,7 +31,7 @@ cd aether-media
 Build all projects in the solution and run the full unit-test suite:
 
 ```bash
-dotnet build AetherMedia.slnx
+dotnet build AetherMeshMedia.slnx
 dotnet test
 ```
 
@@ -101,9 +101,9 @@ ctest --test-dir build
 All Aether Media subsystems are registered through a single extension method on `IServiceCollection`. Each subsystem is opt-in; use only what your application needs.
 
 ```csharp
-using Aether.Media.DependencyInjection;
+using AetherMesh.Media.DependencyInjection;
 
-services.AddAetherMedia(media =>
+services.AddAetherMeshMedia(media =>
     media.AddIdentity()    // IProfileService, IProfileSyncService, IAvatarService
          .AddContent()     // IMediaLibrary, IContentCache, IMetadataResolver,
                            //   IThumbnailService, IMediaLibraryScanner
@@ -113,9 +113,9 @@ services.AddAetherMedia(media =>
          .AddAI());        // IContentRanker, ICreatorReputationView, IContentModerator
 ```
 
-`AddSocial()` depends on `IDtnService` and `IMeshSender` from the `aether-protocol` library. In production, wire these from `Aether.DependencyInjection`. For demos and tests, use the no-op stubs shown below.
+`AddSocial()` depends on `IDtnService` and `IMeshSender` from the `aether-protocol` library. In production, wire these from `AetherMesh.DependencyInjection`. For demos and tests, use the no-op stubs shown below.
 
-All registrations use `TryAddSingleton`, so you can override any service by registering your own implementation before calling `AddAetherMedia`.
+All registrations use `TryAddSingleton`, so you can override any service by registering your own implementation before calling `AddAetherMeshMedia`.
 
 ---
 
@@ -124,7 +124,7 @@ All registrations use `TryAddSingleton`, so you can override any service by regi
 The interactive console demo exercises all five subsystems without a live mesh. It uses no-op stubs for `IDtnService` and `IMeshSender`:
 
 ```bash
-dotnet run --project samples/Aether.Media.Demo.Console
+dotnet run --project samples/AetherMesh.Media.Demo.Console
 ```
 
 Expected output:
@@ -171,13 +171,13 @@ npm run dev
 This starts the Vite dev server (default port 5173). Open `http://localhost:5173` in a browser to see the player. To load a stream:
 
 ```typescript
-import { AetherMediaPlayer } from '@bhengubv/aether-media';
+import { AetherMeshMediaPlayer } from '@bhengubv/aether-media';
 
 const video  = document.querySelector('video') as HTMLVideoElement;
-const player = new AetherMediaPlayer(video);
+const player = new AetherMeshMediaPlayer(video);
 
 // HLS stream via HTTP relay
-await player.load('https://relay.aether.network/media/stream/uhid-alice-0001.m3u8');
+await player.load('https://relay.aethermesh.network/media/stream/uhid-alice-0001.m3u8');
 await player.play();
 
 // Feed raw mesh segments directly into MSE (used when mesh is available)
@@ -189,7 +189,7 @@ To consume the social feed:
 ```typescript
 import { FeedClient } from '@bhengubv/aether-media';
 
-const client = new FeedClient('https://relay.aether.network/media');
+const client = new FeedClient('https://relay.aethermesh.network/media');
 const items  = await client.getFeed(20, 0);   // limit=20, offset=0
 
 for (const item of items) {
@@ -201,10 +201,10 @@ for (const item of items) {
 
 ## Running the Social Protocol Integration Test
 
-The `Aether.Media.Social.Tests` project contains a full end-to-end integration test that verifies the follow → publish → feed flow without any network access. All mesh transport is simulated by in-process fakes.
+The `AetherMesh.Media.Social.Tests` project contains a full end-to-end integration test that verifies the follow → publish → feed flow without any network access. All mesh transport is simulated by in-process fakes.
 
 ```bash
-dotnet test tests/Aether.Media.Social.Tests
+dotnet test tests/AetherMesh.Media.Social.Tests
 ```
 
 The integration test (`SocialProtocolIntegrationTests`) covers:
@@ -220,7 +220,7 @@ The integration test (`SocialProtocolIntegrationTests`) covers:
 Run a specific test by name:
 
 ```bash
-dotnet test tests/Aether.Media.Social.Tests \
+dotnet test tests/AetherMesh.Media.Social.Tests \
   --filter "DisplayName~NodeB publishes content"
 ```
 
@@ -236,14 +236,14 @@ services.AddSingleton<IDtnService, NoOpDtnService>();
 services.AddSingleton<IMeshSender, NoOpMeshSender>();
 
 // Use:
-services.AddAetherProtocol(aether =>
-    aether.AddDtn()
+services.AddAetherMeshProtocol(aether =>
+    aethermesh.AddDtn()
           .AddMesh()
           .AddHandshake()
           .AddStreaming()
           .AddContent());
 
-services.AddAetherMedia(media =>
+services.AddAetherMeshMedia(media =>
     media.AddIdentity()
          .AddContent()
          .AddSocial()

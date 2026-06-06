@@ -1,4 +1,4 @@
-"""Tests for aether_media.cli.__main__."""
+"""Tests for aethermesh_media.cli.__main__."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch, call
 
 import pytest
 
-from aether_media.cli.__main__ import (
+from aethermesh_media.cli.__main__ import (
     cmd_info,
     cmd_playlist,
     cmd_scan,
@@ -22,7 +22,7 @@ from aether_media.cli.__main__ import (
 # ── cmd_scan ──────────────────────────────────────────────────────────────────
 
 def test_cmd_scan_not_a_directory(capsys):
-    with patch("aether_media.cli.__main__.os.path.isdir", return_value=False):
+    with patch("aethermesh_media.cli.__main__.os.path.isdir", return_value=False):
         rc = cmd_scan("/nonexistent/path")
     assert rc == 1
     captured = capsys.readouterr()
@@ -94,7 +94,7 @@ def test_cmd_scan_playlist_files_ignored(tmp_path, capsys):
 # ── cmd_info ──────────────────────────────────────────────────────────────────
 
 def test_cmd_info_file_not_found(capsys):
-    with patch("aether_media.cli.__main__.os.path.isfile", return_value=False):
+    with patch("aethermesh_media.cli.__main__.os.path.isfile", return_value=False):
         rc = cmd_info("/nonexistent/song.mp3")
     assert rc == 1
     captured = capsys.readouterr()
@@ -117,8 +117,8 @@ def test_cmd_info_success(tmp_path, capsys):
         "artwork_bytes": b"fake_art",
     }
 
-    with patch("aether_media.cli.__main__.os.path.isfile", return_value=True), \
-         patch("aether_media.metadata.tag_reader.read_tags", return_value=fake_tags):
+    with patch("aethermesh_media.cli.__main__.os.path.isfile", return_value=True), \
+         patch("aethermesh_media.metadata.tag_reader.read_tags", return_value=fake_tags):
         rc = cmd_info(str(fake_file))
 
     assert rc == 0
@@ -146,8 +146,8 @@ def test_cmd_info_unknown_fields(tmp_path, capsys):
         "artwork_bytes": None,
     }
 
-    with patch("aether_media.cli.__main__.os.path.isfile", return_value=True), \
-         patch("aether_media.metadata.tag_reader.read_tags", return_value=fake_tags):
+    with patch("aethermesh_media.cli.__main__.os.path.isfile", return_value=True), \
+         patch("aethermesh_media.metadata.tag_reader.read_tags", return_value=fake_tags):
         rc = cmd_info(str(fake_file))
 
     assert rc == 0
@@ -172,8 +172,8 @@ def test_cmd_info_duration_over_one_hour(tmp_path, capsys):
         "artwork_bytes": None,
     }
 
-    with patch("aether_media.cli.__main__.os.path.isfile", return_value=True), \
-         patch("aether_media.metadata.tag_reader.read_tags", return_value=fake_tags):
+    with patch("aethermesh_media.cli.__main__.os.path.isfile", return_value=True), \
+         patch("aethermesh_media.metadata.tag_reader.read_tags", return_value=fake_tags):
         rc = cmd_info(str(fake_file))
 
     assert rc == 0
@@ -185,8 +185,8 @@ def test_cmd_info_read_tags_exception(tmp_path, capsys):
     fake_file = tmp_path / "bad.mp3"
     fake_file.write_bytes(b"bad")
 
-    with patch("aether_media.cli.__main__.os.path.isfile", return_value=True), \
-         patch("aether_media.metadata.tag_reader.read_tags",
+    with patch("aethermesh_media.cli.__main__.os.path.isfile", return_value=True), \
+         patch("aethermesh_media.metadata.tag_reader.read_tags",
                side_effect=Exception("corrupt file")):
         rc = cmd_info(str(fake_file))
 
@@ -199,12 +199,12 @@ def test_cmd_info_mutagen_not_installed(tmp_path, capsys):
     fake_file = tmp_path / "song.mp3"
     fake_file.write_bytes(b"fake")
 
-    with patch("aether_media.cli.__main__.os.path.isfile", return_value=True), \
-         patch("aether_media.cli.__main__.read_tags" if False else
-               "aether_media.metadata.tag_reader.read_tags",
+    with patch("aethermesh_media.cli.__main__.os.path.isfile", return_value=True), \
+         patch("aethermesh_media.cli.__main__.read_tags" if False else
+               "aethermesh_media.metadata.tag_reader.read_tags",
                side_effect=ImportError("no module named mutagen")):
         # Simulate ImportError being raised on the import inside cmd_info
-        with patch.dict("sys.modules", {"aether_media.metadata.tag_reader": None}):
+        with patch.dict("sys.modules", {"aethermesh_media.metadata.tag_reader": None}):
             rc = cmd_info(str(fake_file))
 
     # When module import fails, we get ImportError path
@@ -214,7 +214,7 @@ def test_cmd_info_mutagen_not_installed(tmp_path, capsys):
 # ── cmd_playlist — M3U ───────────────────────────────────────────────────────
 
 def test_cmd_playlist_file_not_found(capsys):
-    with patch("aether_media.cli.__main__.os.path.isfile", return_value=False):
+    with patch("aethermesh_media.cli.__main__.os.path.isfile", return_value=False):
         rc = cmd_playlist("/nonexistent/list.m3u")
     assert rc == 1
     captured = capsys.readouterr()
@@ -324,7 +324,7 @@ def test_cmd_playlist_xspf_untitled_track(tmp_path, capsys):
 # ── main() — argparse dispatch ────────────────────────────────────────────────
 
 def test_main_scan_dispatches(tmp_path):
-    with patch("aether_media.cli.__main__.cmd_scan", return_value=0) as mock_scan, \
+    with patch("aethermesh_media.cli.__main__.cmd_scan", return_value=0) as mock_scan, \
          patch("sys.argv", ["aether-media", "scan", str(tmp_path)]), \
          pytest.raises(SystemExit) as exc_info:
         main()
@@ -335,7 +335,7 @@ def test_main_scan_dispatches(tmp_path):
 def test_main_info_dispatches(tmp_path):
     fake = tmp_path / "song.mp3"
     fake.write_bytes(b"x")
-    with patch("aether_media.cli.__main__.cmd_info", return_value=0) as mock_info, \
+    with patch("aethermesh_media.cli.__main__.cmd_info", return_value=0) as mock_info, \
          patch("sys.argv", ["aether-media", "info", str(fake)]), \
          pytest.raises(SystemExit) as exc_info:
         main()
@@ -346,7 +346,7 @@ def test_main_info_dispatches(tmp_path):
 def test_main_playlist_dispatches(tmp_path):
     pl = tmp_path / "list.m3u"
     pl.write_bytes(b"x")
-    with patch("aether_media.cli.__main__.cmd_playlist", return_value=0) as mock_pl, \
+    with patch("aethermesh_media.cli.__main__.cmd_playlist", return_value=0) as mock_pl, \
          patch("sys.argv", ["aether-media", "playlist", str(pl)]), \
          pytest.raises(SystemExit) as exc_info:
         main()
@@ -362,7 +362,7 @@ def test_main_no_command_exits_nonzero():
 
 
 def test_main_scan_returns_exit_code_1(tmp_path):
-    with patch("aether_media.cli.__main__.cmd_scan", return_value=1) as mock_scan, \
+    with patch("aethermesh_media.cli.__main__.cmd_scan", return_value=1) as mock_scan, \
          patch("sys.argv", ["aether-media", "scan", "/bad/path"]), \
          pytest.raises(SystemExit) as exc_info:
         main()

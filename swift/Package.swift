@@ -2,15 +2,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "AetherMedia",
+    name: "AetherMeshMedia",
     platforms: [
         .iOS(.v16),
         .macOS(.v13),
     ],
     products: [
         .library(
-            name: "AetherMedia",
-            targets: ["AetherMedia"]
+            name: "AetherMeshMedia",
+            targets: ["AetherMeshMedia"]
         ),
     ],
     dependencies: [
@@ -18,14 +18,14 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "AetherMedia",
+            name: "AetherMeshMedia",
             dependencies: [],
-            path: "Sources/AetherMedia"
+            path: "Sources/AetherMeshMedia"
         ),
         .testTarget(
-            name: "AetherMediaTests",
-            dependencies: ["AetherMedia"],
-            path: "Tests/AetherMediaTests"
+            name: "AetherMeshMediaTests",
+            dependencies: ["AetherMeshMedia"],
+            path: "Tests/AetherMeshMediaTests"
         ),
     ]
 )

@@ -63,7 +63,7 @@ data class MediaContent(
 
 ### `MediaProfile`
 
-Identidade do criador vinculada a uma AetherTag.
+Identidade do criador vinculada a uma AetherMeshTag.
 
 ```kotlin
 data class MediaProfile(

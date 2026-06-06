@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>AetherMesh.Vault.Core</PackageId>
+    <Description>Domain models and interfaces for Aether Vault — distributed encrypted file storage with erasure coding over the Aether mesh network.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../../src/AetherMesh.Media.Core/AetherMesh.Media.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
+    <ProjectReference Include="../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
+    <PackageReference Include="AetherMesh.Core" Version="1.0.3" />
+  </ItemGroup>
+
+</Project>

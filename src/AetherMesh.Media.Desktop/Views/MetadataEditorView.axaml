@@ -1,0 +1,240 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AetherMesh.Media.Desktop.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AetherMesh.Media.Desktop.Views.MetadataEditorView"
+             x:DataType="vm:MetadataEditorViewModel"
+             x:CompileBindings="False"
+             Background="#13132a">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header bar -->
+        <DockPanel Grid.Row="0" Margin="16,12,16,8">
+            <TextBlock DockPanel.Dock="Left"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       VerticalAlignment="Center">
+                <Run Text="✏  Edit Metadata — "/>
+                <Run Text="{Binding FilePath}"
+                     Foreground="#888"
+                     FontWeight="Normal"
+                     FontSize="12"/>
+            </TextBlock>
+
+            <ProgressBar DockPanel.Dock="Right"
+                         IsVisible="{Binding IsLoading}"
+                         IsIndeterminate="True"
+                         Width="80" Height="3"
+                         Foreground="#2196F3"
+                         Background="Transparent"
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+        </DockPanel>
+
+        <!-- Fields — scrollable -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Hidden"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Margin="0,0,0,8">
+            <StackPanel Margin="16,0" Spacing="10">
+
+                <!-- ── Common: Title + Year ── -->
+                <Grid ColumnDefinitions="*,120">
+                    <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,8,0">
+                        <TextBlock Text="Title" Foreground="#888" FontSize="11"/>
+                        <TextBox Text="{Binding Title}"
+                                 Background="#1e1e38" Foreground="White"
+                                 BorderBrush="#333" BorderThickness="1" CornerRadius="6" Padding="8,6"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock Text="Year" Foreground="#888" FontSize="11"/>
+                        <NumericUpDown Value="{Binding Year}"
+                                       Minimum="0" Maximum="9999"
+                                       Background="#1e1e38" Foreground="White"
+                                       BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                       Padding="8,6" ShowButtonSpinner="False"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- ── Common: Genres ── -->
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Genres (comma-separated)" Foreground="#888" FontSize="11"/>
+                    <TextBox Text="{Binding GenresText}"
+                             PlaceholderText="Rock, Pop, Electronic"
+                             Background="#1e1e38" Foreground="White"
+                             BorderBrush="#333" BorderThickness="1" CornerRadius="6" Padding="8,6"/>
+                </StackPanel>
+
+                <!-- ── Audio fields ── -->
+                <StackPanel IsVisible="{Binding IsAudioMode}" Spacing="10">
+
+                    <Grid ColumnDefinitions="*,*">
+                        <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,8,0">
+                            <TextBlock Text="Artist" Foreground="#888" FontSize="11"/>
+                            <TextBox Text="{Binding Artist}"
+                                     Background="#1e1e38" Foreground="White"
+                                     BorderBrush="#333" BorderThickness="1" CornerRadius="6" Padding="8,6"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Album Artist" Foreground="#888" FontSize="11"/>
+                            <TextBox Text="{Binding AlbumArtist}"
+                                     Background="#1e1e38" Foreground="White"
+                                     BorderBrush="#333" BorderThickness="1" CornerRadius="6" Padding="8,6"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Album" Foreground="#888" FontSize="11"/>
+                        <TextBox Text="{Binding Album}"
+                                 Background="#1e1e38" Foreground="White"
+                                 BorderBrush="#333" BorderThickness="1" CornerRadius="6" Padding="8,6"/>
+                    </StackPanel>
+
+                    <Grid ColumnDefinitions="*,*,*,*">
+                        <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,6,0">
+                            <TextBlock Text="Track #" Foreground="#888" FontSize="11"/>
+                            <NumericUpDown Value="{Binding Track}" Minimum="0"
+                                           Background="#1e1e38" Foreground="White"
+                                           BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                           Padding="6,6" ShowButtonSpinner="False"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4" Margin="0,0,6,0">
+                            <TextBlock Text="of" Foreground="#888" FontSize="11"/>
+                            <NumericUpDown Value="{Binding TrackCount}" Minimum="0"
+                                           Background="#1e1e38" Foreground="White"
+                                           BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                           Padding="6,6" ShowButtonSpinner="False"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="4" Margin="0,0,6,0">
+                            <TextBlock Text="Disc #" Foreground="#888" FontSize="11"/>
+                            <NumericUpDown Value="{Binding Disc}" Minimum="0"
+                                           Background="#1e1e38" Foreground="White"
+                                           BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                           Padding="6,6" ShowButtonSpinner="False"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3" Spacing="4">
+                            <TextBlock Text="of" Foreground="#888" FontSize="11"/>
+                            <NumericUpDown Value="{Binding DiscCount}" Minimum="0"
+                                           Background="#1e1e38" Foreground="White"
+                                           BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                           Padding="6,6" ShowButtonSpinner="False"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Comment" Foreground="#888" FontSize="11"/>
+                        <TextBox Text="{Binding Comment}"
+                                 Background="#1e1e38" Foreground="White"
+                                 BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                 Padding="8,6" AcceptsReturn="False"/>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <!-- ── Video fields ── -->
+                <StackPanel IsVisible="{Binding IsVideoMode}" Spacing="10">
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Plot" Foreground="#888" FontSize="11"/>
+                        <TextBox Text="{Binding Plot}"
+                                 Background="#1e1e38" Foreground="White"
+                                 BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                 Padding="8,6" AcceptsReturn="True" Height="72"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Tagline" Foreground="#888" FontSize="11"/>
+                        <TextBox Text="{Binding Tagline}"
+                                 Background="#1e1e38" Foreground="White"
+                                 BorderBrush="#333" BorderThickness="1" CornerRadius="6" Padding="8,6"/>
+                    </StackPanel>
+
+                    <Grid ColumnDefinitions="*,*,*">
+                        <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,6,0">
+                            <TextBlock Text="Rating (0–10)" Foreground="#888" FontSize="11"/>
+                            <NumericUpDown Value="{Binding Rating}"
+                                           Minimum="0" Maximum="10" Increment="0.1"
+                                           FormatString="F1"
+                                           Background="#1e1e38" Foreground="White"
+                                           BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                           Padding="6,6" ShowButtonSpinner="False"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4" Margin="0,0,6,0">
+                            <TextBlock Text="Runtime (min)" Foreground="#888" FontSize="11"/>
+                            <NumericUpDown Value="{Binding Runtime}" Minimum="0"
+                                           Background="#1e1e38" Foreground="White"
+                                           BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                           Padding="6,6" ShowButtonSpinner="False"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Text=" " FontSize="11"/>
+                            <CheckBox Content="Watched"
+                                      IsChecked="{Binding Watched}"
+                                      Foreground="White"
+                                      VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*">
+                        <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,8,0">
+                            <TextBlock Text="Directors (one per line)" Foreground="#888" FontSize="11"/>
+                            <TextBox Text="{Binding DirectorsText}"
+                                     Background="#1e1e38" Foreground="White"
+                                     BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                     Padding="8,6" AcceptsReturn="True" Height="72"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Cast (one per line)" Foreground="#888" FontSize="11"/>
+                            <TextBox Text="{Binding CastText}"
+                                     Background="#1e1e38" Foreground="White"
+                                     BorderBrush="#333" BorderThickness="1" CornerRadius="6"
+                                     Padding="8,6" AcceptsReturn="True" Height="72"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*">
+                        <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,8,0">
+                            <TextBlock Text="IMDB ID (tt0000000)" Foreground="#888" FontSize="11"/>
+                            <TextBox Text="{Binding ImdbId}"
+                                     PlaceholderText="tt0133093"
+                                     Background="#1e1e38" Foreground="White"
+                                     BorderBrush="#333" BorderThickness="1" CornerRadius="6" Padding="8,6"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="TMDB ID" Foreground="#888" FontSize="11"/>
+                            <TextBox Text="{Binding TmdbId}"
+                                     PlaceholderText="603"
+                                     Background="#1e1e38" Foreground="White"
+                                     BorderBrush="#333" BorderThickness="1" CornerRadius="6" Padding="8,6"/>
+                        </StackPanel>
+                    </Grid>
+
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <DockPanel Grid.Row="2" Margin="16,0,16,12">
+            <TextBlock DockPanel.Dock="Right"
+                       Text="{Binding StatusMessage}"
+                       Foreground="#2196F3"
+                       FontSize="12"
+                       VerticalAlignment="Center"/>
+            <Button Command="{Binding SaveCommand}"
+                    Content="Save"
+                    IsEnabled="{Binding !IsSaving}"
+                    Background="#2196F3"
+                    Foreground="White"
+                    Padding="16,7"
+                    CornerRadius="6"
+                    DockPanel.Dock="Left"/>
+        </DockPanel>
+
+    </Grid>
+
+</UserControl>

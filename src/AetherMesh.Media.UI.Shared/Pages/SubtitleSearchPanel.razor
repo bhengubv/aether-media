@@ -1,0 +1,51 @@
+@using AetherMesh.Media.UI.Shared.ViewModels
+
+<div class="am-subtitle-search">
+    <div class="am-search-bar">
+        <input class="am-input" placeholder="Language (e.g. en, fr, de)"
+               value="@Search.LanguageCode"
+               @oninput="e => Search.LanguageCode = e.Value?.ToString() ?? string.Empty" />
+        <button class="am-btn am-btn-primary"
+                @onclick="() => Search.SearchCommand.Execute(null)"
+                disabled="@Search.IsSearching">
+            @(Search.IsSearching ? "Searching…" : "🔍 Search")
+        </button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Search.StatusMessage))
+    {
+        <p class="am-status-message">@Search.StatusMessage</p>
+    }
+
+    @if (Search.HasNoResults && !Search.IsSearching)
+    {
+        <p class="am-empty">No results yet.</p>
+    }
+    else
+    {
+        <div class="am-subtitle-results">
+            @foreach (var result in Search.Results)
+            {
+                var isSelected = Search.SelectedResult == result;
+                <div class="am-subtitle-row @(isSelected ? "am-selected" : "")"
+                     @onclick="() => Search.SelectedResult = result">
+                    <p class="am-subtitle-title">@result.MovieTitle</p>
+                    <p class="am-subtitle-meta">@result.Language · @result.ReleaseName · @result.BadgeText</p>
+                </div>
+            }
+        </div>
+    }
+
+    @if (Search.CanDownload)
+    {
+        <button class="am-btn am-btn-primary"
+                @onclick="() => Search.DownloadCommand.Execute(null)"
+                disabled="@Search.IsDownloading">
+            @(Search.IsDownloading ? "Downloading…" : "⬇ Download")
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public SubtitleSearchViewModel Search { get; set; } = null!;
+}

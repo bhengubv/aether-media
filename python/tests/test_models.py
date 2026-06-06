@@ -8,7 +8,7 @@ import time
 
 # ── MediaContent.formatted_duration ───────────────────────────────────────────
 
-from aether_media.models import MediaContent, MediaReaction, MediaReactionType
+from aethermesh_media.models import MediaContent, MediaReaction, MediaReactionType
 
 
 def _make_content(duration_ms: int) -> MediaContent:
@@ -125,7 +125,7 @@ def test_reaction_empty_content_hash_rejected():
 
 # ── M3U parser ─────────────────────────────────────────────────────────────────
 
-from aether_media.playlist.m3u_parser import parse_m3u
+from aethermesh_media.playlist.m3u_parser import parse_m3u
 
 
 def test_m3u_basic():
@@ -184,6 +184,6 @@ def test_m3u_multiple_tracks():
 # ── tag_reader (offline — no real file required for import test) ───────────────
 
 def test_tag_reader_raises_file_not_found():
-    from aether_media.metadata.tag_reader import read_tags
+    from aethermesh_media.metadata.tag_reader import read_tags
     with pytest.raises(FileNotFoundError):
         read_tags("/nonexistent/path/file.mp3")

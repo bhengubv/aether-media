@@ -1,0 +1,43 @@
+<Solution>
+  <Project Path="src\AetherMesh.Media.Core\AetherMesh.Media.Core.csproj" />
+  <Project Path="src\AetherMesh.Media.Identity\AetherMesh.Media.Identity.csproj" />
+  <Project Path="src\AetherMesh.Media.Content\AetherMesh.Media.Content.csproj" />
+  <Project Path="src\AetherMesh.Media.Social\AetherMesh.Media.Social.csproj" />
+  <Project Path="src\AetherMesh.Media.Streaming\AetherMesh.Media.Streaming.csproj" />
+  <Project Path="src\AetherMesh.Media.AI\AetherMesh.Media.AI.csproj" />
+  <Project Path="src\AetherMesh.Media.Distribution\AetherMesh.Media.Distribution.csproj" />
+  <Project Path="src\AetherMesh.Media.LocalLibrary\AetherMesh.Media.LocalLibrary.csproj" />
+  <Project Path="src\AetherMesh.Media.Reel\AetherMesh.Media.Reel.csproj" />
+  <Project Path="src\AetherMesh.Media.UI.Shared\AetherMesh.Media.UI.Shared.csproj" />
+  <Project Path="src\AetherMesh.Media.Mobile\AetherMesh.Media.Mobile.csproj" />
+  <Project Path="src\AetherMesh.Media.Web\AetherMesh.Media.Web.csproj" />
+  <Project Path="src\AetherMesh.Media.DependencyInjection\AetherMesh.Media.DependencyInjection.csproj" />
+  <Project Path="tests\AetherMesh.Media.Core.Tests\AetherMesh.Media.Core.Tests.csproj" />
+  <Project Path="tests\AetherMesh.Media.Social.Tests\AetherMesh.Media.Social.Tests.csproj" />
+  <Project Path="tests\AetherMesh.Media.Streaming.Tests\AetherMesh.Media.Streaming.Tests.csproj" />
+  <Project Path="tests\AetherMesh.Media.Content.Tests\AetherMesh.Media.Content.Tests.csproj" />
+  <Project Path="tests\AetherMesh.Media.Identity.Tests\AetherMesh.Media.Identity.Tests.csproj" />
+  <Project Path="tests\AetherMesh.Media.AI.Tests\AetherMesh.Media.AI.Tests.csproj" />
+  <Project Path="tests\AetherMesh.Media.Distribution.Tests\AetherMesh.Media.Distribution.Tests.csproj" />
+  <Project Path="tests\AetherMesh.Media.LocalLibrary.Tests\AetherMesh.Media.LocalLibrary.Tests.csproj" />
+  <Project Path="tests\AetherMesh.Media.Reel.Tests\AetherMesh.Media.Reel.Tests.csproj" />
+  <Project Path="samples\AetherMesh.Media.Demo.Console\AetherMesh.Media.Demo.Console.csproj" />
+  <Project Path="samples\AetherMesh.Media.RelayTest\AetherMesh.Media.RelayTest.csproj" />
+  <!-- Phase 2 Extensions — Trust Rings -->
+  <Project Path="extensions\aether-trust\src\AetherMesh.Trust.Core\AetherMesh.Trust.Core.csproj" />
+  <Project Path="extensions\aether-trust\src\AetherMesh.Trust.Verification\AetherMesh.Trust.Verification.csproj" />
+  <Project Path="extensions\aether-trust\tests\AetherMesh.Trust.Tests\AetherMesh.Trust.Tests.csproj" />
+  <!-- Phase 2 Extensions -->
+  <Project Path="extensions\aether-space\src\AetherMesh.Space.Core\AetherMesh.Space.Core.csproj" />
+  <Project Path="extensions\aether-space\src\AetherMesh.Space.Protocol\AetherMesh.Space.Protocol.csproj" />
+  <Project Path="extensions\aether-space\tests\AetherMesh.Space.Tests\AetherMesh.Space.Tests.csproj" />
+  <Project Path="extensions\aether-forge\src\AetherMesh.Forge.Core\AetherMesh.Forge.Core.csproj" />
+  <Project Path="extensions\aether-forge\src\AetherMesh.Forge.Proxy\AetherMesh.Forge.Proxy.csproj" />
+  <Project Path="extensions\aether-forge\tests\AetherMesh.Forge.Tests\AetherMesh.Forge.Tests.csproj" />
+  <Project Path="extensions\aether-vault\src\AetherMesh.Vault.Core\AetherMesh.Vault.Core.csproj" />
+  <Project Path="extensions\aether-vault\src\AetherMesh.Vault.ErasureCoding\AetherMesh.Vault.ErasureCoding.csproj" />
+  <Project Path="extensions\aether-vault\tests\AetherMesh.Vault.Tests\AetherMesh.Vault.Tests.csproj" />
+  <Project Path="extensions\aether-market\src\AetherMesh.Market.Core\AetherMesh.Market.Core.csproj" />
+  <Project Path="extensions\aether-market\src\AetherMesh.Market.Protocol\AetherMesh.Market.Protocol.csproj" />
+  <Project Path="extensions\aether-market\tests\AetherMesh.Market.Tests\AetherMesh.Market.Tests.csproj" />
+</Solution>

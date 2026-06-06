@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <!-- Samples are not packed -->
-  <PropertyGroup Condition="$(MSBuildProjectName.StartsWith('Aether.Media.Demo')) Or $(MSBuildProjectName.StartsWith('Aether.Media.Relay'))">
+  <PropertyGroup Condition="$(MSBuildProjectName.StartsWith('AetherMesh.Media.Demo')) Or $(MSBuildProjectName.StartsWith('AetherMesh.Media.Relay'))">
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

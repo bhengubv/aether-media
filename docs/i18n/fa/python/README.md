@@ -42,11 +42,11 @@ pytest
 
 | ماژول | توضیحات |
 |--------|-------------|
-| `aether_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
-| `aether_media.metadata` | خواندن و نوشتن تگ ID3 و MP4 (از طریق Mutagen)؛ استخراج XML از NFO |
-| `aether_media.playlist` | پارس کردن و سریال‌سازی پلی‌لیست M3U و XSPF |
-| `aether_media.plugins` | میزبان افزونه — بارگذاری، فعال‌سازی، و فراخوانی اسکریپت‌های سبک VLC |
-| `aether_media.cli` | نقطه ورودی خط فرمان (دستور `aether-media`) |
+| `aethermesh_media.models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
+| `aethermesh_media.metadata` | خواندن و نوشتن تگ ID3 و MP4 (از طریق Mutagen)؛ استخراج XML از NFO |
+| `aethermesh_media.playlist` | پارس کردن و سریال‌سازی پلی‌لیست M3U و XSPF |
+| `aethermesh_media.plugins` | میزبان افزونه — بارگذاری، فعال‌سازی، و فراخوانی اسکریپت‌های سبک VLC |
+| `aethermesh_media.cli` | نقطه ورودی خط فرمان (دستور `aether-media`) |
 
 ---
 
@@ -55,7 +55,7 @@ pytest
 ### خواندن متادیتا
 
 ```python
-from aether_media.metadata import read_tags
+from aethermesh_media.metadata import read_tags
 
 tags = read_tags("/media/music/track.mp3")
 print(tags.title)    # "Song Title"
@@ -66,7 +66,7 @@ print(tags.duration) # 213.4 (seconds)
 ### نوشتن متادیتا
 
 ```python
-from aether_media.metadata import write_tags, TagUpdate
+from aethermesh_media.metadata import write_tags, TagUpdate
 
 write_tags("/media/music/track.mp3", TagUpdate(
     title="Updated Title",
@@ -77,7 +77,7 @@ write_tags("/media/music/track.mp3", TagUpdate(
 ### پارس کردن پلی‌لیست
 
 ```python
-from aether_media.playlist import parse_m3u, parse_xspf
+from aethermesh_media.playlist import parse_m3u, parse_xspf
 
 tracks = parse_m3u("/media/playlists/summer.m3u")
 for track in tracks:
@@ -89,7 +89,7 @@ tracks = parse_xspf("/media/playlists/podcast.xspf")
 ### استخراج فایل NFO
 
 ```python
-from aether_media.metadata import read_nfo
+from aethermesh_media.metadata import read_nfo
 
 movie = read_nfo("/media/movies/Inception/Inception.nfo")
 print(movie.title)   # "Inception"
@@ -100,7 +100,7 @@ print(movie.plot)    # "A thief who steals corporate secrets..."
 ### بارگذاری افزونه
 
 ```python
-from aether_media.plugins import PluginHost
+from aethermesh_media.plugins import PluginHost
 
 host = PluginHost()
 host.load("/path/to/my_plugin.py")
@@ -165,7 +165,7 @@ aether-media plugins activate my_plugin
 ## مدل‌ها
 
 ```python
-from aether_media.models import MediaContent, MediaProfile, MediaFeedItem
+from aethermesh_media.models import MediaContent, MediaProfile, MediaFeedItem
 
 content = MediaContent(
     content_hash="sha256abc",
@@ -187,7 +187,7 @@ print(content.is_video)             # True
 
 ```
 python/
-├── aether_media/
+├── aethermesh_media/
 │   ├── __init__.py
 │   ├── models.py            # Domain models
 │   ├── metadata/            # Tag reading/writing, NFO scraping

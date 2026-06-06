@@ -45,7 +45,7 @@ go run ./cmd/aether-media-daemon \
 | 参数 | 默认值 | 说明 |
 |------|---------|-------------|
 | `--library` | `~/Media` | 本地媒体库路径 |
-| `--identity` | `~/.aether/identity.json` | AetherTag 身份文件 |
+| `--identity` | `~/.aether/identity.json` | AetherMeshTag 身份文件 |
 | `--transport` | `auto` | 逗号分隔的传输方式列表 |
 | `--port` | `7420` | HTTP 中继监听端口 |
 | `--log-level` | `info` | 日志详细级别（`debug`、`info`、`warn`、`error`） |
@@ -63,7 +63,7 @@ Commands:
   feed          Browse the content feed from followed creators
   play <hash>   Play content by SHA-256 hash
   search <q>    Search the local library
-  follow <tag>  Follow a creator by AetherTag
+  follow <tag>  Follow a creator by AetherMeshTag
   library       List local media files
   quit
 ```
@@ -84,7 +84,7 @@ go run ./cmd/wire-roundtrip
 |---------|-------------|
 | `models` | `MediaContent`、`MediaProfile`、`MediaFeedItem`、`MediaReaction` |
 | `feed` | `FeedAggregator` — 上限 500 条，按内容哈希去重 |
-| `social` | `SocialGraph` — 通过 AetherTag UHID 关注/取消关注 |
+| `social` | `SocialGraph` — 通过 AetherMeshTag UHID 关注/取消关注 |
 | `streaming` | Aether `IStreamingService` 客户端及直播流订阅 |
 | `player` | 用于音视频播放的 LibVLC cgo 绑定 |
 

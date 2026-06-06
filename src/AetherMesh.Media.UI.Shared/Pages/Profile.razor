@@ -1,0 +1,90 @@
+@page "/profile"
+@page "/profile/{Uhid}"
+@inherits ViewModelComponentBase<ProfileViewModel>
+@inject NavigationManager Nav
+
+<div class="am-page">
+    @if (ViewModel.IsLoading)
+    {
+        <p class="am-loading">Loading profile…</p>
+    }
+    else if (ViewModel.Profile is null)
+    {
+        <p class="am-empty">Profile not found.</p>
+    }
+    else
+    {
+        var p = ViewModel.Profile;
+        <div class="am-profile-header">
+            <div class="am-profile-name">
+                <h2>@p.DisplayName @(p.IsVerified ? "✓" : "")</h2>
+                <p class="am-profile-tag">@p.AetherMeshTagValue</p>
+            </div>
+            <div class="am-profile-stats">
+                <span>@p.FollowerCount followers</span>
+                <span>@p.FollowingCount following</span>
+                <span>@p.ContentCount items</span>
+            </div>
+            @if (!string.IsNullOrEmpty(p.ShortBio))
+            {
+                <p class="am-profile-bio">@p.ShortBio</p>
+            }
+            @if (!ViewModel.IsOwnProfile)
+            {
+                @if (ViewModel.IsFollowing)
+                {
+                    <button class="am-btn" @onclick="() => ViewModel.UnfollowCommand.Execute(null)">Unfollow</button>
+                }
+                else
+                {
+                    <button class="am-btn am-btn-primary" @onclick="() => ViewModel.FollowCommand.Execute(null)">Follow</button>
+                }
+            }
+        </div>
+
+        @if (ViewModel.CreatorStreams.Count > 0)
+        {
+            <section class="am-section">
+                <h3>Live</h3>
+                @foreach (var stream in ViewModel.CreatorStreams)
+                {
+                    <div class="am-stream-card">
+                        <div class="am-live-badge">LIVE</div>
+                        <p class="am-stream-title">@stream.Title</p>
+                        <p class="am-stream-meta">@stream.ViewerCount viewers</p>
+                    </div>
+                }
+            </section>
+        }
+
+        @if (ViewModel.CreatorContent.Count > 0)
+        {
+            <section class="am-section">
+                <h3>Content</h3>
+                @foreach (var item in ViewModel.CreatorContent)
+                {
+                    <div class="am-content-row" @onclick="() => Play(item)">
+                        <p class="am-content-title">@item.Title</p>
+                        <p class="am-content-meta">@item.Codec · @item.FormattedDuration</p>
+                    </div>
+                }
+            </section>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public string? Uhid { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var uhid = Uhid ?? "local";
+        await ViewModel.LoadProfileAsync(uhid);
+    }
+
+    private void Play(MediaContentViewModel item)
+    {
+        ViewModel.PlayContentCommand.Execute(item);
+        Nav.NavigateTo("/player");
+    }
+}

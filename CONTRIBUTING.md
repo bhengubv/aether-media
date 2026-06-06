@@ -48,8 +48,8 @@ dotnet test
 dotnet test
 
 # Run a specific test project
-dotnet test tests/Aether.Media.Core.Tests
-dotnet test tests/Aether.Media.Social.Tests
+dotnet test tests/AetherMesh.Media.Core.Tests
+dotnet test tests/AetherMesh.Media.Social.Tests
 ```
 
 ### 4. Submit a Pull Request
@@ -66,16 +66,16 @@ dotnet test tests/Aether.Media.Social.Tests
 
 Aether Media is structured around a clean layered architecture:
 
-- **Core** (`Aether.Media.Core`) — domain models, interfaces, no external dependencies
+- **Core** (`AetherMesh.Media.Core`) — domain models, interfaces, no external dependencies
 - **Feature libraries** (`Streaming`, `Social`, `Content`, `Identity`, `AI`) — implement one concern each
-- **DI wiring** (`Aether.Media.DependencyInjection`) — `AddAetherMedia()` fluent builder
+- **DI wiring** (`AetherMesh.Media.DependencyInjection`) — `AddAetherMeshMedia()` fluent builder
 - **Platform apps** (`Desktop`, Android, iOS) — consume feature libraries via DI
 
 To add a new feature:
 
-1. Define the interface in `Aether.Media.Core` (or the appropriate feature library).
+1. Define the interface in `AetherMesh.Media.Core` (or the appropriate feature library).
 2. Implement it in the feature library with full async/cancellation support.
-3. Register it in `Aether.Media.DependencyInjection` via the fluent builder.
+3. Register it in `AetherMesh.Media.DependencyInjection` via the fluent builder.
 4. Add unit tests in the corresponding `Tests` project.
 5. Update the README feature table if the capability is user-facing.
 

@@ -25,7 +25,7 @@ targets: [
     .target(
         name: "MyApp",
         dependencies: [
-            .product(name: "AetherMedia", package: "aether-media")
+            .product(name: "AetherMeshMedia", package: "aether-media")
         ]
     ),
 ]
@@ -61,7 +61,7 @@ swift test
 ### Модели
 
 ```swift
-import AetherMedia
+import AetherMeshMedia
 
 let content = MediaContent(
     contentHash: "sha256abc",
@@ -80,7 +80,7 @@ print(content.isVideo)             // true
 ### Граф социальных связей
 
 ```swift
-import AetherMedia
+import AetherMeshMedia
 
 let graph = SocialGraph()
 await graph.follow("peer-uhid-abc123")
@@ -95,7 +95,7 @@ await graph.unfollow("peer-uhid-abc123")
 ### Агрегатор ленты
 
 ```swift
-import AetherMedia
+import AetherMeshMedia
 import Combine
 
 let aggregator = FeedAggregator(capacity: 500)
@@ -113,10 +113,10 @@ aggregator.push(feedItem)
 ### Проигрыватель
 
 ```swift
-import AetherMedia
+import AetherMeshMedia
 import AVFoundation
 
-let player = AetherMediaPlayer()
+let player = AetherMeshMediaPlayer()
 
 try await player.load(contentHash: "sha256abc")
 player.play()
@@ -137,7 +137,7 @@ player.$state
 ### Трансляция в реальном времени
 
 ```swift
-import AetherMedia
+import AetherMeshMedia
 
 let client = StreamSubscriber()
 try await client.subscribe(to: hostUhid)
@@ -153,7 +153,7 @@ for await segment in client.segments {
 
 ```swift
 import SwiftUI
-import AetherMedia
+import AetherMeshMedia
 
 struct ContentView: View {
     @StateObject private var feedVM = FeedViewModel()
@@ -191,7 +191,7 @@ swift test
 ```
 swift/
 ├── Sources/
-│   └── AetherMedia/
+│   └── AetherMeshMedia/
 │       ├── Content/     # P2P chunk download and cache
 │       ├── Feed/        # FeedAggregator + Combine publisher
 │       ├── Models/      # Domain structs (Codable, Sendable)
@@ -200,7 +200,7 @@ swift/
 │       ├── Streaming/   # Live stream subscription
 │       └── UI/          # SwiftUI views and view models
 ├── Tests/
-│   └── AetherMediaTests/
+│   └── AetherMeshMediaTests/
 └── Package.swift
 ```
 

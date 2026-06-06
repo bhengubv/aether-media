@@ -45,7 +45,7 @@ go run ./cmd/aether-media-daemon \
 | フラグ | デフォルト | 説明 |
 |------|---------|-------------|
 | `--library` | `~/Media` | ローカルメディアライブラリのパス |
-| `--identity` | `~/.aether/identity.json` | AetherTag アイデンティティファイル |
+| `--identity` | `~/.aether/identity.json` | AetherMeshTag アイデンティティファイル |
 | `--transport` | `auto` | カンマ区切りのトランスポートリスト |
 | `--port` | `7420` | HTTP リレーのリッスンポート |
 | `--log-level` | `info` | ログの詳細度（`debug`、`info`、`warn`、`error`） |
@@ -63,7 +63,7 @@ Commands:
   feed          Browse the content feed from followed creators
   play <hash>   Play content by SHA-256 hash
   search <q>    Search the local library
-  follow <tag>  Follow a creator by AetherTag
+  follow <tag>  Follow a creator by AetherMeshTag
   library       List local media files
   quit
 ```
@@ -84,7 +84,7 @@ go run ./cmd/wire-roundtrip
 |---------|-------------|
 | `models` | `MediaContent`、`MediaProfile`、`MediaFeedItem`、`MediaReaction` |
 | `feed` | `FeedAggregator` — 最大 500 件、コンテンツハッシュで重複排除 |
-| `social` | `SocialGraph` — AetherTag UHID によるフォロー / アンフォロー |
+| `social` | `SocialGraph` — AetherMeshTag UHID によるフォロー / アンフォロー |
 | `streaming` | Aether `IStreamingService` クライアントおよびライブストリームサブスクリプション |
 | `player` | 音声 / 動画再生用 LibVLC cgo バインディング |
 

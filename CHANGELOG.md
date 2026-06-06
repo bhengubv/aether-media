@@ -10,16 +10,16 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [1.2.0] — 2026-05-22
 
 Phase 3 CircleAI integration — predictive route pre-warming via
-`IAetherAiProvider.SuggestRoutesAsync` completes the full three-hook
+`IAetherMeshAiProvider.SuggestRoutesAsync` completes the full three-hook
 CircleAI surface area for Aether Media.
 
 ### Added
 
-**AI layer (`Aether.Media.AI`)**
+**AI layer (`AetherMesh.Media.AI`)**
 - `IRoutePreseeder` — interface for pre-warming AODV routing-table entries
   for feed creators before the user taps on content.
 - `RoutePreseeder` — implementation that uses
-  `IAetherAiProvider.SuggestRoutesAsync` to rank creators by AI confidence
+  `IAetherMeshAiProvider.SuggestRoutesAsync` to rank creators by AI confidence
   and then calls `IRoutingService.FindRouteAsync` for the top-N candidates:
   - AI available → creators above confidence threshold 0.6 are pre-warmed,
     sorted by confidence descending, capped at 10.
@@ -30,7 +30,7 @@ CircleAI surface area for Aether Media.
   - Per-creator and per-route exceptions are swallowed (best-effort).
   - Probe payload hint: 1 KiB (presence probe, not media payload).
 
-**DI (`Aether.Media.DependencyInjection`)**
+**DI (`AetherMesh.Media.DependencyInjection`)**
 - `AddAI()` registers `IRoutePreseeder` → `RoutePreseeder` with optional
   `IRoutingService` (silently no-op when routing is absent from the container).
 
@@ -57,7 +57,7 @@ detection, and per-segment AI transport-bias in the ABR controller.
 
 ### Added
 
-**AI layer (`Aether.Media.AI`)**
+**AI layer (`AetherMesh.Media.AI`)**
 - `IWatchHistoryStore` — interface for recording and retrieving per-viewer
   content completion rates.
 - `InMemoryWatchHistoryStore` — thread-safe, insertion-ordered EWMA
@@ -73,16 +73,16 @@ detection, and per-segment AI transport-bias in the ABR controller.
   20 events / 30 s; all other social packet types threshold 5 events / 60 s.
   Operates independently of AI availability.
 
-**Streaming layer (`Aether.Media.Streaming`)**
-- `AbrController` now accepts an optional `IAetherAiProvider` dependency.
+**Streaming layer (`AetherMesh.Media.Streaming`)**
+- `AbrController` now accepts an optional `IAetherMeshAiProvider` dependency.
   Transport biases are fetched at most once every 5 s, averaged, clamped to
   [0.5, 1.5], and applied to the raw bandwidth sample before the EMA update.
   Falls back to neutral (1.0) when AI is unavailable or throws.
 
-**DI (`Aether.Media.DependencyInjection`)**
+**DI (`AetherMesh.Media.DependencyInjection`)**
 - `AddAI()` registers `IWatchHistoryStore` → `InMemoryWatchHistoryStore` and
   wires the updated `ContentRanker` constructor.
-- `AddStreaming()` passes `IAetherAiProvider` (optional) into `AbrController`.
+- `AddStreaming()` passes `IAetherMeshAiProvider` (optional) into `AbrController`.
 
 ### Tests
 - `WatchHistoryStoreTests` (17 tests) — record/retrieve, EWMA blend, live-
@@ -106,28 +106,28 @@ respective package registries from a single CI/CD pipeline.
 
 ### Added
 
-**Core domain (`Aether.Media.Core`)**
+**Core domain (`AetherMesh.Media.Core`)**
 - `MediaContent` — immutable record keyed by SHA-256 `ContentHash`; computed
   `IsVideo`, `IsAudio`, `FormattedDuration` properties
 - `MediaFeedItem` — content + reaction counts + watch count
 - `MediaReaction` — Like / Share / Comment / SuperReact with `PositionMs`
   playback marker
-- `MediaProfile` — AetherTag identity, display name, avatar hash, bio
+- `MediaProfile` — AetherMeshTag identity, display name, avatar hash, bio
 - `WatchSession` / `LiveStream` — thin wrappers over aether-protocol session types
 - `IMediaLibrary`, `IMediaFeed`, `IMediaPlayer`, `IContentNode`,
   `ICreatorChannel` — core interface contracts
 
-**Social layer (`Aether.Media.Social`)**
+**Social layer (`AetherMesh.Media.Social`)**
 - `FeedAggregator` — thread-safe, capped at 500 items, deduplicates by
   `ContentHash`, subscribes to `IStreamingService.StreamAnnounced` and
   `IContentService.ContentAnnounced`
-- `ISocialGraph` — follow/unfollow by AetherTag; resolves to UHID
+- `ISocialGraph` — follow/unfollow by AetherMeshTag; resolves to UHID
 - `IReactionService` — sends/receives reactions mapped to `WatchReactionPayload`
 - `IDiscoveryService` — surfaces nearby creators from mesh peer list via
   `IHandshakeService.PeerNegotiated`
 - DTN-backed follow gossip via `IDtnService.CreateBundleAsync`
 
-**Streaming layer (`Aether.Media.Streaming`)**
+**Streaming layer (`AetherMesh.Media.Streaming`)**
 - `ILiveStreamPublisher` — captures encoded frames, feeds `IStreamingService`
 - `IWatchPartyCoordinator` — manages invite flow, latency compensation,
   reaction overlay
@@ -136,7 +136,7 @@ respective package registries from a single CI/CD pipeline.
 - Full leverage of `IStreamingService`, `IWatchTogetherService`,
   `IVideoCallService`, `IGroupVideoService`
 
-**Content layer (`Aether.Media.Content`)**
+**Content layer (`AetherMesh.Media.Content`)**
 - `IMediaLibraryScanner` — indexes local files into `ContentDescriptor` records
 - `IContentCache` — LRU cache with 500 MiB default capacity
 - `IThumbnailService` — extracts and distributes video thumbnails by hash
@@ -144,40 +144,40 @@ respective package registries from a single CI/CD pipeline.
 - Hash-verified P2P distribution via `IContentService`; BitTorrent metadata
   via `IWatchTogetherService.BroadcastTorrentAsync`
 
-**Identity layer (`Aether.Media.Identity`)**
+**Identity layer (`AetherMesh.Media.Identity`)**
 - `IProfileService` — create / update / fetch `MediaProfile`
 - `IProfileSyncService` — gossips profile updates via `ProfileSync(23)` packet
 - `IAvatarService` — distributes avatars as `IContentService` chunks
 
-**AI layer (`Aether.Media.AI`)**
+**AI layer (`AetherMesh.Media.AI`)**
 - `IContentRanker` — scores feed items using reputation + CircleAI bias +
   watch history; degrades gracefully to reputation-only when
-  `IAetherAiProvider.IsAvailable` is `false`
+  `IAetherMeshAiProvider.IsAvailable` is `false`
 - `ICreatorReputationView` — surfaces `INodeReputationService` scores as
   creator trust signals
 - `IContentModerator` — flags content from low-reputation or high-threat nodes
-  via `IAetherAiProvider.AssessThreatAsync`
+  via `IAetherMeshAiProvider.AssessThreatAsync`
 
-**Local library (`Aether.Media.LocalLibrary`)**
+**Local library (`AetherMesh.Media.LocalLibrary`)**
 - Scanner, watcher, and LRU cache for the local media library
 
-**Reel layer (`Aether.Media.Reel`)**
+**Reel layer (`AetherMesh.Media.Reel`)**
 - Short-form vertical video feed (TikTok-style) built on `FeedAggregator`
 
-**Distribution layer (`Aether.Media.Distribution`)**
+**Distribution layer (`AetherMesh.Media.Distribution`)**
 - P2P chunk scheduling and reassembly coordinator
 
-**DI wiring (`Aether.Media.DependencyInjection`)**
-- `services.AddAetherMedia()` fluent builder:
+**DI wiring (`AetherMesh.Media.DependencyInjection`)**
+- `services.AddAetherMeshMedia()` fluent builder:
   ```csharp
-  services.AddAetherMedia(aether =>
+  services.AddAetherMeshMedia(aether =>
   {
       aether
           .AddSocial()
           .AddStreaming()
           .AddContent()
           .AddIdentity()
-          .AddAI()       // no-op if IAetherAiProvider not registered
+          .AddAI()       // no-op if IAetherMeshAiProvider not registered
           .AddDesktop(); // Avalonia + LibVLCSharp
   });
   ```
@@ -189,16 +189,16 @@ respective package registries from a single CI/CD pipeline.
 - `android/media-tv/` — Android TV lean-back variant (D-pad navigation)
 
 **Platform applications**
-- `Aether.Media.Desktop` — Avalonia MVVM desktop (Windows, Linux, macOS)
+- `AetherMesh.Media.Desktop` — Avalonia MVVM desktop (Windows, Linux, macOS)
   with LibVLCSharp VideoView, NativeControlHost overlay pattern,
-  MeshStatusBar showing transport / peer count / bandwidth / AetherTag
-- `Aether.Media.Mobile` — .NET MAUI cross-platform mobile shell
-- `Aether.Media.Web` — Blazor web player
+  MeshStatusBar showing transport / peer count / bandwidth / AetherMeshTag
+- `AetherMesh.Media.Mobile` — .NET MAUI cross-platform mobile shell
+- `AetherMesh.Media.Web` — Blazor web player
 
 **TypeScript web player**
 - HLS.js + Shaka Player integration
-- `AetherMediaPlayer`, `FeedClient`, `ReactionClient`, `ProfileClient`,
-  `AetherStreamClient`
+- `AetherMeshMediaPlayer`, `FeedClient`, `ReactionClient`, `ProfileClient`,
+  `AetherMeshStreamClient`
 - Strict mode, declaration maps, NodeNext modules; 9 test files
 
 **Python plugin engine**
@@ -258,7 +258,7 @@ Every Aether Protocol service is leveraged:
 | `IDtnService` | Follow / content-announce delivery to offline peers |
 | `IMessagingService` | In-app chat alongside watch sessions |
 | `IReputationGossipService` | Creator trust scores gossiped across mesh |
-| `IAetherAiProvider` | Feed ranking, route pre-seeding, threat assessment |
+| `IAetherMeshAiProvider` | Feed ranking, route pre-seeding, threat assessment |
 | `ISosBroadcastService` | Emergency interrupt of any stream / watch session |
 | `IHandshakeService` | Discover `NodeCapabilities.Streaming` peers on connect |
-| `AetherTag` | Human-readable creator identity (e.g. `KXJB7-MN2P4`) |
+| `AetherMeshTag` | Human-readable creator identity (e.g. `KXJB7-MN2P4`) |

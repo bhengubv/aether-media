@@ -34,7 +34,7 @@ In scope for security reports:
 
 - Content integrity — hash verification, tampered chunk detection, false
   content-address claims
-- Identity spoofing — AetherTag forgery, creator impersonation, unsigned
+- Identity spoofing — AetherMeshTag forgery, creator impersonation, unsigned
   profile updates
 - Social graph manipulation — follow-graph poisoning, forged reactions,
   reputation gaming via fake content announcements
@@ -42,7 +42,7 @@ In scope for security reports:
   crafted mesh packets
 - Privacy leaks — unintended disclosure of watch history, social graph,
   or location via mesh metadata
-- AI layer — adversarial inputs that cause `IAetherAiProvider` to misclassify
+- AI layer — adversarial inputs that cause `IAetherMeshAiProvider` to misclassify
   clean content as threats, or vice versa
 - Cryptographic issues inherited from the aether-protocol layer — report
   those here if discovered via Aether Media; we will coordinate with the

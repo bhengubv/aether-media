@@ -1,4 +1,4 @@
-"""Tests for aether_media.plugins.base and aether_media.plugins.host."""
+"""Tests for aethermesh_media.plugins.base and aethermesh_media.plugins.host."""
 
 from __future__ import annotations
 
@@ -8,9 +8,9 @@ from unittest.mock import MagicMock, patch, call
 
 import pytest
 
-from aether_media.plugins.base import AetherMediaPlugin
-from aether_media.plugins.host import PluginHost
-from aether_media.models import (
+from aethermesh_media.plugins.base import AetherMeshMediaPlugin
+from aethermesh_media.plugins.host import PluginHost
+from aethermesh_media.models import (
     MediaContent,
     MediaReaction,
     MediaReactionType,
@@ -68,9 +68,9 @@ def _stream(**kwargs) -> LiveStream:
     return LiveStream(**defaults)
 
 
-# ── Concrete plugin for testing AetherMediaPlugin ABC ─────────────────────────
+# ── Concrete plugin for testing AetherMeshMediaPlugin ABC ─────────────────────────
 
-class _GoodPlugin(AetherMediaPlugin):
+class _GoodPlugin(AetherMeshMediaPlugin):
     def __init__(self):
         self.loaded = []
         self.reactions = []
@@ -102,7 +102,7 @@ class _StreamPlugin(_GoodPlugin):
         self.streams.append(stream)
 
 
-class _BrokenPlugin(AetherMediaPlugin):
+class _BrokenPlugin(AetherMeshMediaPlugin):
     """Plugin that raises exceptions in every hook."""
 
     @property
@@ -123,15 +123,15 @@ class _BrokenPlugin(AetherMediaPlugin):
         raise RuntimeError("on_stream_started boom")
 
 
-# ── AetherMediaPlugin — abstract checks ──────────────────────────────────────
+# ── AetherMeshMediaPlugin — abstract checks ──────────────────────────────────────
 
 def test_plugin_cannot_be_instantiated_directly():
     with pytest.raises(TypeError):
-        AetherMediaPlugin()  # type: ignore[abstract]
+        AetherMeshMediaPlugin()  # type: ignore[abstract]
 
 
 def test_plugin_missing_abstract_methods_raises():
-    class _Incomplete(AetherMediaPlugin):
+    class _Incomplete(AetherMeshMediaPlugin):
         @property
         def name(self) -> str:
             return "x"
@@ -180,7 +180,7 @@ def test_plugin_host_register_multiple_plugins():
 
 def test_plugin_host_register_non_plugin_raises():
     host = PluginHost()
-    with pytest.raises(TypeError, match="Expected AetherMediaPlugin"):
+    with pytest.raises(TypeError, match="Expected AetherMeshMediaPlugin"):
         host.register("not a plugin")  # type: ignore[arg-type]
 
 
@@ -287,7 +287,7 @@ def test_broken_plugin_content_loaded_is_isolated(caplog):
     host.register(good)
     content = _content()
 
-    with caplog.at_level(logging.ERROR, logger="aether_media.plugins.host"):
+    with caplog.at_level(logging.ERROR, logger="aethermesh_media.plugins.host"):
         host.notify_content_loaded(content)
 
     # Good plugin must still have received the event
@@ -304,7 +304,7 @@ def test_broken_plugin_reaction_received_is_isolated(caplog):
     host.register(good)
     r = _reaction()
 
-    with caplog.at_level(logging.ERROR, logger="aether_media.plugins.host"):
+    with caplog.at_level(logging.ERROR, logger="aethermesh_media.plugins.host"):
         host.notify_reaction_received(r)
 
     assert good.reactions == [r]
@@ -319,7 +319,7 @@ def test_broken_plugin_stream_started_is_isolated(caplog):
     host.register(stream_p)
     s = _stream()
 
-    with caplog.at_level(logging.ERROR, logger="aether_media.plugins.host"):
+    with caplog.at_level(logging.ERROR, logger="aethermesh_media.plugins.host"):
         host.notify_stream_started(s)
 
     assert stream_p.streams == [s]
@@ -339,7 +339,7 @@ def test_multiple_broken_plugins_all_isolated(caplog):
     good = _GoodPlugin()
     host.register(good)
 
-    with caplog.at_level(logging.ERROR, logger="aether_media.plugins.host"):
+    with caplog.at_level(logging.ERROR, logger="aethermesh_media.plugins.host"):
         host.notify_content_loaded(_content())
 
     assert len(good.loaded) == 1
@@ -349,7 +349,7 @@ def test_multiple_broken_plugins_all_isolated(caplog):
 
 def test_register_logs_debug(caplog):
     host = PluginHost()
-    with caplog.at_level(logging.DEBUG, logger="aether_media.plugins.host"):
+    with caplog.at_level(logging.DEBUG, logger="aethermesh_media.plugins.host"):
         host.register(_GoodPlugin())
     assert any("good-plugin" in r.message for r in caplog.records)
 
@@ -357,6 +357,6 @@ def test_register_logs_debug(caplog):
 def test_unregister_logs_debug(caplog):
     host = PluginHost()
     host.register(_GoodPlugin())
-    with caplog.at_level(logging.DEBUG, logger="aether_media.plugins.host"):
+    with caplog.at_level(logging.DEBUG, logger="aethermesh_media.plugins.host"):
         host.unregister("good-plugin")
     assert any("good-plugin" in r.message for r in caplog.records)

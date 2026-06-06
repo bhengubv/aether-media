@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>AetherMesh.Media.Content</PackageId>
+    <Description>P2P media library and chunked content distribution for Aether Media.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherMesh.Media.Core\AetherMesh.Media.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherMesh.Content/AetherMesh.Content.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
+    <PackageReference Include="AetherMesh.Core"    Version="1.0.3" />
+    <PackageReference Include="AetherMesh.Content" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TagLibSharp" Version="2.3.0" />
+  </ItemGroup>
+
+</Project>

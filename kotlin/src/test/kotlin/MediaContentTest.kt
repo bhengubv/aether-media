@@ -1,4 +1,4 @@
-import aether.media.models.MediaContent
+import aethermesh.media.models.MediaContent
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

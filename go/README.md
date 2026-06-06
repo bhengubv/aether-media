@@ -45,7 +45,7 @@ go run ./cmd/aether-media-daemon \
 | Flag | Default | Description |
 |------|---------|-------------|
 | `--library` | `~/Media` | Path to local media library |
-| `--identity` | `~/.aether/identity.json` | AetherTag identity file |
+| `--identity` | `~/.aether/identity.json` | AetherMeshTag identity file |
 | `--transport` | `auto` | Comma-separated transport list |
 | `--port` | `7420` | HTTP relay listen port |
 | `--log-level` | `info` | Logging verbosity (`debug`, `info`, `warn`, `error`) |
@@ -63,7 +63,7 @@ Commands:
   feed          Browse the content feed from followed creators
   play <hash>   Play content by SHA-256 hash
   search <q>    Search the local library
-  follow <tag>  Follow a creator by AetherTag
+  follow <tag>  Follow a creator by AetherMeshTag
   library       List local media files
   quit
 ```
@@ -84,7 +84,7 @@ go run ./cmd/wire-roundtrip
 |---------|-------------|
 | `models` | `MediaContent`, `MediaProfile`, `MediaFeedItem`, `MediaReaction` |
 | `feed` | `FeedAggregator` — capped at 500 items, deduplicates by content hash |
-| `social` | `SocialGraph` — follow/unfollow by AetherTag UHID |
+| `social` | `SocialGraph` — follow/unfollow by AetherMeshTag UHID |
 | `streaming` | Aether `IStreamingService` client and live-stream subscription |
 | `player` | LibVLC cgo bindings for audio/video playback |
 

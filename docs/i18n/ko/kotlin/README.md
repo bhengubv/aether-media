@@ -63,7 +63,7 @@ data class MediaContent(
 
 ### `MediaProfile`
 
-AetherTag에 연결된 크리에이터 신원 정보입니다.
+AetherMeshTag에 연결된 크리에이터 신원 정보입니다.
 
 ```kotlin
 data class MediaProfile(

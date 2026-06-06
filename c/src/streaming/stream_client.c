@@ -1,4 +1,4 @@
-#include "aether_media.h"
+#include "aethermesh_media.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -44,9 +44,9 @@ typedef int socket_t;
 
 #define READ_BUF_SIZE 65536
 
-struct AetherStreamClient {
+struct AetherMeshStreamClient {
     socket_t           fd;
-    aether_segment_cb  callback;
+    aethermesh_segment_cb  callback;
     void              *user_data;
     char               host[256];
     char               path[1024];
@@ -110,8 +110,8 @@ static bool parse_url(const char *url,
 
 /* ── Lifecycle ───────────────────────────────────────────────────────────────── */
 
-AetherStreamClient *aether_stream_client_create(aether_segment_cb cb, void *user_data) {
-    AetherStreamClient *c = (AetherStreamClient *)calloc(1, sizeof(AetherStreamClient));
+AetherMeshStreamClient *aethermesh_stream_client_create(aethermesh_segment_cb cb, void *user_data) {
+    AetherMeshStreamClient *c = (AetherMeshStreamClient *)calloc(1, sizeof(AetherMeshStreamClient));
     if (!c) return NULL;
     c->callback  = cb;
     c->user_data = user_data;
@@ -128,9 +128,9 @@ AetherStreamClient *aether_stream_client_create(aether_segment_cb cb, void *user
     return c;
 }
 
-void aether_stream_client_destroy(AetherStreamClient *client) {
+void aethermesh_stream_client_destroy(AetherMeshStreamClient *client) {
     if (!client) return;
-    aether_stream_client_close(client);
+    aethermesh_stream_client_close(client);
     free(client->read_buf);
     free(client);
 #ifdef _WIN32
@@ -140,13 +140,13 @@ void aether_stream_client_destroy(AetherStreamClient *client) {
 
 /* ── Connect ─────────────────────────────────────────────────────────────────── */
 
-bool aether_stream_client_connect(AetherStreamClient *client, const char *url) {
+bool aethermesh_stream_client_connect(AetherMeshStreamClient *client, const char *url) {
     if (!client || !url) return false;
 
     if (!parse_url(url, client->host, sizeof(client->host),
                        client->port, sizeof(client->port),
                        client->path, sizeof(client->path))) {
-        fprintf(stderr, "[AetherStream] Failed to parse URL: %s\n", url);
+        fprintf(stderr, "[AetherMeshStream] Failed to parse URL: %s\n", url);
         return false;
     }
 
@@ -157,7 +157,7 @@ bool aether_stream_client_connect(AetherStreamClient *client, const char *url) {
 
     int rc = getaddrinfo(client->host, client->port, &hints, &res);
     if (rc != 0) {
-        fprintf(stderr, "[AetherStream] getaddrinfo error: %s\n", gai_strerror(rc));
+        fprintf(stderr, "[AetherMeshStream] getaddrinfo error: %s\n", gai_strerror(rc));
         return false;
     }
 
@@ -172,7 +172,7 @@ bool aether_stream_client_connect(AetherStreamClient *client, const char *url) {
     freeaddrinfo(res);
 
     if (sock == INVALID_SOCK) {
-        fprintf(stderr, "[AetherStream] Could not connect to %s:%s\n",
+        fprintf(stderr, "[AetherMeshStream] Could not connect to %s:%s\n",
                 client->host, client->port);
         return false;
     }
@@ -195,19 +195,19 @@ bool aether_stream_client_connect(AetherStreamClient *client, const char *url) {
     size_t req_len = strlen(req);
     ssize_t sent = send(sock, req, (int)req_len, 0);
     if (sent != (ssize_t)req_len) {
-        fprintf(stderr, "[AetherStream] send failed\n");
-        aether_stream_client_close(client);
+        fprintf(stderr, "[AetherMeshStream] send failed\n");
+        aethermesh_stream_client_close(client);
         return false;
     }
 
-    printf("[AetherStream] Connected to %s:%s%s\n",
+    printf("[AetherMeshStream] Connected to %s:%s%s\n",
            client->host, client->port, client->path);
     return true;
 }
 
 /* ── Read segment ────────────────────────────────────────────────────────────── */
 
-int aether_stream_client_read_segment(AetherStreamClient *client,
+int aethermesh_stream_client_read_segment(AetherMeshStreamClient *client,
                                        uint8_t *buf, size_t max_len) {
     if (!client || !buf || max_len == 0 || !client->connected) return -1;
 
@@ -215,11 +215,11 @@ int aether_stream_client_read_segment(AetherStreamClient *client,
     ssize_t n = recv(client->fd, (char *)buf, (int)max_len, 0);
     if (n <= 0) {
         if (n == 0) {
-            printf("[AetherStream] Server closed connection\n");
+            printf("[AetherMeshStream] Server closed connection\n");
         } else {
-            fprintf(stderr, "[AetherStream] recv error: %d\n", (int)sock_errno);
+            fprintf(stderr, "[AetherMeshStream] recv error: %d\n", (int)sock_errno);
         }
-        aether_stream_client_close(client);
+        aethermesh_stream_client_close(client);
         return -1;
     }
 
@@ -257,7 +257,7 @@ int aether_stream_client_read_segment(AetherStreamClient *client,
 
 /* ── Close ───────────────────────────────────────────────────────────────────── */
 
-void aether_stream_client_close(AetherStreamClient *client) {
+void aethermesh_stream_client_close(AetherMeshStreamClient *client) {
     if (!client) return;
     if (client->fd != INVALID_SOCK) {
         close_sock(client->fd);
@@ -265,5 +265,5 @@ void aether_stream_client_close(AetherStreamClient *client) {
     }
     client->connected    = false;
     client->headers_done = false;
-    printf("[AetherStream] Closed\n");
+    printf("[AetherMeshStream] Closed\n");
 }

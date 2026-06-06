@@ -2,26 +2,26 @@
 import PackageDescription
 
 let package = Package(
-    name: "AetherMarket",
+    name: "AetherMeshMarket",
     platforms: [
         .iOS(.v15),
         .macOS(.v12)
     ],
     products: [
         .library(
-            name: "AetherMarket",
-            targets: ["AetherMarket"]
+            name: "AetherMeshMarket",
+            targets: ["AetherMeshMarket"]
         )
     ],
     targets: [
         .target(
-            name: "AetherMarket",
-            path: "Sources/AetherMarket"
+            name: "AetherMeshMarket",
+            path: "Sources/AetherMeshMarket"
         ),
         .testTarget(
-            name: "AetherMarketTests",
-            dependencies: ["AetherMarket"],
-            path: "Tests/AetherMarketTests"
+            name: "AetherMeshMarketTests",
+            dependencies: ["AetherMeshMarket"],
+            path: "Tests/AetherMeshMarketTests"
         )
     ]
 )

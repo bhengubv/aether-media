@@ -1,5 +1,5 @@
 [package]
-name = "aether-market"
+name = "aethermesh-market"
 version = "1.0.0"
 edition = "2021"
 description = "PoV trust and offline commerce for the Aether protocol"

@@ -18,7 +18,7 @@
     <application
         android:label="Aether Media"
         android:banner="@mipmap/ic_launcher"
-        android:theme="@style/Theme.AetherMedia.TV"
+        android:theme="@style/Theme.AetherMeshMedia.TV"
         android:supportsRtl="true">
         <activity
             android:name=".MainActivity"

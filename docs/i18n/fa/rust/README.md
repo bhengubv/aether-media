@@ -51,7 +51,7 @@ cargo bench
 ## شروع سریع
 
 ```rust
-use aether_media::{
+use aethermesh_media::{
     models::{MediaContent, MediaFeedItem},
     feed::FeedStore,
     social::SocialGraph,
@@ -118,7 +118,7 @@ aether-media = { version = "1.0.0", features = ["player", "ui"] }
 ## پخش‌کننده (LibVLC)
 
 ```rust
-use aether_media::player::Player;
+use aethermesh_media::player::Player;
 
 #[tokio::main]
 async fn main() {
@@ -137,7 +137,7 @@ LibVLC باید روی سیستم میزبان نصب باشد. پرچم feature
 ## استریم ناهمزمان
 
 ```rust
-use aether_media::streaming::StreamClient;
+use aethermesh_media::streaming::StreamClient;
 
 #[tokio::main]
 async fn main() {

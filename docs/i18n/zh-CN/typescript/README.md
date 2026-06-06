@@ -40,10 +40,10 @@ npm test
 ## 快速入门
 
 ```typescript
-import { AetherMediaPlayer, FeedClient, ProfileClient } from '@bhengubv/aether-media';
+import { AetherMeshMediaPlayer, FeedClient, ProfileClient } from '@bhengubv/aether-media';
 
 // Play a piece of content by hash
-const player = new AetherMediaPlayer();
+const player = new AetherMeshMediaPlayer();
 await player.load('sha256abc');
 player.play();
 
@@ -66,23 +66,23 @@ console.log(profile.displayName, profile.aetherTag);
 
 | 模块 | 导出 | 说明 |
 |--------|--------|-------------|
-| `player` | `AetherMediaPlayer` | HLS.js + Shaka Player 自适应播放引擎 |
+| `player` | `AetherMeshMediaPlayer` | HLS.js + Shaka Player 自适应播放引擎 |
 | `social` | `FeedClient`、`ReactionClient` | 信息流浏览与互动发送 |
-| `streaming` | `AetherStreamClient` | 直播订阅与分片缓冲 |
+| `streaming` | `AetherMeshStreamClient` | 直播订阅与分片缓冲 |
 | `content` | `ContentClient` | P2P 内容块发现与下载 |
-| `identity` | `ProfileClient` | AetherTag 个人资料解析 |
+| `identity` | `ProfileClient` | AetherMeshTag 个人资料解析 |
 | `models` | `MediaContent`、`MediaProfile`、`MediaFeedItem`、`MediaReaction` | 共享领域类型 |
 
 ---
 
 ## 播放器
 
-`AetherMediaPlayer` 同时封装了 HLS.js（用于 HTTP/HLS 源）和 Shaka Player（用于 DASH 和 Aether 网状流），并自动选择最佳引擎：
+`AetherMeshMediaPlayer` 同时封装了 HLS.js（用于 HTTP/HLS 源）和 Shaka Player（用于 DASH 和 Aether 网状流），并自动选择最佳引擎：
 
 ```typescript
-import { AetherMediaPlayer } from '@bhengubv/aether-media';
+import { AetherMeshMediaPlayer } from '@bhengubv/aether-media';
 
-const player = new AetherMediaPlayer({
+const player = new AetherMeshMediaPlayer({
     container: document.getElementById('video-container')!,
     autoQuality: true,
 });
@@ -106,9 +106,9 @@ player.on('error',  (err) => console.error(err));
 ## 直播
 
 ```typescript
-import { AetherStreamClient } from '@bhengubv/aether-media';
+import { AetherMeshStreamClient } from '@bhengubv/aether-media';
 
-const client = new AetherStreamClient();
+const client = new AetherMeshStreamClient();
 await client.subscribe('host-uhid-abc123');
 
 client.on('segment', (segment) => {
@@ -169,9 +169,9 @@ typescript/
 │   ├── content/         # P2P content chunk client
 │   ├── identity/        # ProfileClient
 │   ├── models/          # Domain types + computed properties
-│   ├── player/          # AetherMediaPlayer (HLS.js + Shaka)
+│   ├── player/          # AetherMeshMediaPlayer (HLS.js + Shaka)
 │   ├── social/          # FeedClient, ReactionClient
-│   ├── streaming/       # AetherStreamClient
+│   ├── streaming/       # AetherMeshStreamClient
 │   └── index.ts         # Public re-exports
 ├── package.json
 └── tsconfig.json

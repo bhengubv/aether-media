@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>AetherMesh.Trust.Verification</PackageId>
+    <Description>Trust Rings verification engine for Aether Media — SHA-256 block validation and Ed25519 ring attestation with quarantine overlay.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AetherMesh.Trust.Core/AetherMesh.Trust.Core.csproj" />
+    <ProjectReference Include="../../../../src/AetherMesh.Media.DependencyInjection/AetherMesh.Media.DependencyInjection.csproj" />
+  </ItemGroup>
+
+</Project>

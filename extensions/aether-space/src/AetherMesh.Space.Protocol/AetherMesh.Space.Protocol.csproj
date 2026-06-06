@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>AetherMesh.Space.Protocol</PackageId>
+    <Description>Wire protocol and packet routing for Aether Space breadcrumbs over the Aether mesh network.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AetherMesh.Space.Core/AetherMesh.Space.Core.csproj" />
+    <ProjectReference Include="../../../../src/AetherMesh.Media.DependencyInjection/AetherMesh.Media.DependencyInjection.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
+    <ProjectReference Include="../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
+    <PackageReference Include="AetherMesh.Core" Version="1.0.3" />
+  </ItemGroup>
+
+</Project>

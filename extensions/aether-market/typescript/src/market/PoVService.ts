@@ -22,15 +22,15 @@ export class PoVService {
 
   /**
    * Initiates a Proof-of-Vicinity handshake with the device identified by
-   * {@link subjectAetherTag} and returns the signed token on success.
+   * {@link subjectAetherMeshTag} and returns the signed token on success.
    *
-   * @param subjectAetherTag  The @tag of the device to witness.
+   * @param subjectAetherMeshTag  The @tag of the device to witness.
    */
-  async issueToken(subjectAetherTag: string): Promise<PoVToken> {
+  async issueToken(subjectAetherMeshTag: string): Promise<PoVToken> {
     const res = await fetch(`${this._baseUrl}/market/pov/issue`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ subjectAetherTag }),
+      body: JSON.stringify({ subjectAetherMeshTag }),
     });
 
     if (!res.ok) {

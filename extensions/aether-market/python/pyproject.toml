@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "aether-market"
+name = "aethermesh-market"
 version = "1.0.0"
 description = "PoV trust and offline commerce for the Aether protocol"
 requires-python = ">=3.11"
@@ -17,4 +17,4 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["aether_market"]
+packages = ["aethermesh_market"]

@@ -1,6 +1,6 @@
-use aether_media::feed::{FeedAggregator, MediaFeedItem};
-use aether_media::models::{MediaContent, MediaReaction, MediaReactionType, MediaProfile};
-use aether_media::social::SocialGraph;
+use aethermesh_media::feed::{FeedAggregator, MediaFeedItem};
+use aethermesh_media::models::{MediaContent, MediaReaction, MediaReactionType, MediaProfile};
+use aethermesh_media::social::SocialGraph;
 
 fn main() {
     // ── Social graph demo ────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ fn main() {
         display_name: "Alice".into(),
         avatar_hash: None,
         bio: Some("Building on the Aether mesh. Decentralised video for everyone. South African creator. Building open-source tools for the mesh network since day one.".into()),
-        aether_tag: "@alice".into(),
+        aethermesh_tag: "@alice".into(),
         follower_count: 1_234,
         following_count: 56,
         content_count: 42,

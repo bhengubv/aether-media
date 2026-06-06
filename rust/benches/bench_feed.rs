@@ -1,7 +1,7 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
-use aether_media::feed::{FeedAggregator, MediaFeedItem, FEED_CAP};
-use aether_media::models::MediaContent;
+use aethermesh_media::feed::{FeedAggregator, MediaFeedItem, FEED_CAP};
+use aethermesh_media::models::MediaContent;
 
 fn make_item(i: usize) -> MediaFeedItem {
     MediaFeedItem {

@@ -72,14 +72,14 @@ Aether Media ist aufgebaut auf [aether-protocol](https://github.com/bhengubv/aet
 
 | Aether-Schnittstelle | Paket | Wie Aether Media sie nutzt |
 |---|---|---|
-| `ITransportService` | `Aether.Transport` | Sendet kodierte Video-/Audioframes, Reaktionen und Follow-Absichten über das Mesh (BLE / Wi-Fi Direct / NearLink / LoRa / HTTP-Relay) |
-| `IStreamingService` | `Aether.Streaming` | Sendet `StreamAnnounce` beim Go-Live; `FeedAggregator` abonniert `StreamAnnounced`- und `StreamEnded`-Ereignisse zur Pflege des Live-Stream-Feeds |
-| `IContentService` | `Aether.Content` | Veröffentlicht `ContentDescriptor`s für hochgeladene Medien; `FeedAggregator` abonniert `ContentAnnounced` für VOD-Erkennung |
-| `IDtnService` | `Aether.Dtn` | Stellt Follow-Absichten dauerhaft an offline-Creator zu; Bundles warten bis zu 72 Stunden auf eine Route |
-| `IMeshSender` | `Aether.Messaging` | Sendet Best-Effort-Unfollow-Pakete und Live-Reaktionen über das Mesh ohne DTN-Overhead |
-| `IRoutingService` | `Aether.Routing` | Routenaware Zustellung von sozialen Paketen; AODV-artiges RREQ/RREP mit Ed25519-signierten Routen-Antworten |
-| `SignalProtocolService` | `Aether.Security` | Ende-zu-Ende-verschlüsselt Direktnachrichten, Profil-Sync-Nutzdaten und privaten Kanalinhalt mit X3DH + Double Ratchet |
-| `IAdaptiveBitrateController` | `Aether.Streaming` | Wählt die höchste nachhaltige Qualitätsstufe (H.264 / H.265 / VP8) basierend auf Live-Bandbreiten-Schätzungen vom aktiven Transport |
+| `ITransportService` | `AetherMesh.Transport` | Sendet kodierte Video-/Audioframes, Reaktionen und Follow-Absichten über das Mesh (BLE / Wi-Fi Direct / NearLink / LoRa / HTTP-Relay) |
+| `IStreamingService` | `AetherMesh.Streaming` | Sendet `StreamAnnounce` beim Go-Live; `FeedAggregator` abonniert `StreamAnnounced`- und `StreamEnded`-Ereignisse zur Pflege des Live-Stream-Feeds |
+| `IContentService` | `AetherMesh.Content` | Veröffentlicht `ContentDescriptor`s für hochgeladene Medien; `FeedAggregator` abonniert `ContentAnnounced` für VOD-Erkennung |
+| `IDtnService` | `AetherMesh.Dtn` | Stellt Follow-Absichten dauerhaft an offline-Creator zu; Bundles warten bis zu 72 Stunden auf eine Route |
+| `IMeshSender` | `AetherMesh.Messaging` | Sendet Best-Effort-Unfollow-Pakete und Live-Reaktionen über das Mesh ohne DTN-Overhead |
+| `IRoutingService` | `AetherMesh.Routing` | Routenaware Zustellung von sozialen Paketen; AODV-artiges RREQ/RREP mit Ed25519-signierten Routen-Antworten |
+| `SignalProtocolService` | `AetherMesh.Security` | Ende-zu-Ende-verschlüsselt Direktnachrichten, Profil-Sync-Nutzdaten und privaten Kanalinhalt mit X3DH + Double Ratchet |
+| `IAdaptiveBitrateController` | `AetherMesh.Streaming` | Wählt die höchste nachhaltige Qualitätsstufe (H.264 / H.265 / VP8) basierend auf Live-Bandbreiten-Schätzungen vom aktiven Transport |
 
 ---
 
@@ -110,13 +110,13 @@ interoperable soziale Pakete, die durch sprachübergreifende Fixtures in CI veri
 ```bash
 git clone https://github.com/bhengubv/aether-media.git
 cd aether-media
-dotnet run --project samples/Aether.Media.Demo.Console
+dotnet run --project samples/AetherMesh.Media.Demo.Console
 ```
 
 Alle Subsysteme registrieren:
 
 ```csharp
-services.AddAetherMedia(media =>
+services.AddAetherMeshMedia(media =>
     media.AddIdentity()
          .AddContent()
          .AddSocial()
@@ -151,10 +151,10 @@ await feed.StartAsync();
 ### TypeScript (Browser)
 
 ```typescript
-import { AetherMediaPlayer } from '@bhengubv/aether-media';
+import { AetherMeshMediaPlayer } from '@bhengubv/aether-media';
 
 const video  = document.querySelector('video') as HTMLVideoElement;
-const player = new AetherMediaPlayer(video);
+const player = new AetherMeshMediaPlayer(video);
 
 // Load an HLS stream published by a peer on the mesh
 await player.load('aether://stream/KXJB7-MN2P4');
@@ -169,7 +169,7 @@ Feed-Client mit lokalem Speicher-Cache:
 ```typescript
 import { FeedClient } from '@bhengubv/aether-media';
 
-const client = new FeedClient('https://relay.aether.network/media');
+const client = new FeedClient('https://relay.aethermesh.network/media');
 const items  = await client.getFeed(20, 0);   // limit, offset
 
 for (const item of items) {
@@ -182,10 +182,10 @@ await client.markWatched('a3f9...', 45_000);  // contentHash, ms watched
 ### Python (Plugin)
 
 ```python
-from aether_media.plugins.base import AetherMediaPlugin
-from aether_media.models import MediaContent, MediaReaction
+from aethermesh_media.plugins.base import AetherMeshMediaPlugin
+from aethermesh_media.models import MediaContent, MediaReaction
 
-class MyPlugin(AetherMediaPlugin):
+class MyPlugin(AetherMeshMediaPlugin):
     @property
     def name(self) -> str:
         return "My Plugin"
@@ -204,7 +204,7 @@ class MyPlugin(AetherMediaPlugin):
 ### Kotlin (Android / JVM)
 
 ```kotlin
-import aether.media.social.SocialGraph
+import aethermesh.media.social.SocialGraph
 
 val graph = SocialGraph()
 graph.follow("KXJB7-MN2P4")
@@ -217,7 +217,7 @@ println(graph.count)                        // 0
 ### Rust
 
 ```rust
-use aether_media::feed::{FeedStore, FeedEntry};
+use aethermesh_media::feed::{FeedStore, FeedEntry};
 
 let mut store = FeedStore::new(500);
 let entry = FeedEntry {
@@ -246,7 +246,7 @@ fmt.Println(g.Following())                 // [KXJB7-MN2P4]
 ### Swift
 
 ```swift
-import AetherMedia
+import AetherMeshMedia
 
 let graph = SocialGraph()
 try await graph.follow(uhid: "KXJB7-MN2P4")
@@ -257,12 +257,12 @@ print(following) // ["KXJB7-MN2P4"]
 ### C
 
 ```c
-#include "aether_media/social.h"
+#include "aethermesh_media/social.h"
 
-aether_social_graph_t *graph = aether_social_graph_create();
-aether_social_graph_follow(graph, "KXJB7-MN2P4");
-printf("Following: %d\n", aether_social_graph_is_following(graph, "KXJB7-MN2P4")); // 1
-aether_social_graph_destroy(graph);
+aethermesh_social_graph_t *graph = aethermesh_social_graph_create();
+aethermesh_social_graph_follow(graph, "KXJB7-MN2P4");
+printf("Following: %d\n", aethermesh_social_graph_is_following(graph, "KXJB7-MN2P4")); // 1
+aethermesh_social_graph_destroy(graph);
 ```
 
 ---
@@ -300,30 +300,30 @@ Mal, wenn eines von ihnen in Funkreichweite kommt.
 ```
 aether-media/
   src/
-    Aether.Media.Core/            Domänenmodelle und Schnittstellen (MediaContent, IMediaLibrary usw.)
-    Aether.Media.Identity/        Profilverwaltung, Avatar, Profil-Sync
-    Aether.Media.Content/         Medienbibliotheks-Scanner, Metadaten-Resolver, LRU-Cache, Vorschaubilder
-    Aether.Media.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
-    Aether.Media.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
-    Aether.Media.AI/              ContentRanker, ContentModerator, CreatorReputationView
-    Aether.Media.DependencyInjection/  AddAetherMedia()-Erweiterung + AetherMediaBuilder Fluent-API
-    Aether.Media.Desktop/         LibVLCSharp-Integration für Windows / Linux / macOS
+    AetherMesh.Media.Core/            Domänenmodelle und Schnittstellen (MediaContent, IMediaLibrary usw.)
+    AetherMesh.Media.Identity/        Profilverwaltung, Avatar, Profil-Sync
+    AetherMesh.Media.Content/         Medienbibliotheks-Scanner, Metadaten-Resolver, LRU-Cache, Vorschaubilder
+    AetherMesh.Media.Social/          SocialGraph, FeedAggregator, ReactionService, DiscoveryService
+    AetherMesh.Media.Streaming/       LiveStreamPublisher, WatchPartyCoordinator, AbrController
+    AetherMesh.Media.AI/              ContentRanker, ContentModerator, CreatorReputationView
+    AetherMesh.Media.DependencyInjection/  AddAetherMeshMedia()-Erweiterung + AetherMeshMediaBuilder Fluent-API
+    AetherMesh.Media.Desktop/         LibVLCSharp-Integration für Windows / Linux / macOS
   samples/
-    Aether.Media.Demo.Console/    Interaktive Konsoldemo mit allen Subsystemen
-    Aether.Media.RelayTest/       HTTP-Relay-Hin-und-Rücklauf-Test (erfordert Aether.RelayServer)
+    AetherMesh.Media.Demo.Console/    Interaktive Konsoldemo mit allen Subsystemen
+    AetherMesh.Media.RelayTest/       HTTP-Relay-Hin-und-Rücklauf-Test (erfordert AetherMesh.RelayServer)
   tests/
-    Aether.Media.Core.Tests/      Unit-Tests für Domänenmodelle und InMemoryMediaLibrary
-    Aether.Media.Social.Tests/    Unit-Tests für SocialGraph und FeedAggregator
+    AetherMesh.Media.Core.Tests/      Unit-Tests für Domänenmodelle und InMemoryMediaLibrary
+    AetherMesh.Media.Social.Tests/    Unit-Tests für SocialGraph und FeedAggregator
   typescript/                     TypeScript-Web-Player und soziales SDK (@bhengubv/aether-media)
     src/
-      player/   AetherMediaPlayer (HLS.js + Shaka Player + natives MSE)
+      player/   AetherMeshMediaPlayer (HLS.js + Shaka Player + natives MSE)
       social/   FeedClient, ReactionClient
       identity/ ProfileClient
-      streaming/ AetherStreamClient
+      streaming/ AetherMeshStreamClient
       models/   TypeScript-Spiegelungen der C#-Domänenmodelle
   python/                         Python-Plugin-Engine und Metadatenbibliothek (aether-media auf PyPI)
-    aether_media/
-      plugins/  AetherMediaPlugin-Basisklasse, PluginHost
+    aethermesh_media/
+      plugins/  AetherMeshMediaPlugin-Basisklasse, PluginHost
       metadata/ Tag-Leser/-Schreiber (mutagen-Wrapper)
       cli/      Kommandozeilen-Einstiegspunkte
   rust/                           Rust-Feed-Engine (aether-media auf crates.io)
@@ -346,13 +346,13 @@ aether-media/
       streaming/ Stream-Sitzungsmodelle
     android/    Gradle-Android-Modul mit media3-exoplayer-Abhängigkeit
   swift/                          Swift / Apple-Plattform-Player (SwiftPM-Paket)
-    Sources/AetherMedia/
+    Sources/AetherMeshMedia/
       social/   SocialGraph (actor-basiert, Swift Concurrency)
       player/   AVFoundation-Player
       feed/     Feed-Modelle
       streaming/ Stream-Modelle
   c/                              C11-Feed- und Sozialmodelle für eingebettete Ziele
-    include/aether_media/         Öffentliche Header
+    include/aethermesh_media/         Öffentliche Header
     src/                          Implementierungen
     tests/                        CTest-basierte Testsuite
   android/                        Android-Gradle-Module
@@ -368,7 +368,7 @@ aether-media/
 ### C#
 
 ```bash
-dotnet build AetherMedia.slnx
+dotnet build AetherMeshMedia.slnx
 dotnet test
 ```
 

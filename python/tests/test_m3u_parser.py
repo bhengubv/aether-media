@@ -1,10 +1,10 @@
-"""Tests for aether_media.playlist.m3u_parser."""
+"""Tests for aethermesh_media.playlist.m3u_parser."""
 
 from __future__ import annotations
 
 import pytest
 
-from aether_media.playlist.m3u_parser import _parse_stream_inf_attrs, parse_m3u
+from aethermesh_media.playlist.m3u_parser import _parse_stream_inf_attrs, parse_m3u
 
 
 # ── _parse_stream_inf_attrs ───────────────────────────────────────────────────

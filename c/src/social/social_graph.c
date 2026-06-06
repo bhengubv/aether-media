@@ -1,4 +1,4 @@
-#include "aether_media.h"
+#include "aethermesh_media.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -6,7 +6,7 @@
 /* Initial capacity; doubles on overflow */
 #define INITIAL_CAP 16
 
-struct AetherSocialGraph {
+struct AetherMeshSocialGraph {
     char   **uhids;     /* heap-allocated array of heap-allocated strings */
     int      count;
     int      capacity;
@@ -14,8 +14,8 @@ struct AetherSocialGraph {
 
 /* ── Lifecycle ──────────────────────────────────────────────────────────────── */
 
-AetherSocialGraph *aether_social_graph_create(void) {
-    AetherSocialGraph *g = (AetherSocialGraph *)malloc(sizeof(AetherSocialGraph));
+AetherMeshSocialGraph *aethermesh_social_graph_create(void) {
+    AetherMeshSocialGraph *g = (AetherMeshSocialGraph *)malloc(sizeof(AetherMeshSocialGraph));
     if (!g) return NULL;
     g->uhids    = (char **)malloc(INITIAL_CAP * sizeof(char *));
     g->count    = 0;
@@ -27,7 +27,7 @@ AetherSocialGraph *aether_social_graph_create(void) {
     return g;
 }
 
-void aether_social_graph_destroy(AetherSocialGraph *graph) {
+void aethermesh_social_graph_destroy(AetherMeshSocialGraph *graph) {
     if (!graph) return;
     for (int i = 0; i < graph->count; i++) {
         free(graph->uhids[i]);
@@ -39,7 +39,7 @@ void aether_social_graph_destroy(AetherSocialGraph *graph) {
 /* ── Internal helpers ────────────────────────────────────────────────────────── */
 
 /** Returns the index of uhid in the array, or -1 if not found. */
-static int _find_index(AetherSocialGraph *graph, const char *uhid) {
+static int _find_index(AetherMeshSocialGraph *graph, const char *uhid) {
     for (int i = 0; i < graph->count; i++) {
         if (strcmp(graph->uhids[i], uhid) == 0)
             return i;
@@ -48,7 +48,7 @@ static int _find_index(AetherSocialGraph *graph, const char *uhid) {
 }
 
 /** Grow the backing array by doubling capacity.  Returns false on OOM. */
-static bool _grow(AetherSocialGraph *graph) {
+static bool _grow(AetherMeshSocialGraph *graph) {
     int new_cap = graph->capacity * 2;
     char **new_arr = (char **)realloc(graph->uhids, new_cap * sizeof(char *));
     if (!new_arr) return false;
@@ -59,7 +59,7 @@ static bool _grow(AetherSocialGraph *graph) {
 
 /* ── Public operations ───────────────────────────────────────────────────────── */
 
-void aether_social_graph_follow(AetherSocialGraph *graph, const char *uhid) {
+void aethermesh_social_graph_follow(AetherMeshSocialGraph *graph, const char *uhid) {
     if (!graph || !uhid || uhid[0] == '\0') return;
     if (_find_index(graph, uhid) >= 0) return;  /* already following */
 
@@ -72,7 +72,7 @@ void aether_social_graph_follow(AetherSocialGraph *graph, const char *uhid) {
     }
 }
 
-void aether_social_graph_unfollow(AetherSocialGraph *graph, const char *uhid) {
+void aethermesh_social_graph_unfollow(AetherMeshSocialGraph *graph, const char *uhid) {
     if (!graph || !uhid) return;
     int idx = _find_index(graph, uhid);
     if (idx < 0) return;  /* not present — no-op */
@@ -86,12 +86,12 @@ void aether_social_graph_unfollow(AetherSocialGraph *graph, const char *uhid) {
     graph->count--;
 }
 
-bool aether_social_graph_is_following(AetherSocialGraph *graph, const char *uhid) {
+bool aethermesh_social_graph_is_following(AetherMeshSocialGraph *graph, const char *uhid) {
     if (!graph || !uhid) return false;
     return _find_index(graph, uhid) >= 0;
 }
 
-int aether_social_graph_list(AetherSocialGraph *graph,
+int aethermesh_social_graph_list(AetherMeshSocialGraph *graph,
                               const char       **out_uhids,
                               int                max) {
     if (!graph || !out_uhids || max <= 0) return 0;
@@ -102,14 +102,14 @@ int aether_social_graph_list(AetherSocialGraph *graph,
     return written;
 }
 
-int aether_social_graph_count(AetherSocialGraph *graph) {
+int aethermesh_social_graph_count(AetherMeshSocialGraph *graph) {
     if (!graph) return 0;
     return graph->count;
 }
 
 /* ── Duration formatting ─────────────────────────────────────────────────────── */
 
-void aether_format_duration(int64_t duration_ms, char *out, size_t out_len) {
+void aethermesh_format_duration(int64_t duration_ms, char *out, size_t out_len) {
     if (!out || out_len == 0) return;
     if (duration_ms <= 0) {
         snprintf(out, out_len, "Live");
