@@ -18,7 +18,9 @@
 
   <ItemGroup>
     <!-- Same version as AetherMedia.Content — no duplication in restore graph -->
-    <PackageReference Include="TagLibSharp"                           Version="2.3.0" />
+    <PackageReference Include="NAudio.Asio" Version="2.2.1" />
+    <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
+    <PackageReference Include="TagLibSharp" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
   </ItemGroup>
 
