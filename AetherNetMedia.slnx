@@ -31,12 +31,6 @@
   <Project Path="extensions\aether-space\src\AetherNet.Space.Core\AetherNet.Space.Core.csproj" />
   <Project Path="extensions\aether-space\src\AetherNet.Space.Protocol\AetherNet.Space.Protocol.csproj" />
   <Project Path="extensions\aether-space\tests\AetherNet.Space.Tests\AetherNet.Space.Tests.csproj" />
-  <Folder Name="/src/">
-    <Project Path="src/AetherNet.Media.Audio/AetherNet.Media.Audio.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/AetherNet.Media.Audio.Tests/AetherNet.Media.Audio.Tests.csproj" />
-  </Folder>
   <Project Path="extensions\aether-forge\src\AetherNet.Forge.Core\AetherNet.Forge.Core.csproj" />
   <Project Path="extensions\aether-forge\src\AetherNet.Forge.Proxy\AetherNet.Forge.Proxy.csproj" />
   <Project Path="extensions\aether-forge\tests\AetherNet.Forge.Tests\AetherNet.Forge.Tests.csproj" />
