@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <PackageId>AetherMesh.Media.Core</PackageId>
     <Description>Domain models and interfaces for the Aether Media decentralised social media network.</Description>
   </PropertyGroup>

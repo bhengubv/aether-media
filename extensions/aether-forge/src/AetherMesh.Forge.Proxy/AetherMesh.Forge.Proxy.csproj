@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <PackageId>AetherMesh.Forge.Proxy</PackageId>
     <Description>HTTP CONNECT proxy for Aether Forge — serves cached packages from the mesh before falling back to the internet.</Description>
   </PropertyGroup>

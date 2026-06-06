@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <PackageId>AetherMesh.Trust.Verification</PackageId>
     <Description>Trust Rings verification engine for Aether Media — SHA-256 block validation and Ed25519 ring attestation with quarantine overlay.</Description>
   </PropertyGroup>

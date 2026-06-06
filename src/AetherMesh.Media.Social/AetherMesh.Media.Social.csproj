@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <PackageId>AetherMesh.Media.Social</PackageId>
     <Description>Decentralised social graph, feed, reactions, and peer discovery for Aether Media.</Description>
   </PropertyGroup>
@@ -18,9 +18,9 @@
     <ProjectReference Include="../../../aether-protocol/src/AetherMesh.Streaming/AetherMesh.Streaming.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
-    <PackageReference Include="AetherMesh.Core"      Version="1.0.4" />
-    <PackageReference Include="AetherMesh.Content"   Version="1.0.4" />
-    <PackageReference Include="AetherMesh.Streaming" Version="1.0.4" />
+    <PackageReference Include="AetherMesh.Core"      Version="1.1.0" />
+    <PackageReference Include="AetherMesh.Content"   Version="1.1.0" />
+    <PackageReference Include="AetherMesh.Streaming" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

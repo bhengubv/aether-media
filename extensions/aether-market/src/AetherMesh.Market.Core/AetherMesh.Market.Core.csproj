@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <PackageId>AetherMesh.Market.Core</PackageId>
     <Description>Domain models and interfaces for Aether Market — decentralised peer-to-peer marketplace with Proof-of-Vicinity trust and escrow over the Aether mesh network.</Description>
   </PropertyGroup>
@@ -20,7 +20,7 @@
     <ProjectReference Include="../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
-    <PackageReference Include="AetherMesh.Core" Version="1.0.4" />
+    <PackageReference Include="AetherMesh.Core" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

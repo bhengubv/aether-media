@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <PackageId>AetherMesh.Media.AI</PackageId>
     <Description>AI-powered content curation and creator reputation via IAetherMeshAiProvider for Aether Media.</Description>
   </PropertyGroup>
@@ -15,7 +15,7 @@
     <ProjectReference Include="../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherMesh.Core/AetherMesh.Core.csproj')">
-    <PackageReference Include="AetherMesh.Core" Version="1.0.4" />
+    <PackageReference Include="AetherMesh.Core" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
