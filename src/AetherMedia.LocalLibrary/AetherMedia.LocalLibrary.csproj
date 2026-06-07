@@ -16,6 +16,23 @@
     <InternalsVisibleTo Include="AetherMedia.LocalLibrary.Tests" />
   </ItemGroup>
 
+  <!-- AetherNet protocol — local source if available, NuGet fallback. Same
+       conditional shape as AetherMedia.Content / .Streaming / .Social. -->
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Content/AetherNet.Content.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Streaming/AetherNet.Streaming.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Messaging/AetherNet.Messaging.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Forge/AetherNet.Forge.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <PackageReference Include="AetherNet.Core"      Version="1.1.0" />
+    <PackageReference Include="AetherNet.Content"   Version="1.1.0" />
+    <PackageReference Include="AetherNet.Streaming" Version="1.1.0" />
+    <PackageReference Include="AetherNet.Messaging" Version="1.1.0" />
+    <PackageReference Include="AetherNet.Forge"     Version="1.1.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <!-- Same version as AetherMedia.Content — no duplication in restore graph -->
     <PackageReference Include="NAudio.Asio" Version="2.2.1" />
