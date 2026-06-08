@@ -18,8 +18,13 @@ public sealed class InMemoryDtnService : IDtnService
     private readonly List<DtnBundle> _bundles = new();
     private readonly object _gate = new();
 
+#pragma warning disable CS0067 // event-stub for interface contract; this test double doesn't fire events
     /// <inheritdoc/>
     public event EventHandler<DtnDeliveryReceipt>? BundleDelivered;
+
+    /// <inheritdoc/>
+    public event EventHandler<DtnBundleReceivedEventArgs>? BundleReceived;
+#pragma warning restore CS0067
 
     /// <summary>Every bundle ever created — useful for assertions.</summary>
     public IReadOnlyList<DtnBundle> AllBundles

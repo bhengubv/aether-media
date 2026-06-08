@@ -18,13 +18,19 @@ public sealed class MeshFirstLyricFetcher : ILyricFetcher, IDisposable
 {
     private readonly ILyricFetcher _inner;
     private readonly IContentService _content;
+    private readonly IDirectoryService? _directory;
     private readonly LrcParser _parser = new();
     private readonly TimeSpan _meshTimeout;
 
-    public MeshFirstLyricFetcher(ILyricFetcher inner, IContentService content, TimeSpan? meshTimeout = null)
+    public MeshFirstLyricFetcher(
+        ILyricFetcher inner,
+        IContentService content,
+        TimeSpan? meshTimeout = null,
+        IDirectoryService? directory = null)
     {
         _inner = inner ?? throw new ArgumentNullException(nameof(inner));
         _content = content ?? throw new ArgumentNullException(nameof(content));
+        _directory = directory;
         _meshTimeout = meshTimeout ?? TimeSpan.FromSeconds(4);
     }
 
@@ -67,6 +73,23 @@ public sealed class MeshFirstLyricFetcher : ILyricFetcher, IDisposable
 
     private async Task<byte[]?> TryMeshAsync(string contentKey, CancellationToken ct)
     {
+        // Preferred path (AetherNet 1.2.0+): IDirectoryService.ResolveAsync.
+        if (_directory is not null)
+        {
+            try
+            {
+                var descriptor = await _directory.ResolveAsync(contentKey, _meshTimeout, ct).ConfigureAwait(false);
+                if (descriptor is null) return null;
+                using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                timeout.CancelAfter(_meshTimeout);
+                var indices = Enumerable.Range(0, descriptor.ChunkCount).ToList();
+                await _content.RequestChunksAsync(descriptor.RootHash, indices, null, timeout.Token).ConfigureAwait(false);
+                return await _content.AssembleAsync(descriptor.RootHash, timeout.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) { return null; }
+        }
+
+        // Legacy fallback: hash-as-name + ContentAnnounced-listen.
         var seen = new TaskCompletionSource<ContentDescriptor?>(TaskCreationOptions.RunContinuationsAsynchronously);
         void OnAnnounced(object? s, ContentDescriptor d)
         {

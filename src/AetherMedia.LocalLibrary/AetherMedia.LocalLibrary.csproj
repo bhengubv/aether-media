@@ -26,11 +26,11 @@
     <ProjectReference Include="../../../aether-protocol/src/AetherNet.Forge/AetherNet.Forge.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <PackageReference Include="AetherNet.Core"      Version="1.1.0" />
-    <PackageReference Include="AetherNet.Content"   Version="1.1.0" />
-    <PackageReference Include="AetherNet.Streaming" Version="1.1.0" />
-    <PackageReference Include="AetherNet.Messaging" Version="1.1.0" />
-    <PackageReference Include="AetherNet.Forge"     Version="1.1.0" />
+    <PackageReference Include="AetherNet.Core"      Version="1.2.0" />
+    <PackageReference Include="AetherNet.Content"   Version="1.2.0" />
+    <PackageReference Include="AetherNet.Streaming" Version="1.2.0" />
+    <PackageReference Include="AetherNet.Messaging" Version="1.2.0" />
+    <PackageReference Include="AetherNet.Forge"     Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>

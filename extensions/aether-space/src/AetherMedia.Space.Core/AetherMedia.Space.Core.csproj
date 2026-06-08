@@ -1,20 +1,40 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
-    <PackageId>AetherMedia.Space.Core</PackageId>
-    <Description>Domain models and interfaces for Aether Space — geo-anchored breadcrumb layer for the Aether mesh network.</Description>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../../../../src/AetherMedia.Core/AetherMedia.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <ProjectReference Include="../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <PackageReference Include="AetherNet.Core" Version="1.1.0" />
-  </ItemGroup>
-
-</Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
+
+
+  <PropertyGroup>
+
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+
+    <PackageId>AetherMedia.Space.Core</PackageId>
+
+    <Description>Domain models and interfaces for Aether Space — geo-anchored breadcrumb layer for the Aether mesh network.</Description>
+
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+
+    <ProjectReference Include="../../../../src/AetherMedia.Core/AetherMedia.Core.csproj" />
+
+  </ItemGroup>
+
+
+
+  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+
+    <ProjectReference Include="../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+
+  </ItemGroup>
+
+  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+
+    <PackageReference Include="AetherNet.Core" Version="1.2.0" />
+
+  </ItemGroup>
+
+
+
+</Project>
+

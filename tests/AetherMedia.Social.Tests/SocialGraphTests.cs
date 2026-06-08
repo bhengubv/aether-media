@@ -27,6 +27,9 @@ public sealed class SocialGraphTests
     private sealed class FakeDtnService : IDtnService
     {
         public event EventHandler<DtnDeliveryReceipt>? BundleDelivered;
+#pragma warning disable CS0067 // event-stub for interface contract
+        public event EventHandler<DtnBundleReceivedEventArgs>? BundleReceived;
+#pragma warning restore CS0067
 
         // Expose a helper so tests can simulate a delivery receipt if needed.
         public void RaiseDelivered(DtnDeliveryReceipt receipt) =>

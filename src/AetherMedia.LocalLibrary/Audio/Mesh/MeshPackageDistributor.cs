@@ -38,6 +38,7 @@ public sealed class MeshPackageDistributor
 {
     private readonly IForgeService _forge;
     private readonly IContentService _content;
+    private readonly IDirectoryService? _directory;
     private readonly IAetherNetIncentiveProvider _incentives;
     private readonly string _localNodeUhid;
     private readonly TimeSpan _meshTimeout;
@@ -47,13 +48,15 @@ public sealed class MeshPackageDistributor
         IContentService content,
         IAetherNetIncentiveProvider incentives,
         string localNodeUhid,
-        TimeSpan? meshTimeout = null)
+        TimeSpan? meshTimeout = null,
+        IDirectoryService? directory = null)
     {
         _forge = forge ?? throw new ArgumentNullException(nameof(forge));
         _content = content ?? throw new ArgumentNullException(nameof(content));
         _incentives = incentives ?? throw new ArgumentNullException(nameof(incentives));
         ArgumentException.ThrowIfNullOrEmpty(localNodeUhid);
         _localNodeUhid = localNodeUhid;
+        _directory = directory;
         _meshTimeout = meshTimeout ?? TimeSpan.FromSeconds(10);
     }
 
@@ -99,6 +102,26 @@ public sealed class MeshPackageDistributor
         }
 
         // Cache miss — try the live mesh.
+        // Preferred path (AetherNet 1.2.0+): use IDirectoryService.ResolveAsync.
+        if (_directory is not null)
+        {
+            try
+            {
+                var descriptor = await _directory.ResolveAsync(packageId, _meshTimeout, ct).ConfigureAwait(false);
+                if (descriptor is null) return null;
+                using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                timeout.CancelAfter(_meshTimeout);
+                var indices = Enumerable.Range(0, descriptor.ChunkCount).ToList();
+                await _content.RequestChunksAsync(descriptor.RootHash, indices, peerUhid: null, timeout.Token).ConfigureAwait(false);
+                var bytes = await _content.AssembleAsync(descriptor.RootHash, timeout.Token).ConfigureAwait(false);
+                if (bytes is null) return null;
+                await _forge.CacheAsync(packageId, descriptor.RootHash, bytes.LongLength, timeout.Token).ConfigureAwait(false);
+                return bytes;
+            }
+            catch (OperationCanceledException) { return null; }
+        }
+
+        // Legacy fallback: hash-as-name + ContentAnnounced-listen.
         var seen = new TaskCompletionSource<ContentDescriptor?>(TaskCreationOptions.RunContinuationsAsynchronously);
         void OnAnnounced(object? s, ContentDescriptor d)
         {
@@ -123,7 +146,6 @@ public sealed class MeshPackageDistributor
             var bytes = await _content.AssembleAsync(descriptor.RootHash, timeout.Token).ConfigureAwait(false);
             if (bytes is null) return null;
 
-            // Record locally + reward the mesh for the relays we benefited from.
             await _forge.CacheAsync(packageId, descriptor.RootHash, bytes.LongLength, timeout.Token).ConfigureAwait(false);
             return bytes;
         }

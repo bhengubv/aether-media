@@ -1,26 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
-    <PackageId>AetherMedia.Social</PackageId>
-    <Description>Decentralised social graph, feed, reactions, and peer discovery for Aether Media.</Description>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AetherMedia.Core\AetherMedia.Core.csproj" />
-    <ProjectReference Include="..\AetherMedia.Identity\AetherMedia.Identity.csproj" />
-    <ProjectReference Include="..\AetherMedia.Content\AetherMedia.Content.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
-    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Content/AetherNet.Content.csproj" />
-    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Streaming/AetherNet.Streaming.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <PackageReference Include="AetherNet.Core"      Version="1.1.0" />
-    <PackageReference Include="AetherNet.Content"   Version="1.1.0" />
-    <PackageReference Include="AetherNet.Streaming" Version="1.1.0" />
-  </ItemGroup>
-
-</Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherMedia.Social</PackageId>
+    <Description>Decentralised social graph, feed, reactions, and peer discovery for Aether Media.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherMedia.Core\AetherMedia.Core.csproj" />
+    <ProjectReference Include="..\AetherMedia.Identity\AetherMedia.Identity.csproj" />
+    <ProjectReference Include="..\AetherMedia.Content\AetherMedia.Content.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Content/AetherNet.Content.csproj" />
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Streaming/AetherNet.Streaming.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+    <PackageReference Include="AetherNet.Core"      Version="1.2.0" />
+    <PackageReference Include="AetherNet.Content"   Version="1.2.0" />
+    <PackageReference Include="AetherNet.Streaming" Version="1.2.0" />
+  </ItemGroup>
+
+</Project>

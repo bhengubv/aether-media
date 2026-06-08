@@ -38,12 +38,18 @@ public sealed class MeshFirstPodcastDownloader : IDisposable
 {
     private readonly PodcastDownloader _inner;
     private readonly IContentService _content;
+    private readonly IDirectoryService? _directory;
     private readonly TimeSpan _meshTimeout;
 
-    public MeshFirstPodcastDownloader(PodcastDownloader inner, IContentService content, TimeSpan? meshTimeout = null)
+    public MeshFirstPodcastDownloader(
+        PodcastDownloader inner,
+        IContentService content,
+        TimeSpan? meshTimeout = null,
+        IDirectoryService? directory = null)
     {
         _inner = inner ?? throw new ArgumentNullException(nameof(inner));
         _content = content ?? throw new ArgumentNullException(nameof(content));
+        _directory = directory;
         _meshTimeout = meshTimeout ?? TimeSpan.FromSeconds(8);
     }
 
@@ -106,6 +112,24 @@ public sealed class MeshFirstPodcastDownloader : IDisposable
 
     private async Task<byte[]?> TryMeshFetchAsync(string contentKey, CancellationToken ct)
     {
+        // Preferred path (AetherNet 1.2.0+): IDirectoryService.ResolveAsync.
+        if (_directory is not null)
+        {
+            try
+            {
+                var descriptor = await _directory.ResolveAsync(contentKey, _meshTimeout, ct).ConfigureAwait(false);
+                if (descriptor is null) return null;
+                using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                timeout.CancelAfter(_meshTimeout);
+                var indices = Enumerable.Range(0, descriptor.ChunkCount).ToList();
+                await _content.RequestChunksAsync(descriptor.RootHash, indices, peerUhid: null, timeout.Token)
+                              .ConfigureAwait(false);
+                return await _content.AssembleAsync(descriptor.RootHash, timeout.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) { return null; }
+        }
+
+        // Legacy fallback: hash-as-name + ContentAnnounced-listen.
         var seen = new TaskCompletionSource<ContentDescriptor?>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         void OnAnnounced(object? sender, ContentDescriptor descriptor)
@@ -121,17 +145,12 @@ public sealed class MeshFirstPodcastDownloader : IDisposable
             using var reg = timeout.Token.Register(() => seen.TrySetResult(null));
 
             // Issue an empty request so peers' BitmapBroadcasts are forwarded to us.
-            // ChunkBitmap arrivals will eventually cause ContentAnnounced to fire
-            // when a complete descriptor is observed.
             try { await _content.BroadcastBitmapAsync(contentKey, timeout.Token).ConfigureAwait(false); }
             catch (OperationCanceledException) { /* timed out — fine */ }
 
             var descriptor = await seen.Task.ConfigureAwait(false);
             if (descriptor is null) return null;
 
-            // Try to request every chunk we don't have. The receiver path on
-            // ContentService verifies + stores them; AssembleAsync returns the
-            // full bytes if complete.
             var indices = Enumerable.Range(0, descriptor.ChunkCount).ToList();
             await _content.RequestChunksAsync(descriptor.RootHash, indices, peerUhid: null, timeout.Token)
                           .ConfigureAwait(false);

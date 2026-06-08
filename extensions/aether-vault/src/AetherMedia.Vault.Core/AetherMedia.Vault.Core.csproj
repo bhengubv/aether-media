@@ -1,24 +1,48 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
-    <PackageId>AetherMedia.Vault.Core</PackageId>
-    <Description>Domain models and interfaces for Aether Vault — distributed encrypted file storage with erasure coding over the Aether mesh network.</Description>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../../../../src/AetherMedia.Core/AetherMedia.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <ProjectReference Include="../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <PackageReference Include="AetherNet.Core" Version="1.1.0" />
-  </ItemGroup>
-
-</Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
+
+
+  <PropertyGroup>
+
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+
+    <PackageId>AetherMedia.Vault.Core</PackageId>
+
+    <Description>Domain models and interfaces for Aether Vault — distributed encrypted file storage with erasure coding over the Aether mesh network.</Description>
+
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+
+    <ProjectReference Include="../../../../src/AetherMedia.Core/AetherMedia.Core.csproj" />
+
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+
+  </ItemGroup>
+
+
+
+  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+
+    <ProjectReference Include="../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+
+  </ItemGroup>
+
+  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+
+    <PackageReference Include="AetherNet.Core" Version="1.2.0" />
+
+  </ItemGroup>
+
+
+
+</Project>
+

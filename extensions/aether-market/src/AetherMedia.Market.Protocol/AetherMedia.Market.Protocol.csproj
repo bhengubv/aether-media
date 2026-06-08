@@ -1,24 +1,48 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
-    <PackageId>AetherMedia.Market.Protocol</PackageId>
-    <Description>Wire protocol and packet definitions for Aether Market — PoV tokens, market listings, and trade escrow packets for the Aether mesh network.</Description>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../AetherMedia.Market.Core/AetherMedia.Market.Core.csproj" />
-    <ProjectReference Include="../../../../src/AetherMedia.DependencyInjection/AetherMedia.DependencyInjection.csproj" />
-    <!-- Market requires Space (geo-pinned listings) and Vault (document escrow) -->
-    <ProjectReference Include="../../../aether-space/src/AetherMedia.Space.Protocol/AetherMedia.Space.Protocol.csproj" />
-    <ProjectReference Include="../../../aether-vault/src/AetherMedia.Vault.ErasureCoding/AetherMedia.Vault.ErasureCoding.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <ProjectReference Include="../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <PackageReference Include="AetherNet.Core" Version="1.1.0" />
-  </ItemGroup>
-
-</Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
+
+
+  <PropertyGroup>
+
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+
+    <PackageId>AetherMedia.Market.Protocol</PackageId>
+
+    <Description>Wire protocol and packet definitions for Aether Market — PoV tokens, market listings, and trade escrow packets for the Aether mesh network.</Description>
+
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+
+    <ProjectReference Include="../AetherMedia.Market.Core/AetherMedia.Market.Core.csproj" />
+
+    <ProjectReference Include="../../../../src/AetherMedia.DependencyInjection/AetherMedia.DependencyInjection.csproj" />
+
+    <!-- Market requires Space (geo-pinned listings) and Vault (document escrow) -->
+
+    <ProjectReference Include="../../../aether-space/src/AetherMedia.Space.Protocol/AetherMedia.Space.Protocol.csproj" />
+
+    <ProjectReference Include="../../../aether-vault/src/AetherMedia.Vault.ErasureCoding/AetherMedia.Vault.ErasureCoding.csproj" />
+
+  </ItemGroup>
+
+
+
+  <ItemGroup Condition="Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+
+    <ProjectReference Include="../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj" />
+
+  </ItemGroup>
+
+  <ItemGroup Condition="!Exists('../../../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
+
+    <PackageReference Include="AetherNet.Core" Version="1.2.0" />
+
+  </ItemGroup>
+
+
+
+</Project>
+
