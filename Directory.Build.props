@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <VersionPrefix>1.4.0</VersionPrefix>
+    <VersionPrefix>1.5.0</VersionPrefix>
     <Authors>The Other Bhengu (Pty) Ltd t/a The Geek Network</Authors>
     <Company>The Geek Network</Company>
     <Copyright>Copyright © 2025 The Other Bhengu (Pty) Ltd t/a The Geek Network</Copyright>

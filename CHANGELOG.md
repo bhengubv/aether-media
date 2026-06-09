@@ -7,6 +7,40 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.5.0] — 2026-06-09
+
+Second move-upstream wave. The last two protocol-level classes that were
+still living in `AetherMedia.LocalLibrary.Audio.Mesh` — `AesGcmEnvelope`
+and `MeshPackageDistributor` — are now in AetherNet 1.5.0 where they
+belong. AetherMedia 1.5.0 consumes them via `using AetherNet.Security;`
+and `using AetherNet.Forge;` respectively.
+
+### Changed
+
+**LocalLibrary (`AetherMedia.LocalLibrary`)**
+- **BREAKING (internal/test-only):** Deleted local copies of
+  `AetherMedia.LocalLibrary.Audio.Mesh.AesGcmEnvelope` and
+  `AetherMedia.LocalLibrary.Audio.Mesh.MeshPackageDistributor`. Both now
+  live upstream:
+  - `AetherNet.Security.AesGcmEnvelope` (AetherNet 1.5.0+)
+  - `AetherNet.Forge.MeshPackageDistributor` (AetherNet 1.5.0+)
+- Existing consumers (`DtnAwarePlayHistoryStore`,
+  `DtnAwareBookmarkStore`, `MeshIntegrationTests`) now resolve them via
+  `using AetherNet.Security;` and `using AetherNet.Forge;` — same shape,
+  same semantics, byte-equal results.
+
+### Dependency
+
+- `AetherNet.*` PackageReferences bumped from 1.3.0 → 1.5.0 across all
+  packable libraries, samples, and extensions (Vault, Space, Market, Forge).
+
+### Verification
+
+- `AetherMedia.LocalLibrary.Tests`: **192/192 pass** on net9.0 and net10.0.
+- `AetherMedia.Social.Tests`: **68/68 pass** on net9.0 and net10.0.
+
+---
+
 ## [1.4.0] — 2026-06-09
 
 Protocol-surface alignment release: AetherMedia 1.4.0 consumes AetherNet 1.3.0
