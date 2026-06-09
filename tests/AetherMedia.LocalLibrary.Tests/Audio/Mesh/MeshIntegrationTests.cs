@@ -8,6 +8,7 @@ using AetherMedia.LocalLibrary.Audio.Library;
 using AetherMedia.LocalLibrary.Audio.Lyrics;
 using AetherMedia.LocalLibrary.Audio.Mesh;
 using AetherMedia.LocalLibrary.Audio.Output;
+using AetherNet.Content.Diagnostics;
 using AetherMedia.LocalLibrary.Audio.Podcast;
 using AetherMedia.LocalLibrary.Audio.Radio;
 using AetherMedia.LocalLibrary.Audio.Scrobble;

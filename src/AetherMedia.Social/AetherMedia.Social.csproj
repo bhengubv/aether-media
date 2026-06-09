@@ -18,9 +18,9 @@
     <ProjectReference Include="../../../aether-protocol/src/AetherNet.Streaming/AetherNet.Streaming.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
-    <PackageReference Include="AetherNet.Core"      Version="1.2.0" />
-    <PackageReference Include="AetherNet.Content"   Version="1.2.0" />
-    <PackageReference Include="AetherNet.Streaming" Version="1.2.0" />
+    <PackageReference Include="AetherNet.Core"      Version="1.3.0" />
+    <PackageReference Include="AetherNet.Content"   Version="1.3.0" />
+    <PackageReference Include="AetherNet.Streaming" Version="1.3.0" />
   </ItemGroup>
 
 </Project>

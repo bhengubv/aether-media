@@ -7,6 +7,42 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.4.0] — 2026-06-09
+
+Protocol-surface alignment release: AetherMedia 1.4.0 consumes AetherNet 1.3.0
+and removes the local copy of mesh-invariant predicates that were previously
+duplicated inside `AetherMedia.LocalLibrary.Audio.Mesh`. All eight predicates
+are now authoritative in `AetherNet.Content.Diagnostics.MeshInvariants` —
+upstream, where they belong.
+
+### Changed
+
+**LocalLibrary (`AetherMedia.LocalLibrary`)**
+- **BREAKING (internal/test-only):** Deleted the local
+  `AetherMedia.LocalLibrary.Audio.Mesh.MeshInvariants` class. The eight
+  predicates (`DtnCustodyEventuallyTerminates`,
+  `MultiDeviceSyncConverges`, `ContentBitmapEventuallyComplete`,
+  `ForgeIntegrity`, `StreamSequenceMonotonic`, `WatchTogetherBoundedLatency`,
+  `OutboxBounded`, `ByzantineQuorumReached`) now live upstream in
+  `AetherNet.Content.Diagnostics.MeshInvariants` (AetherNet 1.3.0+).
+- Test code that referenced the moved predicates now resolves them through
+  `using AetherNet.Content.Diagnostics;` — same shape, same semantics,
+  byte-equal results.
+
+### Dependency
+
+- `AetherNet.*` PackageReferences bumped from 1.2.0 → 1.3.0 across all
+  packable libraries, samples, and extensions (Vault, Space, Market, Forge).
+
+### Verification
+
+- Solution build (Release, net9.0 + net10.0): **0 errors, 1 warning** (Android
+  libsodium 16 KB page-size advisory — unrelated to this release).
+- `AetherMedia.LocalLibrary.Tests`: **192/192 pass** on net9.0 and net10.0.
+- `AetherMedia.Social.Tests`: **68/68 pass** on net9.0 and net10.0.
+
+---
+
 ## [1.2.0] — 2026-05-22
 
 Phase 3 CircleAI integration — predictive route pre-warming via
