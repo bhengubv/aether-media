@@ -1,6 +1,6 @@
-use aethermedia::feed::{FeedAggregator, MediaFeedItem};
-use aethermedia::models::{MediaContent, MediaReaction, MediaReactionType, MediaProfile};
-use aethermedia::social::SocialGraph;
+use aethernet_media::feed::{FeedAggregator, MediaFeedItem};
+use aethernet_media::models::{MediaContent, MediaReaction, MediaReactionType, MediaProfile};
+use aethernet_media::social::SocialGraph;
 
 fn main() {
     // ── Social graph demo ────────────────────────────────────────────────────
@@ -27,6 +27,7 @@ fn main() {
         content_type: "video/mp4".into(),
         creator_uhid: "alice-uhid-0001".into(),
         size_bytes: 150_000_000,
+        created_at_ms: 1_700_000_000_000,
         thumbnail_hash: Some("thumb_abc".into()),
         tags: vec!["aether".into(), "launch".into(), "live".into()],
     };
@@ -67,6 +68,7 @@ fn main() {
                 content_type: "video/mp4".into(),
                 creator_uhid: "alice-uhid-0001".into(),
                 size_bytes: 10_000_000,
+                created_at_ms: 1_700_000_000_000 + (i as u64 * 3600_000),
                 thumbnail_hash: None,
                 tags: vec![],
             },

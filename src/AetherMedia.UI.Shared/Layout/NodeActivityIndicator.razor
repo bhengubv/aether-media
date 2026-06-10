@@ -1,0 +1,149 @@
+@using AetherNet.Bandwidth
+@implements IDisposable
+@inject INodeActivityMonitor Monitor
+
+@*
+    NodeActivityIndicator
+    ─────────────────────
+    Slim status pill that sits at the bottom of the nav rail.
+    • Coloured dot reflects NodeActivityState (Offline | Idle | Active | Busy | Degraded).
+    • Aggregate ingress / egress rate shown alongside (human-readable, B/s → MB/s).
+    • Click toggles an expanded breakdown listing every transport.
+
+    The component subscribes to INodeActivityMonitor.SnapshotChanged on first
+    render and unsubscribes on Dispose. Snapshot updates marshal back onto the
+    UI thread via InvokeAsync(StateHasChanged); no extra timer is required.
+
+    Designed to work identically inside Blazor Web (server / wasm) and
+    Blazor Hybrid (MAUI / Avalonia) — no platform-specific JS interop.
+*@
+
+<div class="am-activity @StateClass" title="@TooltipText" @onclick="ToggleExpanded" role="button" tabindex="0">
+    <span class="am-activity-dot"></span>
+    <span class="am-activity-label">@StateLabel</span>
+    <span class="am-activity-rates">
+        <span class="am-activity-rate" title="Incoming">↓ @FormatRate(_snapshot.IngressBps)</span>
+        <span class="am-activity-rate" title="Outgoing">↑ @FormatRate(_snapshot.EgressBps)</span>
+    </span>
+</div>
+
+@if (_expanded)
+{
+    <div class="am-activity-detail">
+        <div class="am-activity-detail-row">
+            <span>Active peers</span>
+            <span>@_snapshot.ActivePeers</span>
+        </div>
+        <div class="am-activity-detail-row">
+            <span>Active transports</span>
+            <span>@_snapshot.ActiveTransports</span>
+        </div>
+        @if (!string.IsNullOrEmpty(_snapshot.PrimaryTransportName))
+        {
+            <div class="am-activity-detail-row">
+                <span>Primary transport</span>
+                <span>@_snapshot.PrimaryTransportName</span>
+            </div>
+        }
+        @if (_snapshot.Transports.Count > 0)
+        {
+            <div class="am-activity-detail-divider"></div>
+            @foreach (var t in _snapshot.Transports)
+            {
+                <div class="am-activity-transport @TransportStateClass(t.State)">
+                    <div class="am-activity-transport-name">
+                        <span class="am-activity-dot small"></span>
+                        @t.TransportName
+                    </div>
+                    <div class="am-activity-transport-rates">
+                        <span>↓ @FormatRate(t.IngressBps)</span>
+                        <span>↑ @FormatRate(t.EgressBps)</span>
+                        @if (t.BtlBwBps > 0)
+                        {
+                            <span class="am-activity-util" title="Utilization">@t.UtilizationPercent</span>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+
+@code {
+    private NodeActivitySnapshot _snapshot = default!;
+    private bool _expanded;
+
+    protected override void OnInitialized()
+    {
+        _snapshot = Monitor.Current;
+        Monitor.SnapshotChanged += OnSnapshotChanged;
+    }
+
+    private async void OnSnapshotChanged(object? sender, NodeActivitySnapshot snapshot)
+    {
+        _snapshot = snapshot;
+        try
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (ObjectDisposedException)
+        {
+            // Component was disposed mid-callback — ignore.
+        }
+    }
+
+    private void ToggleExpanded() => _expanded = !_expanded;
+
+    private string StateClass => _snapshot.State switch
+    {
+        NodeActivityState.Offline  => "state-offline",
+        NodeActivityState.Idle     => "state-idle",
+        NodeActivityState.Active   => "state-active",
+        NodeActivityState.Busy     => "state-busy",
+        NodeActivityState.Degraded => "state-degraded",
+        _                          => "state-idle",
+    };
+
+    private string StateLabel => _snapshot.State switch
+    {
+        NodeActivityState.Offline  => "Offline",
+        NodeActivityState.Idle     => "Idle",
+        NodeActivityState.Active   => "Active",
+        NodeActivityState.Busy     => "Busy",
+        NodeActivityState.Degraded => "Degraded",
+        _                          => "Unknown",
+    };
+
+    private string TooltipText =>
+        $"{StateLabel} · {_snapshot.ActivePeers} peers · " +
+        $"↓{FormatRate(_snapshot.IngressBps)} ↑{FormatRate(_snapshot.EgressBps)} " +
+        $"(click for detail)";
+
+    private static string TransportStateClass(NodeActivityState s) => s switch
+    {
+        NodeActivityState.Offline  => "state-offline",
+        NodeActivityState.Idle     => "state-idle",
+        NodeActivityState.Active   => "state-active",
+        NodeActivityState.Busy     => "state-busy",
+        NodeActivityState.Degraded => "state-degraded",
+        _                          => "state-idle",
+    };
+
+    /// <summary>
+    /// Formats a byte-per-second rate with the appropriate SI prefix and a
+    /// single decimal place (e.g. <c>2.4 MB/s</c>, <c>973 KB/s</c>, <c>0 B/s</c>).
+    /// </summary>
+    private static string FormatRate(long bps)
+    {
+        if (bps <= 0) return "0 B/s";
+        if (bps < 1_024)              return $"{bps} B/s";
+        if (bps < 1_024L * 1_024)     return $"{bps / 1_024.0:F1} KB/s";
+        if (bps < 1_024L * 1_024 * 1_024) return $"{bps / (1_024.0 * 1_024):F1} MB/s";
+        return $"{bps / (1_024.0 * 1_024 * 1_024):F2} GB/s";
+    }
+
+    public void Dispose()
+    {
+        Monitor.SnapshotChanged -= OnSnapshotChanged;
+    }
+}

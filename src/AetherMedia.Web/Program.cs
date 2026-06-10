@@ -29,7 +29,8 @@ builder.Services.AddAetherNetMedia(media =>
         .AddDistribution()
         .AddLocalLibrary()
         .AddAI()
-        .AddReel(localUhid);
+        .AddReel(localUhid)
+        .AddNodeActivity();
 });
 
 // ── Web-specific services ─────────────────────────────────────────────────

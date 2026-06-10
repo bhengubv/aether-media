@@ -19,14 +19,25 @@ typedef struct {
     char    content_type[64];
     char    creator_uhid[128];
     int64_t size_bytes;
+    int64_t created_at_ms;      /* Unix-epoch ms when content was published.    */
 } AetherNetMediaContent;
 
+/*
+ * Canonical MediaProfile struct — mirrors the C# / Go / Python / TS / Rust /
+ * Swift / Kotlin SDKs so the C wire-roundtrip harness (gated on a JSON lib —
+ * see tests/cross-language/README.md) can round-trip identically.
+ */
 typedef struct {
-    char uhid[128];
-    char display_name[256];
-    char aethernet_tag[16];
-    int  follower_count;
-    int  content_count;
+    char    uhid[128];
+    char    display_name[256];
+    char    avatar_hash[65];     /* nullable — empty string means null on wire */
+    char    bio[512];            /* nullable — empty string means null on wire */
+    char    aethernet_tag[16];
+    int     follower_count;
+    int     following_count;
+    int     content_count;
+    bool    is_verified;
+    int64_t joined_at_ms;
 } AetherNetMediaProfile;
 
 /* ── Duration formatting ────────────────────────────────────────────────────── */

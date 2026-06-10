@@ -27,6 +27,21 @@ tasks.test {
     useJUnitPlatform()
 }
 
+// ── Cross-language wire-roundtrip ────────────────────────────────────────────
+//
+// Drives the Kotlin lane of `tests/cross-language/run_all.sh`. Reads the three
+// golden JSON fixtures via kotlinx.serialization and emits MODEL:JSON lines.
+// The harness compares the output against the goldens to prove wire-format
+// identity with the C# reference implementation (and Go / Python / TS /
+// Rust / Swift / C).
+tasks.register<JavaExec>("wireRoundtrip") {
+    group = "verification"
+    description = "Round-trips the 3 golden wire fixtures through the Kotlin models."
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("aethermedia.WireRoundtripKt")
+    standardOutput = System.out
+}
+
 publishing {
     repositories {
         maven {

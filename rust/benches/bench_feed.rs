@@ -1,7 +1,7 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
-use aethermedia::feed::{FeedAggregator, MediaFeedItem, FEED_CAP};
-use aethermedia::models::MediaContent;
+use aethernet_media::feed::{FeedAggregator, MediaFeedItem, FEED_CAP};
+use aethernet_media::models::MediaContent;
 
 fn make_item(i: usize) -> MediaFeedItem {
     MediaFeedItem {
@@ -13,6 +13,7 @@ fn make_item(i: usize) -> MediaFeedItem {
             content_type: "video/mp4".into(),
             creator_uhid: "creator-1".into(),
             size_bytes: 10_000_000,
+            created_at_ms: 1_700_000_000_000 + (i as u64 * 1000),
             thumbnail_hash: None,
             tags: vec![],
         },

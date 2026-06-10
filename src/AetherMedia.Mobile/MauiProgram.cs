@@ -51,7 +51,8 @@ public static class MauiProgram
                 .AddDistribution()
                 .AddLocalLibrary()
                 .AddAI()
-                .AddReel(localUhid);
+                .AddReel(localUhid)
+                .AddNodeActivity();
         });
 
         // ── Platform services ──────────────────────────────────────────

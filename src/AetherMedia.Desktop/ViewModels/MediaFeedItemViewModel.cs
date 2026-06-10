@@ -29,7 +29,9 @@ public sealed partial class MediaFeedItemViewModel : ViewModelBase
     {
         get
         {
-            var elapsed = DateTime.UtcNow - Source.PublishedAtMs.ToUniversalTime();
+            // PublishedAtMs is a Unix-epoch millisecond timestamp (see MediaFeedItem).
+            var publishedUtc = DateTimeOffset.FromUnixTimeMilliseconds(Source.PublishedAtMs).UtcDateTime;
+            var elapsed = DateTime.UtcNow - publishedUtc;
 
             if (elapsed.TotalSeconds < 60)
                 return "just now";
@@ -50,7 +52,7 @@ public sealed partial class MediaFeedItemViewModel : ViewModelBase
                 var d = (int)elapsed.TotalDays;
                 return $"{d} days ago";
             }
-            return Source.PublishedAtMs.ToString("d MMM yyyy");
+            return publishedUtc.ToString("d MMM yyyy");
         }
     }
 

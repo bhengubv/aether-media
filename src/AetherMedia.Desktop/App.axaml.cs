@@ -41,7 +41,8 @@ public partial class App : Application
             .AddContent()
             .AddSocial()
             .AddStreaming()
-            .AddAI());
+            .AddAI()
+            .AddNodeActivity());
 
         // Desktop-local implementations for interfaces without a mesh-backed impl
         services.AddSingleton<LocalMediaFeed>();

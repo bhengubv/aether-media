@@ -1,7 +1,10 @@
 @inherits LayoutComponentBase
 
 <div class="am-shell">
-    <NavMenu />
+    <div class="am-nav-column">
+        <NavMenu />
+        <NodeActivityIndicator />
+    </div>
     <main class="am-content">
         @Body
     </main>

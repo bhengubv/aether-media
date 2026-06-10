@@ -147,7 +147,7 @@ type MediaProfile struct {
 	DisplayName    string  `json:"display_name"`
 	AvatarHash     *string `json:"avatar_hash"`
 	Bio            *string `json:"bio"`
-	AetherTag      string  `json:"aether_tag"`
+	AethernetTag   string  `json:"aethernet_tag"`
 	FollowerCount  int     `json:"follower_count"`
 	FollowingCount int     `json:"following_count"`
 	ContentCount   int     `json:"content_count"`

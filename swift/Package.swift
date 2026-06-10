@@ -12,6 +12,13 @@ let package = Package(
             name: "AetherNetMedia",
             targets: ["AetherNetMedia"]
         ),
+        // Cross-language wire-format conformance driver — used by
+        // tests/cross-language/run_all.sh to prove the Swift SDK round-trips
+        // the golden fixtures identically to every other language SDK.
+        .executable(
+            name: "wire-roundtrip",
+            targets: ["wire-roundtrip"]
+        ),
     ],
     dependencies: [
         // aether-protocol: integrated at runtime via Aether mesh — not a compile-time dependency
@@ -21,6 +28,11 @@ let package = Package(
             name: "AetherNetMedia",
             dependencies: [],
             path: "Sources/AetherNetMedia"
+        ),
+        .executableTarget(
+            name: "wire-roundtrip",
+            dependencies: ["AetherNetMedia"],
+            path: "Sources/wire-roundtrip"
         ),
         .testTarget(
             name: "AetherNetMediaTests",

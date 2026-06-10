@@ -23,7 +23,10 @@ html, body { height: 100%; background: var(--am-bg); color: var(--am-text); font
 .am-content::-webkit-scrollbar { display: none; }
 
 /* ── Nav ────────────────────────────────────────────────────────────── */
-.am-nav { width: var(--am-nav-w); background: var(--am-surface); display: flex; flex-direction: column; padding: 1rem; gap: 0.5rem; border-right: 1px solid var(--am-border); flex-shrink: 0; }
+/* The left rail. NavMenu lives at the top; NodeActivityIndicator sticks to the bottom. */
+.am-nav-column { width: var(--am-nav-w); height: 100%; background: var(--am-surface); display: flex; flex-direction: column; border-right: 1px solid var(--am-border); flex-shrink: 0; }
+.am-nav { flex: 1; display: flex; flex-direction: column; padding: 1rem; gap: 0.5rem; overflow-y: auto; scrollbar-width: none; min-height: 0; }
+.am-nav::-webkit-scrollbar { display: none; }
 .am-nav-brand { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0 1rem; }
 .am-nav-logo { font-size: 1.5rem; color: var(--am-primary); }
 .am-nav-title { font-weight: 700; font-size: 1rem; }

@@ -11,7 +11,9 @@ using AetherMedia.Reel;
 using AetherMedia.Reel.Interfaces;
 using AetherMedia.Social;
 using AetherMedia.Streaming;
+using AetherNet.Bandwidth;
 using AetherNet.Routing;
+using AetherNet.Transport.Bandwidth;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -305,6 +307,59 @@ public sealed class AetherNetMediaBuilder
             sp.GetRequiredService<AetherNet.Content.IContentService>(),
             localUhid,
             sp.GetService<Microsoft.Extensions.Logging.ILogger<SoundLibrary>>()));
+
+        return this;
+    }
+
+    /// <summary>
+    /// Registers the AetherNet Bandwidth Measurement Framework (ABMF) UI surface:
+    /// <list type="bullet">
+    ///   <item><see cref="INodeActivityMonitor"/> — UI-facing snapshot stream
+    ///         (state, ingress/egress rates, per-transport breakdown).</item>
+    ///   <item><see cref="IBandwidthEstimator"/> — BBRv3 estimator factory for any
+    ///         host-supplied transport. Hosts inject their estimators by calling
+    ///         <c>NodeActivityMonitor.Register(estimator)</c> after registration.</item>
+    /// </list>
+    ///
+    /// <para>The monitor is auto-started on first resolution. Host applications
+    /// should resolve <see cref="INodeActivityMonitor"/> at startup to begin sampling
+    /// — the <c>NodeActivityIndicator</c> Razor component (AetherMedia.UI.Shared)
+    /// does this on first render, so the indicator alone is enough to bring the
+    /// monitor online.</para>
+    ///
+    /// <para>The monitor degrades gracefully when no transports are registered
+    /// (snapshot stays in <see cref="NodeActivityState.Offline"/> with zero rates),
+    /// so calling <c>AddNodeActivity()</c> on a host with no
+    /// <c>ITransportManager</c> is safe.</para>
+    /// </summary>
+    /// <param name="sampleIntervalMs">
+    /// Sampling cadence in milliseconds. Default 500 ms balances responsiveness
+    /// against CPU overhead — clamped to <c>[100, 5000]</c>.
+    /// </param>
+    /// <param name="idleThresholdSeconds">
+    /// Seconds without observed traffic before a transport is considered idle.
+    /// Default 5 s matches the BBRv3 ProbeRTT window.
+    /// </param>
+    public AetherNetMediaBuilder AddNodeActivity(
+        int sampleIntervalMs    = 500,
+        int idleThresholdSeconds = 5)
+    {
+        sampleIntervalMs    = Math.Clamp(sampleIntervalMs, 100, 5_000);
+        idleThresholdSeconds = Math.Clamp(idleThresholdSeconds, 1, 600);
+
+        // Single shared NodeActivityMonitor across the host process. We start it
+        // on first resolution so callers don't need to remember a `.Start()` call
+        // — the indicator component triggers it via DI on first render.
+        Services.TryAddSingleton<INodeActivityMonitor>(sp =>
+        {
+            var monitor = new NodeActivityMonitor
+            {
+                SampleIntervalMs     = sampleIntervalMs,
+                IdleThresholdSeconds = idleThresholdSeconds,
+            };
+            monitor.Start();
+            return monitor;
+        });
 
         return this;
     }

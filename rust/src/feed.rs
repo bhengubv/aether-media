@@ -93,6 +93,7 @@ mod tests {
                 content_type: "video/mp4".into(),
                 creator_uhid: "u1".into(),
                 size_bytes: 10_000,
+                created_at_ms: 1_700_000_000_000,
                 thumbnail_hash: None,
                 tags: vec![],
             },

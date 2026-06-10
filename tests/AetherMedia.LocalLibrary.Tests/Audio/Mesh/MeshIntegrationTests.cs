@@ -212,8 +212,17 @@ public class MeshIntegrationTests
             return buf.Length;
         });
         sut.Play();
-        Thread.Sleep(60);
         var sessionId = sut.Session!.Id; // capture before Stop() nulls it
+
+        // Poll until at least one segment has been published OR a 2 s ceiling
+        // is hit. Replaces a fragile Thread.Sleep(60) that under net9's slower
+        // scheduler intermittently captured zero segments before Stop().
+        var deadline = DateTime.UtcNow.AddSeconds(2);
+        while (DateTime.UtcNow < deadline &&
+               streaming.GetPublishedSegments(sessionId).Count == 0)
+        {
+            Thread.Sleep(20);
+        }
         sut.Stop();
 
         var segments = streaming.GetPublishedSegments(sessionId);

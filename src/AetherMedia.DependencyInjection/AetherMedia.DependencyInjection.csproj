@@ -1,25 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
-    <PackageId>AetherMedia.DependencyInjection</PackageId>
-    <Description>DI wiring for all Aether Media services — one call activates the full stack.</Description>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AetherMedia.Core\AetherMedia.Core.csproj" />
-    <ProjectReference Include="..\AetherMedia.Identity\AetherMedia.Identity.csproj" />
-    <ProjectReference Include="..\AetherMedia.Content\AetherMedia.Content.csproj" />
-    <ProjectReference Include="..\AetherMedia.Social\AetherMedia.Social.csproj" />
-    <ProjectReference Include="..\AetherMedia.Streaming\AetherMedia.Streaming.csproj" />
-    <ProjectReference Include="..\AetherMedia.AI\AetherMedia.AI.csproj" />
-    <ProjectReference Include="..\AetherMedia.Distribution\AetherMedia.Distribution.csproj" />
-    <ProjectReference Include="..\AetherMedia.LocalLibrary\AetherMedia.LocalLibrary.csproj" />
-    <ProjectReference Include="..\AetherMedia.Reel\AetherMedia.Reel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
-  </ItemGroup>
-
-</Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherMedia.DependencyInjection</PackageId>
+    <Description>DI wiring for all Aether Media services — one call activates the full stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherMedia.Core\AetherMedia.Core.csproj" />
+    <ProjectReference Include="..\AetherMedia.Identity\AetherMedia.Identity.csproj" />
+    <ProjectReference Include="..\AetherMedia.Content\AetherMedia.Content.csproj" />
+    <ProjectReference Include="..\AetherMedia.Social\AetherMedia.Social.csproj" />
+    <ProjectReference Include="..\AetherMedia.Streaming\AetherMedia.Streaming.csproj" />
+    <ProjectReference Include="..\AetherMedia.AI\AetherMedia.AI.csproj" />
+    <ProjectReference Include="..\AetherMedia.Distribution\AetherMedia.Distribution.csproj" />
+    <ProjectReference Include="..\AetherMedia.LocalLibrary\AetherMedia.LocalLibrary.csproj" />
+    <ProjectReference Include="..\AetherMedia.Reel\AetherMedia.Reel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
+  </ItemGroup>
+
+  <!-- AetherNet.Transport hosts the NodeActivityMonitor + BandwidthEstimator so the
+       builder's AddNodeActivity() can register them. AetherNet.Core (interfaces +
+       snapshot models) is pulled in transitively through Transport. -->
+  <ItemGroup Condition="Exists('../../../aether-protocol/src/AetherNet.Transport/AetherNet.Transport.csproj')">
+    <ProjectReference Include="../../../aether-protocol/src/AetherNet.Transport/AetherNet.Transport.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Transport/AetherNet.Transport.csproj')">
+    <PackageReference Include="AetherNet.Transport" Version="1.6.2" />
+  </ItemGroup>
+
+</Project>

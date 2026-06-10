@@ -21,6 +21,9 @@ data class MediaContent(
     val creatorUhid: String,
     @SerialName("size_bytes")
     val sizeBytes: Long,
+    /** Unix-epoch milliseconds when the content was created/published. */
+    @SerialName("created_at_ms")
+    val createdAtMs: Long = 0L,
     val tags: List<String> = emptyList(),
     @SerialName("thumbnail_hash")
     val thumbnailHash: String? = null,
@@ -55,11 +58,12 @@ data class MediaContent(
 
 // ── MediaReactionType ──────────────────────────────────────────────────────────
 
+@Serializable
 enum class MediaReactionType(val value: Int) {
-    LIKE(1),
-    SHARE(2),
-    COMMENT(3),
-    SUPER_REACT(4);
+    @SerialName("like")        LIKE(1),
+    @SerialName("share")       SHARE(2),
+    @SerialName("comment")     COMMENT(3),
+    @SerialName("super_react") SUPER_REACT(4);
 
     companion object {
         fun fromValue(v: Int): MediaReactionType =
@@ -131,7 +135,7 @@ data class MediaProfile(
     @SerialName("joined_at_ms")
     val joinedAtMs: Long,
 ) {
-    private companion object { const val SHORT_BIO_MAX = 120 }
+    companion object { const val SHORT_BIO_MAX = 120 }
 
     /**
      * Bio trimmed to 120 characters at the last word boundary, with "…" appended.

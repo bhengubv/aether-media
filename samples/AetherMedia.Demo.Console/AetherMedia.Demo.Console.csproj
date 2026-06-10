@@ -46,7 +46,7 @@
 
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Core/AetherNet.Core.csproj')">
 
-    <PackageReference Include="AetherNet.Core" Version="1.5.0" />
+    <PackageReference Include="AetherNet.Core" Version="1.6.2" />
 
   </ItemGroup>
 
@@ -62,7 +62,7 @@
 
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.DependencyInjection/AetherNet.DependencyInjection.csproj')">
 
-    <PackageReference Include="AetherNet.DependencyInjection" Version="1.5.0" />
+    <PackageReference Include="AetherNet.DependencyInjection" Version="1.6.2" />
 
   </ItemGroup>
 

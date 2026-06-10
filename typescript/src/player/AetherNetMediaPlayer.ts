@@ -142,7 +142,20 @@ export class AetherNetMediaPlayer {
   }
 
   private async _loadWithShaka(url: string): Promise<void> {
-    const shaka = await import("shaka-player");
+    // shaka-player 4.x ships a compiled .d.ts that doesn't expose the static
+    // `polyfill` namespace or `Player` constructor on its default export
+    // (they exist at runtime). A minimal local interface bridges the gap.
+    interface ShakaCompiledRuntime {
+      polyfill: { installAll(): void };
+      Player: {
+        new (video: HTMLVideoElement): {
+          load(url: string): Promise<void>;
+          destroy(): Promise<void>;
+        };
+        isBrowserSupported(): boolean;
+      };
+    }
+    const shaka = (await import("shaka-player")) as unknown as ShakaCompiledRuntime;
     shaka.polyfill.installAll();
     if (!shaka.Player.isBrowserSupported()) {
       this.video.src = url;
@@ -162,7 +175,9 @@ export class AetherNetMediaPlayer {
       sb = this._mediaSource.sourceBuffers[0];
     }
     if (!sb.updating) {
-      sb.appendBuffer(bytes);
+      // TS 5.x narrows Uint8Array<SharedArrayBuffer> vs <ArrayBuffer>; appendBuffer
+      // accepts ArrayBufferView so an explicit cast is safe here.
+      sb.appendBuffer(bytes as BufferSource);
     }
   }
 
