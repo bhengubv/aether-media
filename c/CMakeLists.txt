@@ -38,3 +38,21 @@ enable_testing()
 add_executable(test_social tests/test_social.c)
 target_link_libraries(test_social aethermedia)
 add_test(NAME social_graph COMMAND test_social)
+
+# ── Cross-language wire-roundtrip driver ──────────────────────────────────────
+#
+# Reads the 3 golden JSON fixtures from tests/cross-language/golden/, round-trips
+# them through the C struct definitions in include/aethermedia.h, and prints
+# MODEL:JSON to stdout. The harness (tests/cross-language/run_all.sh) compares
+# the output against the goldens to prove the C SDK's wire format is byte-equal
+# to the other 7 language SDKs.
+#
+# Uses jsmn (vendored under third_party/) — single-header public-domain JSON
+# parser, ~400 LOC, no transitive deps. Toggleable so the default `cmake -S .`
+# invocation stays lean for downstream consumers who don't need it.
+option(BUILD_WIRE_ROUNDTRIP "Build the cross-language wire-roundtrip driver" ON)
+if(BUILD_WIRE_ROUNDTRIP)
+    add_executable(wire_roundtrip src/wire_roundtrip.c)
+    target_link_libraries(wire_roundtrip aethermedia)
+    target_include_directories(wire_roundtrip PRIVATE third_party/jsmn)
+endif()

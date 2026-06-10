@@ -119,15 +119,41 @@ else
 fi
 
 # ── C (cmake + native binary) ─────────────────────────────────────────────────
+# Prefer MinGW Makefiles on Windows when gcc is on PATH — avoids the MSVC
+# default (which requires the C++ workload's headers, not always present).
+# On Linux/macOS the default Unix Makefiles work fine.
 C_OUT=""
 if command -v cmake >/dev/null 2>&1 && [ -f "$ROOT/c/CMakeLists.txt" ]; then
-  (cd "$ROOT/c" && cmake -S . -B build -DBUILD_WIRE_ROUNDTRIP=ON >/dev/null 2>&1 \
-                && cmake --build build --target wire_roundtrip >/dev/null 2>&1) || true
-  if [ -x "$ROOT/c/build/wire_roundtrip" ]; then
-    C_OUT=$("$ROOT/c/build/wire_roundtrip" 2>/dev/null) || true
-  elif [ -x "$ROOT/c/build/Debug/wire_roundtrip.exe" ]; then
-    C_OUT=$("$ROOT/c/build/Debug/wire_roundtrip.exe" 2>/dev/null) || true
-  fi
+  # Pick a generator: on MSYS2/MinGW prefer MinGW Makefiles so we use gcc
+  # (the user's installed C toolchain) instead of cmake's MSVC default.
+  case "$(uname -s 2>/dev/null)" in
+    MINGW*|MSYS*|CYGWIN*)
+      if command -v gcc >/dev/null 2>&1; then
+        (cd "$ROOT/c" && cmake -S . -B build_xlang -DBUILD_WIRE_ROUNDTRIP=ON \
+                              -G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc >/dev/null 2>&1 \
+                      && cmake --build build_xlang --target wire_roundtrip >/dev/null 2>&1) || true
+      else
+        (cd "$ROOT/c" && cmake -S . -B build_xlang -DBUILD_WIRE_ROUNDTRIP=ON >/dev/null 2>&1 \
+                      && cmake --build build_xlang --target wire_roundtrip >/dev/null 2>&1) || true
+      fi
+      ;;
+    *)
+      (cd "$ROOT/c" && cmake -S . -B build_xlang -DBUILD_WIRE_ROUNDTRIP=ON >/dev/null 2>&1 \
+                    && cmake --build build_xlang --target wire_roundtrip >/dev/null 2>&1) || true
+      ;;
+  esac
+  for cand in \
+    "$ROOT/c/build_xlang/wire_roundtrip" \
+    "$ROOT/c/build_xlang/wire_roundtrip.exe" \
+    "$ROOT/c/build_xlang/Debug/wire_roundtrip.exe"; do
+    if [ -x "$cand" ]; then
+      # The C driver resolves goldens relative to its cwd unless
+      # AETHERMEDIA_GOLDEN_DIR is set; pass an absolute path so the
+      # harness can run it from any cwd.
+      C_OUT=$(AETHERMEDIA_GOLDEN_DIR="$GOLDEN" "$cand" 2>/dev/null) || true
+      break
+    fi
+  done
 fi
 if [ -n "$C_OUT" ]; then
   check "c" "media_content"  "$(echo "$C_OUT" | grep '^CONTENT:'  | cut -d: -f2-)"
