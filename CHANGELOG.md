@@ -7,6 +7,25 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.0] — 2026-06-10
+
+A three-phase wave: adopt AetherNet 1.6.2, surface node activity in the UI, and sweep cross-language wire parity to 8 languages.
+
+### Added — node-activity UI indicator (surfacing ABMF)
+- `AetherMedia.DependencyInjection`: `AddNodeActivity(sampleIntervalMs, idleThresholdSeconds)` registers `INodeActivityMonitor` as a singleton and auto-starts it.
+- `NodeActivityIndicator.razor` — coloured-dot state (Active/Busy/Degraded/Idle/Offline), aggregate ingress/egress rates, click-to-expand per-transport breakdown. Wired into `MainLayout` across Desktop / Web / Mobile.
+
+### Changed
+- All `AetherNet.*` PackageReferences 1.5.0 -> 1.6.2 (16 csproj); `VersionPrefix` -> 1.6.0.
+
+### Fixed
+- `MediaFeedItemViewModel.PublishedAgo` epoch handling now uses `DateTimeOffset.FromUnixTimeMilliseconds`.
+- 7 cross-language wire-format divergences caught by the new harness (Go `aether_tag`->`aethernet_tag`; Rust/Kotlin/C missing `created_at_ms`; Kotlin reaction-enum serialization; C profile field gaps).
+- TS SDK `dist/` now builds clean.
+
+### Verification
+- LocalLibrary.Tests 192/192, Social.Tests 68/68 (net9 + net10); cross-language `run_all.sh` 15/15.
+
 ## [1.5.0] — 2026-06-09
 
 Second move-upstream wave. The last two protocol-level classes that were
@@ -76,6 +95,19 @@ upstream, where they belong.
 - `AetherMedia.Social.Tests`: **68/68 pass** on net9.0 and net10.0.
 
 ---
+
+## [1.3.0] — 2026-06-08
+
+Adopt AetherNet 1.2.0 and migrate the mesh-first fetchers to the new application-layer directory service.
+
+### Added
+- 4 mesh-first fetchers (cover-art, lyrics, package distributor, podcast) accept an optional `IDirectoryService` and use `ResolveAsync(name)`, closing the Wave-16 hash-as-name gap (Issue #60). Falls back to the existing `ContentAnnounced`-wait pattern when not wired (backward compatible).
+
+### Changed
+- `AetherNet.*` PackageReferences 1.1.0 -> 1.2.0 across 16 csproj; consumes `IDtnService.BundleReceived`, `IDirectoryService`, and `IAetherNetIncentiveProvider.RecordCreatorTipAsync`.
+
+### Verification
+- LocalLibrary.Tests 192/192, Social.Tests 68/68. Published 10 `AetherMedia.*` 1.3.0 packages.
 
 ## [1.2.0] — 2026-05-22
 
