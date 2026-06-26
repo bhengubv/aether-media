@@ -35,6 +35,7 @@ internal sealed class FakeRoutingService : IRoutingService
     public IReadOnlyList<RouteEntry> GetAllRoutes() => Array.Empty<RouteEntry>();
 
     public Task HandleRouteRequestAsync(MeshPacket routeRequest,
+        string? linkLayerSenderUhid = null,
         CancellationToken cancellationToken = default) => Task.CompletedTask;
 
     public Task HandleRouteReplyAsync(MeshPacket routeReply,

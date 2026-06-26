@@ -17,6 +17,10 @@ internal sealed class FakeReputationService : INodeReputationService
     public Task<double> GetReputationScoreAsync(string uhid, CancellationToken ct = default)
         => Task.FromResult(Scores.TryGetValue(uhid, out var s) ? s : 1.0);
 
+    /// <summary>Gossip weight tracks the node's own reputation (same controllable source, default 1.0).</summary>
+    public Task<double> GetGossipWeightAsync(string uhid, CancellationToken ct = default)
+        => Task.FromResult(Scores.TryGetValue(uhid, out var s) ? s : 1.0);
+
     public Task<IReadOnlyDictionary<string, double>> GetAllScoresAsync(CancellationToken ct = default)
         => Task.FromResult<IReadOnlyDictionary<string, double>>(
             new Dictionary<string, double>(Scores, StringComparer.Ordinal));

@@ -29,7 +29,7 @@
     <ProjectReference Include="../../../aether-protocol/src/AetherNet.Transport/AetherNet.Transport.csproj" />
   </ItemGroup>
   <ItemGroup Condition="!Exists('../../../aether-protocol/src/AetherNet.Transport/AetherNet.Transport.csproj')">
-    <PackageReference Include="AetherNet.Transport" Version="1.6.2" />
+    <PackageReference Include="AetherNet.Transport" Version="2.0.0" />
   </ItemGroup>
 
 </Project>
