@@ -7,6 +7,29 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [2.0.0] — 2026-06-27
+
+**Adopts the AetherNet 2.0.0 SDK.** AetherMedia now builds on AetherNet 2.0.0,
+whose DTN bundle wire format moved from JSON to a canonical binary envelope — a
+breaking mesh-interop change that flows through transitively, hence the major
+bump. The C# media surface itself is unchanged; consumers recompiling against
+AetherMedia 2.0.0 get the 2.0.0-built libraries.
+
+### Changed — BREAKING
+- **AetherNet dependency 1.6.2 → 2.0.0** across all 17 projects — pulls the binary
+  DTN envelope and the Phase-2 module ports. A 2.0.0 media node and a 1.x node can
+  no longer exchange DTN bundles.
+
+### Fixed
+- Aligned `AetherMedia.AI.Tests` doubles to AetherNet 2.0.0's new interface members
+  (`INodeReputationService.GetGossipWeightAsync`, the 3-arg
+  `IRoutingService.HandleRouteRequestAsync`).
+- `AetherMedia.Demo.Console`: bumped `Microsoft.Extensions.*` 10.0.0 → 10.0.2 to
+  match AetherNet 2.0.0's transitive requirement (resolves an NU1605 downgrade).
+
+### Verified
+- Build: 0 warnings / 0 errors. Full test suite green on net9.0 + net10.0.
+
 ## [1.6.0] — 2026-06-10
 
 A three-phase wave: adopt AetherNet 1.6.2, surface node activity in the UI, and sweep cross-language wire parity to 8 languages.
