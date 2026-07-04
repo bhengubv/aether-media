@@ -7,6 +7,27 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [2.1.0] — 2026-07-04
+
+**Adopts the AetherNet 2.4.1 SDK.** Bumps all `AetherNet.*` package references from
+2.0.0 to 2.4.1, pulling the serverless-integration and hardening work of the 2.1–2.4
+line: transport-backed WebRTC signalling, circuit-relay-v2 as a last-resort fallback
+transport, fail-closed Ed25519 route-reply verification, the naming/directory service,
+and the creator-tipping seam. **No AetherMedia source change was required** — the media
+surface already compiled against the 2.4.1 protocol source via the conditional project
+reference, and the 2.1→2.4 interface changes are additive and backward-compatible for
+AetherMedia's usage.
+
+### Changed
+- **AetherNet dependency 2.0.0 → 2.4.1** across all 17 referencing projects (src,
+  extensions, samples). Additive only — 2.4.x preserves byte-identical mesh
+  serialisation of existing packets (new capabilities are new packet types), so a
+  2.1.0 media node introduces no wire break versus a 2.0.0 node.
+
+### Verified
+- Build: 0 warnings / 0 errors (`TreatWarningsAsErrors`) on net9.0 + net10.0.
+- Full test suite green: 667 tests per target framework (1,334 runs), 0 failed / 0 skipped.
+
 ## [2.0.0] — 2026-06-27
 
 **Adopts the AetherNet 2.0.0 SDK.** AetherMedia now builds on AetherNet 2.0.0,
