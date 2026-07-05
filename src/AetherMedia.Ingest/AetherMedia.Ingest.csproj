@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <PackageId>AetherMedia.Ingest</PackageId>
+    <Description>Stream-ingest gateway for Aether Media: pull any external source (HLS today, more via the ISourceAdapter seam) and publish it onto the mesh — passthrough by default, transcode where a node is capable. Any node holding an internet path and the mesh can be the gateway.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AetherMedia.Core\AetherMedia.Core.csproj" />
+    <ProjectReference Include="..\AetherMedia.Streaming\AetherMedia.Streaming.csproj" />
+  </ItemGroup>
+
+</Project>

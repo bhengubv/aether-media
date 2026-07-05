@@ -7,6 +7,33 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [2.2.0] — 2026-07-04
+
+**Stream-ingest gateway.** A new `AetherMedia.Ingest` package that pulls an external live source
+and republishes it onto the mesh — passthrough by default, transcode where a node is capable —
+behind a portable `ISourceAdapter` seam. The gateway is a *role* any node holding both an internet
+path and the mesh can assume (any platform, any SDK language), not a fixed machine. Purely additive;
+**no existing package or wire format changed**.
+
+### Added
+- **`AetherMedia.Ingest`** — the ingest seam and gateway:
+  - `ISourceAdapter` → `MediaSegment` IR → `IStreamGateway` (passthrough | transcode) → the existing
+    `ILiveStreamPublisher` → mesh. Any protocol reduces to the shared segment IR; the mesh side never
+    changes.
+  - **HLS source adapter** — master→media resolution, segment pull, verbatim passthrough. DASH,
+    LL-HLS, WebRTC-WHEP, RTMP/SRT, file, and capture are drop-in adapters, sequenced next.
+  - **Transcode as a capability, not a place** (`ITranscoder` + `NodeCapabilities`): a node with no
+    transcode muscle passes the source's native rendition through — the always-watchable floor — while
+    a capable node fans it into the ABR ladder. `PassthroughTranscoder` is the default.
+- **`AddIngest()`** — a builder extension registering the gateway, HLS adapter, and passthrough
+  transcoder. Additive: a new file; the existing `Add*` methods are untouched.
+
+### Verified
+- Build: 0 warnings / 0 errors (`TreatWarningsAsErrors`) on net9.0 + net10.0.
+- 12 ingest tests green on both target frameworks — gateway ordering & byte-fidelity, the
+  always-yes floor, ABR fan-out, HLS master→media→segment end-to-end (reproducible stub HTTP, no live
+  feed), parser edge cases, and capability logic.
+
 ## [2.1.0] — 2026-07-04
 
 **Adopts the AetherNet 2.4.1 SDK.** Bumps all `AetherNet.*` package references from

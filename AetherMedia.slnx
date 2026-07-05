@@ -12,6 +12,7 @@
   <Project Path="src\AetherMedia.Mobile\AetherMedia.Mobile.csproj" />
   <Project Path="src\AetherMedia.Web\AetherMedia.Web.csproj" />
   <Project Path="src\AetherMedia.DependencyInjection\AetherMedia.DependencyInjection.csproj" />
+  <Project Path="src\AetherMedia.Ingest\AetherMedia.Ingest.csproj" />
   <Project Path="tests\AetherMedia.Core.Tests\AetherMedia.Core.Tests.csproj" />
   <Project Path="tests\AetherMedia.Social.Tests\AetherMedia.Social.Tests.csproj" />
   <Project Path="tests\AetherMedia.Streaming.Tests\AetherMedia.Streaming.Tests.csproj" />
@@ -21,6 +22,7 @@
   <Project Path="tests\AetherMedia.Distribution.Tests\AetherMedia.Distribution.Tests.csproj" />
   <Project Path="tests\AetherMedia.LocalLibrary.Tests\AetherMedia.LocalLibrary.Tests.csproj" />
   <Project Path="tests\AetherMedia.Reel.Tests\AetherMedia.Reel.Tests.csproj" />
+  <Project Path="tests\AetherMedia.Ingest.Tests\AetherMedia.Ingest.Tests.csproj" />
   <Project Path="samples\AetherMedia.Demo.Console\AetherMedia.Demo.Console.csproj" />
   <Project Path="samples\AetherMedia.RelayTest\AetherMedia.RelayTest.csproj" />
   <!-- Phase 2 Extensions — Trust Rings -->

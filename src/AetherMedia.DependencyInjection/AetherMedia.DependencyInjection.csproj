@@ -16,6 +16,7 @@
     <ProjectReference Include="..\AetherMedia.Distribution\AetherMedia.Distribution.csproj" />
     <ProjectReference Include="..\AetherMedia.LocalLibrary\AetherMedia.LocalLibrary.csproj" />
     <ProjectReference Include="..\AetherMedia.Reel\AetherMedia.Reel.csproj" />
+    <ProjectReference Include="..\AetherMedia.Ingest\AetherMedia.Ingest.csproj" />
   </ItemGroup>
 
   <ItemGroup>
