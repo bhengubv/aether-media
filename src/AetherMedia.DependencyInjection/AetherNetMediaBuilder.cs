@@ -6,6 +6,12 @@ using AetherMedia.Core;
 using AetherMedia.Distribution;
 using AetherMedia.Identity;
 using AetherMedia.LocalLibrary;
+using AetherMedia.LocalLibrary.Audio.Crossfade;
+using AetherMedia.LocalLibrary.Audio.Effects;
+using AetherMedia.LocalLibrary.Audio.Equalizer;
+using AetherMedia.LocalLibrary.Audio.Output;
+using AetherMedia.LocalLibrary.Audio.Playback;
+using AetherMedia.LocalLibrary.Audio.Visualization;
 using AetherMedia.LocalLibrary.Interfaces;
 using AetherMedia.Reel;
 using AetherMedia.Reel.Interfaces;
@@ -16,6 +22,7 @@ using AetherNet.Routing;
 using AetherNet.Transport.Bandwidth;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace AetherMedia.DependencyInjection;
 
@@ -265,6 +272,68 @@ public sealed class AetherNetMediaBuilder
                 sp.GetRequiredService<IMovieHasher>(),
                 sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<SubtitleService>>(),
                 apiKey: null));   // replace with real key via appsettings / env var
+        return this;
+    }
+
+    /// <summary>
+    /// Registers the audio player: the engine, the effects chain, the equaliser, crossfade,
+    /// and the spectrum feed the visualisers draw from.
+    ///
+    /// <para><b>Read this before assuming it was already on.</b> <see cref="AddLocalLibrary"/>
+    /// registers metadata, collections and subtitles — none of the audio stack. Every Winamp
+    /// piece in <c>AetherMedia.LocalLibrary.Audio</c> shipped as classes nothing constructed,
+    /// which is why the equaliser, Milkdrop, AVS, skins and the rest were unreachable rather
+    /// than merely unused.</para>
+    ///
+    /// <para><b>Two things the host must supply</b>, because both are platform hardware and
+    /// this library is portable:</para>
+    /// <list type="bullet">
+    ///   <item><see cref="IAudioOutput"/> — where sound comes out. Register
+    ///     <c>WindowsWasapiOutput</c> on desktop, the AudioTrack output on Android. Without one
+    ///     the engine has nowhere to play and this method throws at resolve time rather than
+    ///     silently registering <c>NullAudioOutput</c> and appearing to work.</item>
+    ///   <item><see cref="IAudioSourceFactory"/> — what turns a file into PCM, using the
+    ///     platform's own decoders.</item>
+    /// </list>
+    ///
+    /// <para>The default chain is preamp → equaliser → normalisation → safe-clip. Safe-clip is
+    /// last on purpose: everything before it can push a signal past ±1.0, and clipping is the
+    /// difference between a loud passage and a burst of noise.</para>
+    /// </summary>
+    /// <param name="fftSize">
+    /// Spectrum resolution, a power of two. 2048 gives a bar layout that reads well at phone
+    /// width without costing more per frame than a low-end device can spare.
+    /// </param>
+    public AetherNetMediaBuilder AddAudioPlayback(int fftSize = 2048)
+    {
+        Services.TryAddSingleton<IEqualizer, BiquadEqualizer>();
+        Services.TryAddSingleton<ICrossfade, CrossfadeController>();
+        Services.TryAddSingleton<IVisualizationFeed>(_ => new FftAnalyzer(fftSize));
+
+        Services.TryAddSingleton<IDspChain>(sp =>
+        {
+            var chain = new DspChain();
+            chain.Add(new PreampEffect());
+            chain.Add(sp.GetRequiredService<IEqualizer>());
+            chain.Add(new NormalizationEffect());
+            chain.Add(new SafeClipEffect());
+            return chain;
+        });
+
+        Services.TryAddSingleton(sp => new AudioPlayerEngine(
+            sp.GetRequiredService<IAudioSourceFactory>(),
+            sp.GetRequiredService<IAudioOutput>(),
+            sp.GetRequiredService<IDspChain>(),
+            sp.GetRequiredService<ICrossfade>(),
+            sp.GetRequiredService<ILogger<AudioPlayerEngine>>(),
+            sp.GetService<IVisualizationFeed>()));
+
+        // The list and the rules for moving through it. Also what makes gapless work: only the
+        // queue knows what comes next, and the engine will not open a file on the audio thread.
+        Services.TryAddSingleton(sp => new PlaybackQueue(
+            sp.GetRequiredService<AudioPlayerEngine>(),
+            sp.GetRequiredService<ILogger<PlaybackQueue>>()));
+
         return this;
     }
 
